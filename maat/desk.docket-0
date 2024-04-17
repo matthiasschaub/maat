@@ -1,0 +1,10 @@
+:~  title+'Maat (alpha)'
+    info+'A Todo App'
+    color+0xff.fff3
+    image+''
+    base+'maat'
+    site+/apps/maat
+    version+[0 0 1]
+    website+'https://github.com/matthiasschaub/maat'
+    license+'MIT'
+==

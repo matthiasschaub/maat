@@ -1,0 +1,155 @@
+/-  *maat
+/+  dbug
+/+  verb
+/+  default-agent
+/+  server                    :: HTTP request processing
+/+  schooner                  :: HTTP response handling
+::
+/*  html-index                %html  /app/ui/html/index/html
+/*  css-udjat                 %css   /app/ui/css/udjat/css
+/*  css-style                 %css   /app/ui/css/style/css
+/*  svg-circles               %svg   /app/ui/svg/circles/svg
+/*  svg-icon                  %svg   /app/ui/svg/icon/svg
+/*  ttf-soria                 %ttf   /app/ui/ttf/soria/ttf
+/*  js-index                  %js    /app/ui/js/index/js
+/*  js-json-enc               %js    /app/ui/js/json-enc/js
+/*  js-path-deps              %js    /app/ui/js/path-deps/js
+/*  js-client-side-templates  %js    /app/ui/js/client-side-templates/js
+::
+|%
++$  card  card:agent:gall
++$  versioned-state
+  $%  state-0
+  ==
++$  state-0  [%0 page=@t]
+--
+=|  state-0
+=*  state  -
+::  debug wrap
+::
+%+  verb   %.n
+%-  agent:dbug
+::  agent core
+::
+^-  agent:gall
+|_  =bowl:gall
++*  this  .
+    default  ~(. (default-agent this %.n) bowl)
+::
+++  on-init
+  ^-  [(list card) $_(this)]
+  :-  ^-  (list card)
+    :~
+      :*  %pass  /bind  %arvo  %e
+          %connect  `/apps/maat  %maat-ui
+      ==
+    ==
+  %=  this
+    page  'Hello World'
+  ==
+::
+++  on-save
+  ^-  vase
+  !>(state)
+::
+++  on-load
+  |=  old=vase
+  ^-  [(list card) $_(this)]
+  :-  ^-  (list card)
+      ~
+  %=  this
+    state  !<(state-0 old)
+  ==
+::
+++  on-poke
+  |=  [=mark =vase]
+  ^-  [(list card) $_(this)]
+  |^
+  ?+  mark  (on-poke:default mark vase)
+    ::
+      %handle-http-request
+    =^  cards  state
+      (handle-http !<([@ta =inbound-request:eyre] vase))
+    [cards this]
+  ==
+  ++  handle-http
+    |=  [eyre-id=@ta =inbound-request:eyre]
+    ^-  [(list card) $_(state)]
+    =/  hx-req=?
+      ?~  (get-header:http 'hx-request' header-list.request.inbound-request)
+        %.n
+      %.y
+    =/  request-line
+      (parse-request-line:server url.request.inbound-request)
+    =+  site=site.request-line
+    =+  ext=ext.request-line
+    =+  send=(cury response:schooner eyre-id)
+    =+  auth=authenticated.inbound-request
+    =/  public  %.n  :: TODO:
+    ?.  ?|(auth public)
+      ?.  hx-req
+        [(send [302 ~ [%login-redirect './apps/maat']]) state]
+      [(send [200 ~ [%hx-login-redirect './apps/maat']]) state]
+    ?.  =(method.request.inbound-request %'GET')
+      [(send [405 ~ [%plain "405 - Method Not Allowed"]]) state]
+    ?+  site  [(send [404 ~ [%plain "404 - Not Found"]]) state]
+      ::
+      [%apps %maat ~]
+        [(send [200 ~ [%html html-index]]) state]
+      ::  css
+      ::
+      [%apps %maat %udjat ~]
+        [(send [200 ~ [%css css-udjat]]) state]
+      [%apps %maat %style ~]
+        [(send [200 ~ [%css css-style]]) state]
+      ::  svg
+      ::
+      [%apps %maat %circles ~]
+        [(send [200 ~ [%svg svg-circles]]) state]
+      [%apps %maat %icon ~]
+        [(send [200 ~ [%svg svg-icon]]) state]
+      ::  ttf
+      ::
+      [%apps %maat %soria ~]
+        [(send [200 ~ [%font-ttf q.ttf-soria]]) state]
+      ::  js
+      ::
+      [%apps %maat %index ~]
+        [(send [200 ~ [%js js-index]]) state]
+      [%apps %maat %json-enc ~]
+        [(send [200 ~ [%js js-json-enc]]) state]
+      [%apps %maat %path-deps ~]
+        [(send [200 ~ [%js js-path-deps]]) state]
+      [%apps %maat %client-side-templates ~]
+        [(send [200 ~ [%js js-client-side-templates]]) state]
+      ::  html
+      ::
+    ==
+  --
+++  on-arvo
+  |=  [=wire =sign-arvo]
+  ^-  [(list card) $_(this)]
+  ?.  ?=([%bind ~] wire)
+    (on-arvo:default [wire sign-arvo])
+  ?.  ?=([%eyre %bound *] sign-arvo)
+    (on-arvo:default [wire sign-arvo])
+  :: error if not accepted
+  ::
+  ~?  !accepted.sign-arvo
+    %eyre-rejected-maat-ui-bind
+  :-  ^-  (list card)
+      ~
+  this
+++  on-watch
+  |=  =path
+  ^-  [(list card) $_(this)]
+  ?+    path  (on-watch:default path)
+      [%http-response *]
+    [~ this]
+  ==
+::
+++  on-leave  on-leave:default
+++  on-peek  on-peek:default
+++  on-agent  on-agent:default
+++  on-fail  on-fail:default
+--

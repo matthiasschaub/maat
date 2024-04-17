@@ -1,0 +1,12 @@
+# python
+venv/
+__pycache__/
+.pytest_cache/
+.hypothesis/
+.ruff_cache/
+
+# javascript
+node_modules/
+
+# custom
+maat/app/ui/

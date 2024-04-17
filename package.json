@@ -1,0 +1,9 @@
+{
+  "name": "maat",
+  "author": "~talfus-laddus",
+  "license": "MIT",
+  "dependencies": {
+    "htmx": "^0.0.2",
+    "mustache": "^4.2.0"
+  }
+}
