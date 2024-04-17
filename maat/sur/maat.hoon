@@ -17,16 +17,16 @@
 ::
 ::    tag
 ::
-+$  tag       @tas
-+$  tags      (list tags)
++$  tag      @tas
++$  tags     (set tag)
 ::
 ::    task
 ::
-+$  tid       @tas
-+$  title     @t
-+$  desc      @tas
-+$  date      @da
-+$  done      ?
++$  tid      @tas
++$  title    @t
++$  desc     @t
++$  date     @da
++$  done     ?
 +$  task
   $:
     =tid
@@ -36,13 +36,13 @@
     =done
     =tags
   ==
-+$  tasks     (map tid task)
++$  tasks    (map tid task)
 ::
 ::    list
 ::
-+$  lid       @tas
-+$  host      @p
-+$  public    ?
++$  lid      @tas
++$  host     @p
++$  public   ?
 +$  list
   $:
     =lid
@@ -51,18 +51,18 @@
     =public
     =tasks
   ==
-+$  lists     (map lid list)
++$  lists    (map lid list)
 ::
 ::    register of members (reg)
 ::    access-control list (acl)
 ::
-+$  member    @tas
-+$  reg       (set member)
-+$  acl       (set @p)
-+$  regs      (map lid reg)
-+$  acls      (map lid acl)
++$  member   @tas
++$  reg      (set member)
++$  acl      (set @p)
++$  regs     (map lid reg)
++$  acls     (map lid acl)
 ::
 ::    invites
 ::
-+$  invites   (map lid host)
++$  invites  (set [lid host])
 --

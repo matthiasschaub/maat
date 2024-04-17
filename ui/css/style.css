@@ -1,3 +1,10 @@
+@font-face {
+  font-family: "Soria";
+  src: url("/apps/tahuti/soria.woff2") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 .with-sidebar {
   display: flex;
   flex-wrap: wrap;

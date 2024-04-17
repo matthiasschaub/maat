@@ -1,20 +1,24 @@
-/-  *maat
+:: /-  *maat
 /+  dbug
 /+  verb
 /+  default-agent
 /+  server                    :: HTTP request processing
 /+  schooner                  :: HTTP response handling
 ::
-/*  html-index                %html  /app/ui/html/index/html
-/*  css-udjat                 %css   /app/ui/css/udjat/css
-/*  css-style                 %css   /app/ui/css/style/css
-/*  svg-circles               %svg   /app/ui/svg/circles/svg
-/*  svg-icon                  %svg   /app/ui/svg/icon/svg
-/*  ttf-soria                 %ttf   /app/ui/ttf/soria/ttf
-/*  js-index                  %js    /app/ui/js/index/js
-/*  js-json-enc               %js    /app/ui/js/json-enc/js
-/*  js-path-deps              %js    /app/ui/js/path-deps/js
-/*  js-client-side-templates  %js    /app/ui/js/client-side-templates/js
+/*  html-index                %html   /app/ui/html/index/html
+/*  css-udjat                 %css    /app/ui/css/udjat/css
+/*  css-style                 %css    /app/ui/css/style/css
+/*  svg-circles               %svg    /app/ui/svg/circles/svg
+/*  svg-circle                %svg    /app/ui/svg/circle/svg
+/*  svg-circle-checked                %svg    /app/ui/svg/circle-checked/svg
+/*  svg-circle-question                %svg    /app/ui/svg/circle-question/svg
+/*  svg-circle-plus                %svg    /app/ui/svg/circle-plus/svg
+/*  svg-icon                  %svg    /app/ui/svg/icon/svg
+/*  woff2-soria               %woff2  /app/ui/woff2/soria/woff2
+/*  js-index                  %js     /app/ui/js/index/js
+/*  js-json-enc               %js     /app/ui/js/json-enc/js
+/*  js-path-deps              %js     /app/ui/js/path-deps/js
+/*  js-client-side-templates  %js     /app/ui/js/client-side-templates/js
 ::
 |%
 +$  card  card:agent:gall
@@ -106,12 +110,20 @@
       ::
       [%apps %maat %circles ~]
         [(send [200 ~ [%svg svg-circles]]) state]
+      [%apps %maat %circle ~]
+        [(send [200 ~ [%svg svg-circle]]) state]
+      [%apps %maat %circle-checked ~]
+        [(send [200 ~ [%svg svg-circle-checked]]) state]
+      [%apps %maat %circle-plus ~]
+        [(send [200 ~ [%svg svg-circle-plus]]) state]
+      [%apps %maat %circle-question ~]
+        [(send [200 ~ [%svg svg-circle-question]]) state]
       [%apps %maat %icon ~]
         [(send [200 ~ [%svg svg-icon]]) state]
-      ::  ttf
+      ::  woff2
       ::
       [%apps %maat %soria ~]
-        [(send [200 ~ [%font-ttf q.ttf-soria]]) state]
+        [(send [200 ~ [%font-woff2 q.woff2-soria]]) state]
       ::  js
       ::
       [%apps %maat %index ~]
