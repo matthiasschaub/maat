@@ -16,6 +16,7 @@
 /*  svg-icon                  %svg    /app/ui/svg/icon/svg
 /*  woff2-soria               %woff2  /app/ui/woff2/soria/woff2
 /*  js-index                  %js     /app/ui/js/index/js
+/*  js-helper                 %js     /app/ui/js/helper/js
 /*  js-json-enc               %js     /app/ui/js/json-enc/js
 /*  js-path-deps              %js     /app/ui/js/path-deps/js
 /*  js-client-side-templates  %js     /app/ui/js/client-side-templates/js
@@ -128,14 +129,36 @@
       ::
       [%apps %maat %index ~]
         [(send [200 ~ [%js js-index]]) state]
+      [%apps %maat %helper ~]
+        [(send [200 ~ [%js js-helper]]) state]
       [%apps %maat %json-enc ~]
         [(send [200 ~ [%js js-json-enc]]) state]
       [%apps %maat %path-deps ~]
         [(send [200 ~ [%js js-path-deps]]) state]
       [%apps %maat %client-side-templates ~]
         [(send [200 ~ [%js js-client-side-templates]]) state]
-      ::  html
+        ::  html
       ::
+      [%apps %maat %lists @t @t ~]
+        =/  endpoint  (snag 4 `(list @t)`site)
+        ?+  endpoint  [(send [404 ~ [%plain "404 - Not Found"]]) state]
+          %tasks        [(send [200 ~ [%html html-index]]) state]
+          :: %settings
+          ::   ?:  auth
+          ::     ?:  .=(our.bowl host:(need group))
+          ::       [(send [200 ~ [%html html-settings-host]]) state]
+          ::     [(send [200 ~ [%html html-settings-member]]) state]
+          ::   [(send [200 ~ [%html html-settings-public]]) state]
+          :: %about           [(send [200 ~ [%html html-about]]) state]
+          :: %invite
+          ::   ?.  auth
+          ::     ?.  hx-req
+          ::       [(send [302 ~ [%login-redirect './apps/tahuti']]) state]
+          ::     [(send [200 ~ [%hx-login-redirect './apps/tahuti']]) state]
+          ::   ?:  public
+          ::     [(send [200 ~ [%html html-invite-public]]) state]
+          ::   [(send [200 ~ [%html html-invite]]) state]
+        ==
     ==
   --
 ++  on-arvo

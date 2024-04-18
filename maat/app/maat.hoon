@@ -60,9 +60,10 @@
 ::  another agents sends a message, react
 ::
 ++  on-poke
+  ~&  >  '%maat (on-poke)'
   |=  [=mark =vase]
   ^-  [(list card) $_(this)]
-  ?>  ?=(%tahuti-action mark)
+  ?>  ?=(%maat-action mark)
   =/  action  !<(action vase)
   ?-  -.action
     ::
@@ -179,9 +180,9 @@
     ::
       %watch-ack
     ?~  p.sign
-      ~&  >  '%tahuti (on-agent): subscription successful'
+      ~&  >  '%maat (on-agent): subscription successful'
       [~ this]
-    ~&  >>>  '%tahuti (on-agent): subscription failed'
+    ~&  >>>  '%maat (on-agent): subscription failed'
     [~ this]
     ::
       %fact

@@ -13,14 +13,21 @@ let ctx = await esbuild.context({
     "./ui/svg/circles.svg",
     "./ui/svg/icon.svg",
     "./ui/js/index.js",
+    "./ui/js/helper.js",
     "./node_modules/htmx.org/dist/ext/path-deps.js",
     "./node_modules/htmx.org/dist/ext/json-enc.js",
     "./node_modules/htmx.org/dist/ext/client-side-templates.js",
   ],
-  external: ['*.svg', '*.woff2'],
+  external: ["*.svg", "*.woff2"],
   entryNames: "[ext]/[name]", // will name the result files by their folder names
   bundle: true,
-  loader: { ".json": "copy", ".html": "copy", ".svg": "copy", ".png": "copy", ".woff2": "copy"},
+  loader: {
+    ".json": "copy",
+    ".html": "copy",
+    ".svg": "copy",
+    ".png": "copy",
+    ".woff2": "copy",
+  },
   outdir: "maat/app/ui",
 });
 

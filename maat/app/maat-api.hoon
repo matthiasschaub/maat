@@ -108,6 +108,55 @@
         =/  path  /(scot %p our.bowl)/maat/(scot %da now.bowl)/[id]/noun
         =,  .^([=group =acl =reg =led] %gx path)
         [(send [200 ~ [%json (group:enjs group)]]) state]
+        ::
+          [%apps %maat %api %lists @t @t ~]
+        ::  get state of a group
+        =/  id    (snag 4 `(list @t)`site)
+        =/  path  /(scot %p our.bowl)/maat/(scot %da now.bowl)/[id]/noun
+        =/  endpoint  (snag 5 `(list @t)`site)
+        =,  .^([=group =acl =reg =led] %gx path)
+        ?+  endpoint
+          [(send [404 ~ [%plain "404 - Not Found"]]) state]
+          ::
+            :: %version
+          :: [(send [200 ~ [%json (version:enjs '2024-04-09.1')]]) state]
+          ::
+            ::%members
+          ::::  FIX: does not work due to reg containing non Urbit-ID
+          ::::    members which get filtered out when comparing against
+          ::::    acl
+          ::::
+          ::=/  regmod    `(set @tas)`(silt (skim ~(tap in reg) |=(m=member ?~(`(unit @p)`(slaw %p `@t`m) %.n %.y))))
+          ::=/  aclmod    `(set @tas)`(~(run in acl) |=(=@p `@tas`(scot %p p)))
+          ::=/  castoffs  (~(dif in regmod) aclmod)
+          ::=/  members   (~(dif in reg) castoffs)
+          ::=.  members   (~(put in members) `@tas`(scot %p host.group))
+          ::[(send [200 ~ [%json (members:enjs members)]]) state]
+          ::::
+            ::%castoffs
+          ::=/  regmod    `(set @tas)`(silt (skim ~(tap in reg) |=(m=member ?~(`(unit @p)`(slaw %p `@t`m) %.n %.y))))
+          ::=/  aclmod    `(set @tas)`(~(run in acl) |=(=@p `@tas`(scot %p `@t`p)))
+          ::=/  castoffs   (~(dif in regmod) aclmod)
+          ::[(send [200 ~ [%json (members:enjs castoffs)]]) state]
+            ::::
+            ::%invitees
+          ::=/  aclmod    `(set @tas)`(~(run in acl) |=(=@p `@tas`(scot %p p)))
+          ::=/  invitees  (~(dif in aclmod) reg)
+          ::[(send [200 ~ [%json (members:enjs invitees)]]) state]
+          ::::
+            %tasks
+          =/  val       ~(val by led)
+          [(send [200 ~ [%json ~]]) state]
+          ::::
+          ::  %balances
+          ::=/  path  /(scot %p our.bowl)/tahuti/(scot %da now.bowl)/[gid]/net/noun
+          ::=/  net   .^(net %gx path)
+          ::[(send [200 ~ [%json (net:enjs [net currency.group])]]) state]
+          ::  %reimbursements
+          ::=/  path  /(scot %p our.bowl)/tahuti/(scot %da now.bowl)/[gid]/rei/noun
+          ::=/  rei   .^(rei %gx path)
+          ::[(send [200 ~ [%json (rei:enjs [rei currency.group])]]) state]
+        ==
       ==
         ::
       ::

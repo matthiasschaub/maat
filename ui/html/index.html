@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <title>Group Expenses</title>
@@ -7,9 +7,13 @@
     <meta name="view-transition" content="same-origin" />
     <link rel="stylesheet" href="/apps/maat/udjat.css" />
     <link rel="stylesheet" href="/apps/maat/style.css" />
+    <script src="/apps/maat/index.js"></script>
+    <script src="/apps/maat/json-enc.js"></script>
+    <script src="/apps/maat/client-side-templates.js"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/debug.js"></script>
   </head>
 
-  <body>
+  <body hx-boost="true" hx-ext="client-side-templates">
     <!-- <header> -->
     <!--   <!-1- navbar -1-> -->
     <!--   <nav> -->
@@ -26,28 +30,55 @@
       <div>
         <!-- sidebar -->
         <nav>
+          <ul
+            id="lists"
+            hx-get="/api/lists"
+            hx-trigger="load"
+            mustache-template="lists-template"
+          ></ul>
+          <template id="lists-template">
+            <!-- iterate over array of response object -->
+            {{#.}}
+            <li>
+              <a href="/lists/{{id}}/tasks">{{title}}</a>
+            </li>
+            {{/.}}
+          </template>
           <ul>
+            <li><a href="/lists/{lid}/settings">Settings</a></li>
             <li>
-              <a href="">Inbox</a>
+              <a href="">About</a>
             </li>
             <li>
-              <a href=""><strong>Shopping List</strong></a>
-            </li>
-            <li>
-              <a href="">Work</a>
+              <a>
+                <form
+                  id="put-lists"
+                  class="inline-form"
+                  hx-put="/apps/maat/api/lists"
+                  hx-ext="json-enc"
+                  hx-swap="none"
+                  hx-vals="js:{id: self.crypto.randomUUID(), public: false}"
+                >
+                  <input
+                    style="
+                      border: none;
+                      display: inline;
+                      padding: 0;
+                      margin: 0;
+                      width: 13ch;
+                    "
+                    name="title"
+                    type="text"
+                    placeholder="Add new list"
+                  />
+                </form>
+              </a>
             </li>
           </ul>
-        <ul>
-          <li><a href="">Settings</a></li>
-          <li>
-            <a href="">About</a>
-          </li>
-        </ul>
         </nav>
       </div>
       <div>
-        <main>
-          <!-- non-sidebar -->
+        <!-- non-sidebar -->
         <!-- <datalist id="tags"> -->
         <!--   <option>#hastag</option> -->
         <!--   <option>#tag</option> -->
@@ -64,94 +95,112 @@
         <!--       /> -->
         <!--     </fieldset> -->
         <!--   </form> -->
-          <ul>
-            <li>
-              <a class="icon icon-circle-question"></a>
+        <div id="error-div" class="error">
+          <p id="error-pre"></p>
+        </div>
+        <ul>
+          <li>
+            <a class="icon icon-circle-question"></a>
+            <input
+              style="display: inline-block; border: none; padding: 0; margin: 0"
+              placeholder="Filter tasks by tags"
+            />
+          </li>
+        </ul>
+        <ul id="task-list">
+          <li>
+            <a class="icon icon-circle"> </a>
+            Bread <small><em>#hastag</em></small>
+            <!-- <a> -->
+            <!--   <img class="icon icon-check" src="pencil.svg" /> Edit -->
+            <!-- </a> -->
+          </li>
+          <li>
+            <a class="icon icon-circle"> </a>
+            Milk from plant not from animals
+          </li>
+          <li>
+            <a class="icon icon-circle"> </a>
+            Apples not peaches. Apples not peaches.
+          </li>
+          <li>
+            <a class="icon icon-circle"> </a>
+            Grapefruit <small><em>#tag</em></small>
+          </li>
+          <li>
+            <a class="icon icon-circle"> </a>
+            Cat food
+          </li>
+          <li>
+            <a class="icon icon-circle"> </a>
+            Wine
+          </li>
+          <li>
+            <a class="icon icon-circle-checked"> </a>
+            <s>Cheese</s>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <a class="icon icon-circle-plus"></a>
+            <form
+              id="put-tasks"
+              class="inline-form"
+              hx-put="/apps/maat/api/lists/{lid}/tasks"
+              hx-ext="json-enc"
+              hx-swap="none"
+              hx-vals="js:{id: self.crypto.randomUUID()}"
+            >
               <input
-                style="display: inline-block; border: none; padding: 0; margin: 0;"
-                placeholder="Filter tasks by tags"
-              />
-            </li>
-          </ul>
-          <ul>
-            <li>
-              <a class="icon icon-circle"> </a>
-                            Bread <small><em>#hastag</em></small>
-              <!-- <a> -->
-              <!--   <img class="icon icon-check" src="pencil.svg" /> Edit -->
-              <!-- </a> -->
-            </li>
-            <li>
-              <a class="icon icon-circle"> </a>
-              Milk from plant not from animals
-            </li>
-            <li>
-              <a class="icon icon-circle"> </a>
-              Apples not peaches. Apples not peaches. Apples not peaches.
-            </li>
-            <li>
-              <a class="icon icon-circle"> </a>
-                            Grapefruit <small><em>#tag</em></small>
-            </li>
-            <li>
-              <a class="icon icon-circle"> </a>
-              Cat food
-            </li>
-            <li>
-              <a class="icon icon-circle"> </a>
-              Wine
-            </li>
-            <li>
-              <a class="icon icon-circle-checked"> </a>
-              <s>Cheese</s>
-            </li>
-          </ul>
-          <ul>
-            <li>
-              <a class="icon icon-circle-plus"></a>
-              <input
-                style="display: inline-block; border: none; padding: 0; margin: 0;"
-                name="task"
+                style="
+                  display: inline-block;
+                  border: none;
+                  padding: 0;
+                  margin: 0;
+                "
+                name="title"
                 type="text"
                 placeholder="Add new task"
               />
-            </li>
-          </ul>
-          <!-- <div class="done"> -->
-          <!--   <h3>Done</h3> -->
-          <!--   <ul> -->
-          <!--     <li> -->
-          <!--       <a class="icon icon-circle-checked"> </a> -->
-          <!--       Bread -->
-          <!--     </li> -->
-          <!--     <li> -->
-          <!--       <a class="icon icon-circle-checked"> </a> -->
-          <!--       Milk -->
-          <!--     </li> -->
-          <!--     <li> -->
-          <!--       <a class="icon icon-circle-checked"> </a> -->
-          <!--       Apples -->
-          <!--     </li> -->
-          <!--     <li> -->
-          <!--       <a class="icon icon-circle-checked"> </a> -->
-          <!--       Grapefruit -->
-          <!--     </li> -->
-          <!--     <li> -->
-          <!--       <a class="icon icon-circle-checked"> </a> -->
-          <!--       Cat food -->
-          <!--     </li> -->
-          <!--     <li> -->
-          <!--       <a class="icon icon-circle-checked"> </a> -->
-          <!--       Cheese -->
-          <!--     </li> -->
-          <!--     <li> -->
-          <!--       <a class="icon icon-circle-checked"> </a> -->
-          <!--       Wine -->
-          <!--     </li> -->
-          <!--   </ul> -->
-          <!-- </div> -->
+            </form>
+          </li>
+        </ul>
+        <!-- <div class="done"> -->
+        <!--   <h3>Done</h3> -->
+        <!--   <ul> -->
+        <!--     <li> -->
+        <!--       <a class="icon icon-circle-checked"> </a> -->
+        <!--       Bread -->
+        <!--     </li> -->
+        <!--     <li> -->
+        <!--       <a class="icon icon-circle-checked"> </a> -->
+        <!--       Milk -->
+        <!--     </li> -->
+        <!--     <li> -->
+        <!--       <a class="icon icon-circle-checked"> </a> -->
+        <!--       Apples -->
+        <!--     </li> -->
+        <!--     <li> -->
+        <!--       <a class="icon icon-circle-checked"> </a> -->
+        <!--       Grapefruit -->
+        <!--     </li> -->
+        <!--     <li> -->
+        <!--       <a class="icon icon-circle-checked"> </a> -->
+        <!--       Cat food -->
+        <!--     </li> -->
+        <!--     <li> -->
+        <!--       <a class="icon icon-circle-checked"> </a> -->
+        <!--       Cheese -->
+        <!--     </li> -->
+        <!--     <li> -->
+        <!--       <a class="icon icon-circle-checked"> </a> -->
+        <!--       Wine -->
+        <!--     </li> -->
+        <!--   </ul> -->
+        <!-- </div> -->
         <!-- </main> -->
-      <!-- </div> -->
+      </div>
     </div>
+    <script src="/apps/maat/helper.js"></script>
   </body>
 </html>
