@@ -1,2 +1,4 @@
-:~  %maat-ui
+:~  %maat
+    %maat-ui
+    %maat-api
 ==

@@ -9,11 +9,19 @@
   ==
 +$  state-0         :: latest state
   $:  %0
-    =invites
-    =lists
-    =regs
+    =groups
     =acls
+    =regs
+    =leds
+    =invs
   ==
+::
+::    general
+::
++$  id       @tas
++$  title    @t
++$  member   @tas
++$  ship     @p
 ::
 ::    tag
 ::
@@ -22,47 +30,65 @@
 ::
 ::    task
 ::
-+$  tid      @tas
-+$  title    @t
 +$  desc     @t
 +$  date     @da
 +$  done     ?
 +$  task
   $:
-    =tid
+    =id
     =title
     =desc
     =date
     =done
     =tags
   ==
-+$  tasks    (map tid task)
 ::
-::    list
+::    group of tasks
 ::
-+$  lid      @tas
 +$  host     @p
 +$  public   ?
-+$  list
++$  group
   $:
-    =lid
+    =id
     =title
     =host
     =public
-    =tasks
   ==
-+$  lists    (map lid list)
 ::
 ::    register of members (reg)
 ::    access-control list (acl)
+::    ledger of tasks     (led)
 ::
-+$  member   @tas
++$  acl      (set ship)
 +$  reg      (set member)
-+$  acl      (set @p)
-+$  regs     (map lid reg)
-+$  acls     (map lid acl)
++$  led      (map id task)
 ::
-::    invites
+::   maps
 ::
-+$  invites  (set [lid host])
++$  groups   (map id group)
++$  acls     (map id acl)
++$  regs     (map id reg)
++$  leds     (map id led)
++$  invs     (map id group)
+::
+::    input requests/actions
+::
++$  action
+  $%  ::
+      :: group actions
+      ::
+      [%add-group =group]
+      [%del-group =id]
+  ==
+::
+::    output events/updater
+::
+::  these are all the possible events that can be sent to subscribers.
+::
++$  update
+  $%  [%group =id =group =acl =reg =led]
+      [%acl =id =acl]
+      [%reg =id =reg]
+      [%led =id =led]
+    ==
 --
