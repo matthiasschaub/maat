@@ -39,7 +39,7 @@ def uuid():
 
 
 @pytest.fixture
-def eid():
+def tid():
     return str(uuid4())
 
 
@@ -51,11 +51,24 @@ def gid():
 @pytest.fixture
 def list_(zod, gid) -> dict:
     list_ = {
-        "gid": gid,
+        "id": gid,
         "title": "assembly",
         "host": "~zod",
         "public": False,
     }
-    url = "/apps/tahuti/api/lists"
+    url = "/apps/maat/api/lists"
+    zod.put(url, json=list_)
+    return list_
+
+
+@pytest.fixture
+def list_public(zod, gid) -> dict:
+    list_ = {
+        "id": gid,
+        "title": "assembly",
+        "host": "~zod",
+        "public": True,
+    }
+    url = "/apps/maat/api/lists"
     zod.put(url, json=list_)
     return list_

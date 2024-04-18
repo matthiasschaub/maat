@@ -11,7 +11,7 @@ def list_schema():
     """Response schema"""
     return Schema(
         {
-            "lid": str,
+            "id": str,
             "title": str,
             "host": str,
             "public": bool,
@@ -50,6 +50,17 @@ def test_lists_put_invalid_title(title, zod):
     assert response.status_code == 200
     result = response.json()
     assert list_ not in result
+
+
+def test_lists_put(zod, uuid):
+    list_ = {
+        "id": uuid,
+        "title": "assembly",
+        "public": False,
+    }
+    url = "/apps/maat/api/lists"
+    response = zod.put(url, json=list_)
+    assert response.status_code == 200
 
 
 def test_lists_get_all(zod, list_, lists_schema):
@@ -102,11 +113,8 @@ def test_lists_delete(zod, gid, list_):
     assert list_ not in result
 
 
-# @pytest.mark.usefixtures("member")
-# def test_lists_delete_unauthorized(zod, nus, gid, list):
-#     # wait for join
-#     sleep(0.5)
-
+# @pytest.mark.usefixtures("list_")
+# def test_lists_delete_unauthorized(zod, nus, gid):
 #     # PUT
 #     url = f"/apps/maat/api/lists/{gid}"
 #     response = nus.delete(url)
@@ -120,35 +128,35 @@ def test_lists_delete(zod, gid, list_):
 #     assert list in result
 
 
-# @pytest.mark.usefixtures("list")
-# def test_lists_get_private(gid):
-#     # GET /lists/{uuid}
-#     url = f"http://localhost:8080/apps/maat/api/lists/{gid}"
-#     response = requests.get(url)
-#     assert response.status_code == 401
+@pytest.mark.usefixtures("list_")
+def test_lists_get_private(gid):
+    # GET /lists/{uuid}
+    url = f"http://localhost:8080/apps/maat/api/lists/{gid}"
+    response = requests.get(url)
+    assert response.status_code == 401
 
 
-# def test_lists_get_public(gid, list_public, list_schema):
-#     # GET /lists/{uuid}
-#     url = f"http://localhost:8080/apps/maat/api/lists/{gid}"
-#     response = requests.get(url)
-#     assert response.status_code == 200
-#     result = response.json()
-#     assert list_schema.is_valid(result)
-#     assert result == list_public
+def test_lists_get_public(gid, list_public, list_schema):
+    # GET /lists/{uuid}
+    url = f"http://localhost:8080/apps/maat/api/lists/{gid}"
+    response = requests.get(url)
+    assert response.status_code == 200
+    result = response.json()
+    assert list_schema.is_valid(result)
+    assert result == list_public
 
 
-# @pytest.mark.usefixtures("list")
-# def test_lists_delete_private(gid):
-#     # PUT
-#     url = f"http://localhost:8080/apps/maat/api/lists/{gid}"
-#     response = requests.delete(url)
-#     assert response.status_code == 401
+@pytest.mark.usefixtures("list_")
+def test_lists_delete_private(gid):
+    # PUT
+    url = f"http://localhost:8080/apps/maat/api/lists/{gid}"
+    response = requests.delete(url)
+    assert response.status_code == 401
 
 
-# @pytest.mark.usefixtures("list_public")
-# def test_lists_delete_public(gid):
-#     # PUT
-#     url = f"http://localhost:8080/apps/maat/api/lists/{gid}"
-#     response = requests.delete(url)
-#     assert response.status_code == 401
+@pytest.mark.usefixtures("list_public")
+def test_lists_delete_public(gid):
+    # PUT
+    url = f"http://localhost:8080/apps/maat/api/lists/{gid}"
+    response = requests.delete(url)
+    assert response.status_code == 401
