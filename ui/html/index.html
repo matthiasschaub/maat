@@ -7,13 +7,16 @@
     <meta name="view-transition" content="same-origin" />
     <link rel="stylesheet" href="/apps/maat/udjat.css" />
     <link rel="stylesheet" href="/apps/maat/style.css" />
+    <link rel="preconnect" href="https://rsms.me/" />
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
     <script src="/apps/maat/index.js"></script>
+    <script src="/apps/maat/path-deps.js"></script>
     <script src="/apps/maat/json-enc.js"></script>
     <script src="/apps/maat/client-side-templates.js"></script>
     <script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/debug.js"></script>
   </head>
 
-  <body hx-boost="true" hx-ext="client-side-templates">
+  <body hx-boost="true" hx-ext="client-side-templates,path-deps">
     <!-- <header> -->
     <!--   <!-1- navbar -1-> -->
     <!--   <nav> -->
@@ -25,7 +28,11 @@
     <!--     </ul> -->
     <!--   </nav> -->
     <!-- </header> -->
-
+    <header>
+      <div id="error-div" class="error">
+        <pre hidden id="error-pre"></pre>
+      </div>
+    </header>
     <div class="with-sidebar">
       <div>
         <!-- sidebar -->
@@ -33,7 +40,8 @@
           <ul
             id="lists"
             hx-get="/api/lists"
-            hx-trigger="load"
+            hx-trigger="load, path-deps"
+            path-deps="/apps/maat/api/lists"
             mustache-template="lists-template"
           ></ul>
           <template id="lists-template">
@@ -45,7 +53,7 @@
             {{/.}}
           </template>
           <ul>
-            <li><a href="/lists/{lid}/settings">Settings</a></li>
+            <li><a href="/apps/maat/lists/{lid}/settings">Settings</a></li>
             <li>
               <a href="">About</a>
             </li>
@@ -54,19 +62,13 @@
                 <form
                   id="put-lists"
                   class="inline-form"
-                  hx-put="/apps/maat/api/lists"
+                  hx-put="/api/lists"
                   hx-ext="json-enc"
                   hx-swap="none"
                   hx-vals="js:{id: self.crypto.randomUUID(), public: false}"
                 >
                   <input
-                    style="
-                      border: none;
-                      display: inline;
-                      padding: 0;
-                      margin: 0;
-                      width: 13ch;
-                    "
+                    class="inline-input"
                     name="title"
                     type="text"
                     placeholder="Add new list"
@@ -95,16 +97,10 @@
         <!--       /> -->
         <!--     </fieldset> -->
         <!--   </form> -->
-        <div id="error-div" class="error">
-          <p id="error-pre"></p>
-        </div>
         <ul>
           <li>
             <a class="icon icon-circle-question"></a>
-            <input
-              style="display: inline-block; border: none; padding: 0; margin: 0"
-              placeholder="Filter tasks by tags"
-            />
+            <input class="inline-input" placeholder="Filter by tags" />
           </li>
         </ul>
         <ul id="task-list">
@@ -152,12 +148,7 @@
               hx-vals="js:{id: self.crypto.randomUUID()}"
             >
               <input
-                style="
-                  display: inline-block;
-                  border: none;
-                  padding: 0;
-                  margin: 0;
-                "
+                class="inline-input"
                 name="title"
                 type="text"
                 placeholder="Add new task"

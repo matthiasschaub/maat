@@ -3,6 +3,7 @@ import * as esbuild from "esbuild";
 let ctx = await esbuild.context({
   entryPoints: [
     "./ui/html/index.html",
+    "./ui/html/settings.html",
     "./ui/css/udjat.css",
     "./ui/css/style.css",
     "./ui/css/soria.woff2",

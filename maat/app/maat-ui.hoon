@@ -6,6 +6,7 @@
 /+  schooner                  :: HTTP response handling
 ::
 /*  html-index                %html   /app/ui/html/index/html
+/*  html-settings             %html   /app/ui/html/settings/html
 /*  css-udjat                 %css    /app/ui/css/udjat/css
 /*  css-style                 %css    /app/ui/css/style/css
 /*  svg-circles               %svg    /app/ui/svg/circles/svg
@@ -142,7 +143,8 @@
       [%apps %maat %lists @t @t ~]
         =/  endpoint  (snag 4 `(list @t)`site)
         ?+  endpoint  [(send [404 ~ [%plain "404 - Not Found"]]) state]
-          %tasks        [(send [200 ~ [%html html-index]]) state]
+          %tasks     [(send [200 ~ [%html html-index]]) state]
+          %settings  [(send [200 ~ [%html html-settings]]) state]
           :: %settings
           ::   ?:  auth
           ::     ?:  .=(our.bowl host:(need group))

@@ -19,10 +19,10 @@ document.body.addEventListener("htmx:configRequest", (event) => {
   let path = event.detail.path;
 
   if (path.includes("{lid}")) {
-    path = path.replace("{lid}", gid());
+    path = path.replace("{lid}", lid());
   }
   if (path.includes("{tid}")) {
-    path = path.replace("{tid}", eid());
+    path = path.replace("{tid}", tid());
   }
   if (path.includes("/apps/maat")) {
     path = path.replace("/apps/maat", "");
@@ -38,9 +38,10 @@ document.body.addEventListener("htmx:responseError", function (evt) {
   const errorPre = document.getElementById("error-pre");
   const errorDiv = document.getElementById("error-div");
   if (evt.detail.xhr) {
+    errorPre.removeAttribute("hidden");
+    errorDiv.removeAttribute("hidden");
     if (evt.detail.xhr.status === 500) {
       errorPre.innerText = "500 - Internal Server Error";
-      errorDiv.removeAttribute("hidden");
       errorDiv.style.display = "grid";
     } else {
       errorPre.innerText = event.detail.xhr.response;
@@ -60,3 +61,5 @@ document.body.addEventListener("htmx:responseError", function (evt) {
 });
 
 export { lid, tid };
+
+window.lid = lid;

@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Group Expenses</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="view-transition" content="same-origin" />
+    <link rel="stylesheet" href="/apps/maat/udjat.css" />
+    <link rel="stylesheet" href="/apps/maat/style.css" />
+    <link rel="preconnect" href="https://rsms.me/" />
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+    <script src="/apps/maat/index.js"></script>
+    <script src="/apps/maat/path-deps.js"></script>
+    <script src="/apps/maat/json-enc.js"></script>
+    <script src="/apps/maat/client-side-templates.js"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/debug.js"></script>
+  </head>
+
+  <body hx-boost="true" hx-ext="client-side-templates,path-deps">
+    <header>
+      <div id="error-div" class="error">
+        <pre hidden id="error-pre"></pre>
+      </div>
+    </header>
+    <div class="with-sidebar">
+      <div>
+        <!-- sidebar -->
+        <nav>
+          <ul
+            id="lists"
+            hx-get="/api/lists"
+            hx-trigger="load, path-deps"
+            path-deps="/apps/maat/api/lists"
+            mustache-template="lists-template"
+          ></ul>
+          <template id="lists-template">
+            <!-- iterate over array of response object -->
+            {{#.}}
+            <li>
+              <a href="/lists/{{id}}/tasks">{{title}}</a>
+            </li>
+            {{/.}}
+          </template>
+          <ul>
+            <li><a href="/lists/{lid}/settings">Settings</a></li>
+            <li>
+              <a href="">About</a>
+            </li>
+            <li>
+              <a>
+                <form
+                  id="put-lists"
+                  class="inline-form"
+                  hx-put="/api/lists"
+                  hx-ext="json-enc"
+                  hx-swap="none"
+                  hx-vals="js:{id: self.crypto.randomUUID(), public: false}"
+                >
+                  <input
+                    class="inline-input"
+                    name="title"
+                    type="text"
+                    placeholder="Add new list"
+                  />
+                </form>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <div>
+        <!-- non-sidebar -->
+        <h2>Settings</h2>
+        <main>
+          <div
+            hx-get="/api/lists/{lid}"
+            hx-trigger="load"
+            mustache-template="list-template"
+          ></div>
+          <template id="list-template">
+            <h2>{{title}}</h2>
+
+            <h3>Details</h3>
+            <table class="col-two">
+              <thead></thead>
+              <tbody>
+                <tr>
+                  <th>Title</th>
+                  <td>{{title}}</td>
+                </tr>
+                <tr>
+                  <th>Host</th>
+                  <td>{{host}}</td>
+                </tr>
+                <tr>
+                  <th>Public</th>
+                  <td>{{public}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </template>
+
+          <h3>Delete list</h3>
+          <p>
+            Permanently
+            <a
+              id="delete-list"
+              hx-delete="/api/lists/{lid}"
+              hx-confirm="Are you sure?"
+              hx-ext="json-enc"
+              hx-swap="none"
+              hx-vals="js:{id: lid()}"
+              hx-on::after-request='if(event.detail.successful) window.location.pathname = "/apps/maat"'
+              >delete</a
+            >
+            this group.
+          </p>
+        </main>
+      </div>
+    </div>
+    <script src="/apps/maat/helper.js"></script>
+  </body>
+</html>
