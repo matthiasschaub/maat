@@ -41,19 +41,19 @@
             id="lists"
             hx-get="/api/lists"
             hx-trigger="load, path-deps"
-            path-deps="/apps/maat/api/lists"
+            path-deps="/api/lists"
             mustache-template="lists-template"
           ></ul>
           <template id="lists-template">
             <!-- iterate over array of response object -->
             {{#.}}
             <li>
-              <a href="/lists/{{id}}/tasks">{{title}}</a>
+              <a href="/lists/{{gid}}/tasks#filter-tasks">{{title}}</a>
             </li>
             {{/.}}
           </template>
           <ul>
-            <li><a href="/apps/maat/lists/{lid}/settings">Settings</a></li>
+            <li><a href="/lists/{gid}/settings">Settings</a></li>
             <li>
               <a href="">About</a>
             </li>
@@ -97,56 +97,44 @@
         <!--       /> -->
         <!--     </fieldset> -->
         <!--   </form> -->
-        <ul>
+        <ul id="filter-tasks">
           <li>
             <a class="icon icon-circle-question"></a>
             <input class="inline-input" placeholder="Filter by tags" />
           </li>
         </ul>
-        <ul id="task-list">
+        <ul
+          id="tasks"
+          hx-get="/api/lists/{gid}/tasks"
+          hx-trigger="load, path-deps"
+          path-deps="/apps/maat/api/lists/*/tasks"
+          mustache-template="tasks-template"
+        ></ul>
+        <template id="tasks-template">
+          {{#.}}
           <li>
-            <a class="icon icon-circle"> </a>
-            Bread <small><em>#hastag</em></small>
-            <!-- <a> -->
-            <!--   <img class="icon icon-check" src="pencil.svg" /> Edit -->
-            <!-- </a> -->
+            <a id="{{tid}}" class="icon icon-circle"> </a>
+            {{title}} <small><em>{{tags}}</em></small>
+            {{/.}}
           </li>
-          <li>
-            <a class="icon icon-circle"> </a>
-            Milk from plant not from animals
-          </li>
-          <li>
-            <a class="icon icon-circle"> </a>
-            Apples not peaches. Apples not peaches.
-          </li>
-          <li>
-            <a class="icon icon-circle"> </a>
-            Grapefruit <small><em>#tag</em></small>
-          </li>
-          <li>
-            <a class="icon icon-circle"> </a>
-            Cat food
-          </li>
-          <li>
-            <a class="icon icon-circle"> </a>
-            Wine
-          </li>
-          <li>
-            <a class="icon icon-circle-checked"> </a>
-            <s>Cheese</s>
-          </li>
-        </ul>
+        </template>
+        <!-- <li> -->
+        <!--   <a class="icon icon-circle-checked"> </a> -->
+        <!--   <s>Cheese</s> -->
+        <!-- </li> -->
         <ul>
           <li>
             <a class="icon icon-circle-plus"></a>
             <form
               id="put-tasks"
               class="inline-form"
-              hx-put="/apps/maat/api/lists/{lid}/tasks"
+              hx-put="/api/lists/{gid}/tasks"
               hx-ext="json-enc"
               hx-swap="none"
-              hx-vals="js:{id: self.crypto.randomUUID()}"
+              hx-vals="js:{tid: self.crypto.randomUUID(), gid: gid(), desc: '', date: new Date().valueOf(), done: false, tags: []}"
+              hx-on::after-request="if(event.detail.successful) this.reset();"
             >
+              <!-- hx-on::after-request="document.getElementById('put-tasks').reset();"> -->
               <input
                 class="inline-input"
                 name="title"

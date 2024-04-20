@@ -66,6 +66,10 @@
         :-  'done'      [%b done.t]
         :-  'tags'      [%a (turn ~(tap in tags.t) tag:enjs)]
       ==
+    ++  led
+      |=  vals=(list ^task)
+      ^-  json
+      [%a (turn vals task:enjs)]
   --
 ::
 ++  dejs

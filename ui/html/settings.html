@@ -37,12 +37,12 @@
             <!-- iterate over array of response object -->
             {{#.}}
             <li>
-              <a href="/lists/{{id}}/tasks">{{title}}</a>
+              <a href="/lists/{{gid}}/tasks">{{title}}</a>
             </li>
             {{/.}}
           </template>
           <ul>
-            <li><a href="/lists/{lid}/settings">Settings</a></li>
+            <li><a href="/lists/{gid}/settings">Settings</a></li>
             <li>
               <a href="">About</a>
             </li>
@@ -73,7 +73,7 @@
         <h2>Settings</h2>
         <main>
           <div
-            hx-get="/api/lists/{lid}"
+            hx-get="/api/lists/{gid}"
             hx-trigger="load"
             mustache-template="list-template"
           ></div>
@@ -105,11 +105,11 @@
             Permanently
             <a
               id="delete-list"
-              hx-delete="/api/lists/{lid}"
+              hx-delete="/api/lists/{gid}"
               hx-confirm="Are you sure?"
               hx-ext="json-enc"
               hx-swap="none"
-              hx-vals="js:{id: lid()}"
+              hx-vals="js:{gid: gid()}"
               hx-on::after-request='if(event.detail.successful) window.location.pathname = "/apps/maat"'
               >delete</a
             >

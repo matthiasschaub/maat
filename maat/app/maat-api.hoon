@@ -146,7 +146,8 @@
           ::::
             %tasks
           =/  val       ~(val by led)
-          [(send [200 ~ [%json ~]]) state]
+          =/  sorted    (sort val |=([a=task b=task] (gth date.a date.b)))
+          [(send [200 ~ [%json (led:enjs sorted)]]) state]
           ::::
           ::  %balances
           ::=/  path  /(scot %p our.bowl)/tahuti/(scot %da now.bowl)/[gid]/net/noun

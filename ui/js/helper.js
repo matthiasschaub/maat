@@ -1,6 +1,6 @@
 // extract list ID from URL
 //
-function lid() {
+function gid() {
   const parts = window.location.href.split("/");
   return parts[6];
 }
@@ -18,8 +18,8 @@ document.body.addEventListener("htmx:configRequest", (event) => {
   // change
   let path = event.detail.path;
 
-  if (path.includes("{lid}")) {
-    path = path.replace("{lid}", lid());
+  if (path.includes("{gid}")) {
+    path = path.replace("{gid}", gid());
   }
   if (path.includes("{tid}")) {
     path = path.replace("{tid}", tid());
@@ -60,6 +60,6 @@ document.body.addEventListener("htmx:responseError", function (evt) {
   });
 });
 
-export { lid, tid };
+export { gid, tid };
 
-window.lid = lid;
+window.gid = gid;
