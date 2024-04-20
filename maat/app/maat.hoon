@@ -131,6 +131,33 @@
     %=  this
       leds  (~(put by leds) gid.action led)
     ==
+    ::
+      %del-task
+    ~&  >  '%maat (on-poke): delete task'
+    =/  group  (~(got by groups) gid.action)
+    =/  acl    (~(got by acls) gid.action)
+    =/  reg    (~(got by regs) gid.action)
+    ?>  ?|
+          (~(has in reg) `@tas`(scot %p src.bowl))
+          .=(src.bowl host.group)
+        ==
+    ?>  ?|
+          (~(has in acl) src.bowl)
+          .=(src.bowl host.group)
+        ==
+    ?.  =(our.bowl host.group)
+      :-  ^-  (list card)
+        :~  (do-action [host.group action])
+        ==
+      this
+    =/  led  (~(got by leds) gid.action)
+    =.  led  (~(del by led) tid.action)
+    :-  ^-  (list card)
+      :~  (do-update [%led gid.action led])
+      ==
+    %=  this
+      leds  (~(put by leds) gid.action led)
+    ==
   ==
 ++  on-arvo  on-arvo:default
 ::

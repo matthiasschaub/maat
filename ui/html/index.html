@@ -33,8 +33,11 @@
         <pre hidden id="error-pre"></pre>
       </div>
     </header>
+    <div id="overlay" class="overlay htmx-indicator htmx-request">
+      <img class="spinner" src="/apps/maat/circles.svg" />
+    </div>
     <div class="with-sidebar">
-      <div>
+      <div hx-indicator="#overlay">
         <!-- sidebar -->
         <nav>
           <ul
@@ -113,7 +116,13 @@
         <template id="tasks-template">
           {{#.}}
           <li>
-            <a id="{{tid}}" class="icon icon-circle"> </a>
+            <a
+              id="{{tid}}"
+              class="icon icon-circle"
+              hx-delete="/api/lists/{{gid}}/tasks/{{tid}}"
+              hx-trigger="click"
+            >
+            </a>
             {{title}} <small><em>{{tags}}</em></small>
             {{/.}}
           </li>

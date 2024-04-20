@@ -82,7 +82,7 @@ def test_tasks_put(zod, gid):
 #         "done": False,
 #         "tags": ["#areas"],
 #     }
-#     url = f"http://localhost:8080/apps/tahuti/api/groups/{gid}/tasks"
+#     url = f"http://localhost:8080/apps/maat/api/groups/{gid}/tasks"
 #     response = requests.put(url, json=task)
 #     assert response.status_code == 200
 
@@ -99,7 +99,7 @@ def test_tasks_put(zod, gid):
 #         "date": 1699182124,
 #         "involves": ["~zod"],
 #     }
-#     url = f"http://localhost:8080/apps/tahuti/api/groups/{gid}/tasks"
+#     url = f"http://localhost:8080/apps/maat/api/groups/{gid}/tasks"
 #     response = requests.put(url, json=task)
 #     assert response.status_code == 401
 
@@ -107,7 +107,7 @@ def test_tasks_put(zod, gid):
 # @pytest.mark.usefixtures("group", "member_nus", "task")
 # def test_tasks_get(zod, nus, gid, eid, tasks_schema):
 #     sleep(0.5)
-#     url = f"/apps/tahuti/api/groups/{gid}/tasks"
+#     url = f"/apps/maat/api/groups/{gid}/tasks"
 #     for pal in (zod, nus):
 #         response = pal.get(url)
 #         assert response.status_code == 200
@@ -118,7 +118,7 @@ def test_tasks_put(zod, gid):
 
 # @pytest.mark.usefixtures("group_public", "task")
 # def test_tasks_get_public(gid, eid, tasks_schema):
-#     url = f"http://localhost:8080/apps/tahuti/api/groups/{gid}/tasks"
+#     url = f"http://localhost:8080/apps/maat/api/groups/{gid}/tasks"
 #     response = requests.get(url)
 #     assert response.status_code == 200
 #     result = response.json()
@@ -126,35 +126,34 @@ def test_tasks_put(zod, gid):
 #     assert eid in ([r["eid"] for r in result])
 
 
-# @pytest.mark.usefixtures("group", "task")
-# def test_tasks_get_unauthorized(gid, eid, tasks_schema):
-#     url = f"http://localhost:8080/apps/tahuti/api/groups/{gid}/tasks"
-#     response = requests.get(url)
-#     assert response.status_code == 401
+@pytest.mark.usefixtures("list_", "task")
+def test_tasks_get_unauthorized(gid, tid):
+    url = f"http://localhost:8080/apps/maat/api/lists/{gid}/tasks"
+    response = requests.get(url)
+    assert response.status_code == 401
 
 
-# @pytest.mark.usefixtures("group")
-# def test_task_put_multi(zod, gid, task, tasks_schema):
-#     """Add multiple tasks by host"""
-#     task_2 = {
-#         "gid": gid,
-#         "eid": str(uuid4()),
-#         "title": "foo",
-#         "amount": "100",
-#         "currency": "EUR",
-#         "payer": "~zod",
-#         "date": 1699182124,
-#         "involves": ["~zod"],
-#     }
-#     url = f"/apps/tahuti/api/groups/{gid}/tasks"
-#     response = zod.put(url, json=task_2)
+@pytest.mark.usefixtures("list_")
+def test_task_put_multi(zod, gid, task, tasks_schema):
+    """Add multiple tasks by host"""
+    task_2 = {
+        "gid": gid,
+        "tid": str(uuid4()),
+        "title": "book a train ticket (return)",
+        "desc": "blah",
+        "date": 1699182124,
+        "done": False,
+        "tags": ["#areas"],
+    }
+    url = f"/apps/maat/api/lists/{gid}/tasks"
+    response = zod.put(url, json=task_2)
 
-#     # GET /tasks
-#     response = zod.get(url)
-#     assert response.status_code == 200
-#     result = response.json()
-#     assert tasks_schema.is_valid(result)
-#     assert set([task["eid"], task_2["eid"]]) <= set([r["eid"] for r in result])
+    # GET /tasks
+    response = zod.get(url)
+    assert response.status_code == 200
+    result = response.json()
+    assert tasks_schema.is_valid(result)
+    assert set([task["tid"], task_2["tid"]]) <= set([r["tid"] for r in result])
 
 
 # @pytest.mark.usefixtures("group", "member")
@@ -170,7 +169,7 @@ def test_tasks_put(zod, gid):
 #         "date": 1699182124,
 #         "involves": ["~zod"],
 #     }
-#     url = f"/apps/tahuti/api/groups/{gid}/tasks"
+#     url = f"/apps/maat/api/groups/{gid}/tasks"
 
 #     # PUT /tasks by nus
 #     response = nus.put(url, json=task)
@@ -187,33 +186,33 @@ def test_tasks_put(zod, gid):
 #         assert task == result
 
 
-# @pytest.mark.usefixtures("group", "task")
-# def test_task_delete(zod, gid, eid):
-#     # DELETE /tasks/{eid}
-#     url = f"/apps/tahuti/api/groups/{gid}/tasks/{eid}"
-#     response = zod.delete(url)
-#     assert response.status_code == 200
+@pytest.mark.usefixtures("list_", "task")
+def test_task_delete(zod, gid, tid):
+    # DELETE /tasks/{eid}
+    url = f"/apps/maat/api/lists/{gid}/tasks/{tid}"
+    response = zod.delete(url)
+    assert response.status_code == 200
 
-#     # GET /tasks
-#     url = f"/apps/tahuti/api/groups/{gid}/tasks"
-#     response = zod.get(url)
-#     assert response.status_code == 200
-#     result = response.json()
-#     ids = [r["eid"] for r in result]
-#     assert eid not in ids
+    # GET /tasks
+    url = f"/apps/maat/api/lists/{gid}/tasks"
+    response = zod.get(url)
+    assert response.status_code == 200
+    result = response.json()
+    ids = [r["tid"] for r in result]
+    assert tid not in ids
 
 
 # @pytest.mark.usefixtures("group", "member", "task")
 # def test_task_delete_by_nus(zod, nus, gid, eid):
 #     # DELETE /tasks/{eid} by nus
 #     sleep(0.5)  # wait for successful join
-#     url = f"/apps/tahuti/api/groups/{gid}/tasks/{eid}"
+#     url = f"/apps/maat/api/groups/{gid}/tasks/{eid}"
 #     response = nus.delete(url)
 #     assert response.status_code == 200
 
 #     # GET /tasks for zod and nus
 #     sleep(0.5)  # wait for successful poke
-#     url = f"/apps/tahuti/api/groups/{gid}/tasks"
+#     url = f"/apps/maat/api/groups/{gid}/tasks"
 #     for ship in (zod, nus):
 #         response = ship.get(url)
 #         assert response.status_code == 200
@@ -225,12 +224,12 @@ def test_tasks_put(zod, gid):
 # @pytest.mark.usefixtures("group_public", "task")
 # def test_task_delete_public(zod, gid, eid):
 #     # DELETE /tasks/{eid}
-#     url = f"http://localhost:8080/apps/tahuti/api/groups/{gid}/tasks/{eid}"
+#     url = f"http://localhost:8080/apps/maat/api/groups/{gid}/tasks/{eid}"
 #     response = requests.delete(url)
 #     assert response.status_code == 200
 
 #     # GET /tasks
-#     url = f"/apps/tahuti/api/groups/{gid}/tasks"
+#     url = f"/apps/maat/api/groups/{gid}/tasks"
 #     response = zod.get(url)
 #     assert response.status_code == 200
 #     result = response.json()
@@ -238,9 +237,9 @@ def test_tasks_put(zod, gid):
 #     assert eid not in ids
 
 
-# @pytest.mark.usefixtures("group", "task")
-# def test_task_delete_unauthorized(gid, eid):
-#     # DELETE /tasks/{eid}
-#     url = f"http://localhost:8080/apps/tahuti/api/groups/{gid}/tasks/{eid}"
-#     response = requests.delete(url)
-#     assert response.status_code == 401
+@pytest.mark.usefixtures("list_", "task")
+def test_task_delete_unauthorized(gid, tid):
+    # DELETE /tasks/{eid}
+    url = f"http://localhost:8080/apps/maat/api/lists/{gid}/tasks/{tid}"
+    response = requests.delete(url)
+    assert response.status_code == 401

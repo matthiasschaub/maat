@@ -85,6 +85,7 @@
       :: task action
       ::
       [%add-task =gid =task]
+      [%del-task =gid =tid]
   ==
 ::
 ::    output events/updater

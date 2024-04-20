@@ -217,6 +217,19 @@
             (send [200 ~ [%plain "ok"]])
           [%pass ~ %agent [our.bowl %maat] %poke %maat-action !>(action)]
         state
+      ::
+          [%apps %maat %api %lists @t %tasks @t ~]
+        ?.  auth
+          [(send [401 ~ [%plain "401 - Unauthorized"]]) state]
+        ~&  >  '%tahuti-api: DELETE /tasks/{tid}'
+        =/  gid       (snag 4 `(list @t)`site)
+        =/  tid       (snag 6 `(list @t)`site)
+        =/  action    [%del-task gid tid]
+        :-  ^-  (list card)
+          %+  snoc
+            (send [200 ~ [%plain "ok"]])
+          [%pass ~ %agent [our.bowl %maat] %poke %maat-action !>(action)]
+        state
       ==
     ==
   --

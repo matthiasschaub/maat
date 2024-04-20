@@ -72,3 +72,19 @@ def list_public(zod, gid) -> dict:
     url = "/apps/maat/api/lists"
     zod.put(url, json=list_)
     return list_
+
+
+@pytest.fixture
+def task(zod, gid, tid) -> dict:
+    task = {
+        "gid": gid,
+        "tid": tid,
+        "title": "book a train ticket",
+        "desc": "blah",
+        "date": 1699182124,
+        "done": False,
+        "tags": ["#areas"],
+    }
+    url = f"/apps/maat/api/lists/{gid}/tasks"
+    zod.put(url, json=task)
+    return task

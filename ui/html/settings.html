@@ -22,6 +22,9 @@
         <pre hidden id="error-pre"></pre>
       </div>
     </header>
+    <div id="overlay" class="overlay htmx-indicator htmx-request">
+      <img class="spinner" src="/apps/maat/circles.svg" />
+    </div>
     <div class="with-sidebar">
       <div>
         <!-- sidebar -->
@@ -70,7 +73,6 @@
       </div>
       <div>
         <!-- non-sidebar -->
-        <h2>Settings</h2>
         <main>
           <div
             hx-get="/api/lists/{gid}"
@@ -78,7 +80,7 @@
             mustache-template="list-template"
           ></div>
           <template id="list-template">
-            <h2>{{title}}</h2>
+            <h2>Settings</h2>
 
             <h3>Details</h3>
             <table class="col-two">
@@ -99,6 +101,15 @@
               </tbody>
             </table>
           </template>
+
+          <h3>Export tasks</h3>
+          <p>
+            <a
+              onclick="window.location.pathname = '/apps/maat/api/lists/' + gid() + '/tasks'"
+              >Download</a
+            >
+            all expenses of this group as JSON.
+          </p>
 
           <h3>Delete list</h3>
           <p>
