@@ -18,7 +18,6 @@
 ::
 ::    general
 ::
-+$  id       @tas
 +$  title    @t
 +$  member   @tas
 +$  ship     @p
@@ -30,12 +29,15 @@
 ::
 ::    task
 ::
++$  gid      @tas
++$  tid      @tas
 +$  desc     @t
 +$  date     @da
 +$  done     ?
 +$  task
   $:
-    =id
+    =gid
+    =tid
     =title
     =desc
     =date
@@ -49,7 +51,7 @@
 +$  public   ?
 +$  group
   $:
-    =id
+    =gid
     =title
     =host
     =public
@@ -61,15 +63,15 @@
 ::
 +$  acl      (set ship)
 +$  reg      (set member)
-+$  led      (map id task)
++$  led      (map tid task)
 ::
 ::   maps
 ::
-+$  groups   (map id group)
-+$  acls     (map id acl)
-+$  regs     (map id reg)
-+$  leds     (map id led)
-+$  invs     (map id group)
++$  groups   (map gid group)
++$  acls     (map gid acl)
++$  regs     (map gid reg)
++$  leds     (map gid led)
++$  invs     (map gid group)
 ::
 ::    input requests/actions
 ::
@@ -78,7 +80,11 @@
       :: group actions
       ::
       [%add-group =group]
-      [%del-group =id]
+      [%del-group =gid]
+      ::
+      :: task action
+      ::
+      [%add-task =gid =task]
   ==
 ::
 ::    output events/updater
@@ -86,9 +92,9 @@
 ::  these are all the possible events that can be sent to subscribers.
 ::
 +$  update
-  $%  [%group =id =group =acl =reg =led]
-      [%acl =id =acl]
-      [%reg =id =reg]
-      [%led =id =led]
+  $%  [%group =gid =group =acl =reg =led]
+      [%acl =gid =acl]
+      [%reg =gid =reg]
+      [%led =gid =led]
     ==
 --

@@ -71,8 +71,8 @@
     =+  auth=authenticated.inbound-request
     =/  public=?
         ?:  (gte (lent site) 5)
-          =/  id   (snag 4 site)
-          =/  path  /(scot %p our.bowl)/maat/(scot %da now.bowl)/[id]/noun
+          =/  gid   (snag 4 site)
+          =/  path  /(scot %p our.bowl)/maat/(scot %da now.bowl)/[gid]/noun
           =,  .^([=group =acl =reg =led] %gx path)
           public.group
         %.n
@@ -104,23 +104,23 @@
         ==
         ::
           [%apps %maat %api %lists @t ~]
-        =/  id       (snag 4 `(list @t)`site)
-        =/  path  /(scot %p our.bowl)/maat/(scot %da now.bowl)/[id]/noun
+        =/  gid       (snag 4 `(list @t)`site)
+        =/  path  /(scot %p our.bowl)/maat/(scot %da now.bowl)/[gid]/noun
         =,  .^([=group =acl =reg =led] %gx path)
         [(send [200 ~ [%json (group:enjs group)]]) state]
         ::
           [%apps %maat %api %lists @t @t ~]
         ::  get state of a group
-        =/  id    (snag 4 `(list @t)`site)
-        =/  path  /(scot %p our.bowl)/maat/(scot %da now.bowl)/[id]/noun
+        =/  gid    (snag 4 `(list @t)`site)
+        =/  path  /(scot %p our.bowl)/maat/(scot %da now.bowl)/[gid]/noun
         =/  endpoint  (snag 5 `(list @t)`site)
         =,  .^([=group =acl =reg =led] %gx path)
         ?+  endpoint
           [(send [404 ~ [%plain "404 - Not Found"]]) state]
           ::
-            :: %version
-          :: [(send [200 ~ [%json (version:enjs '2024-04-09.1')]]) state]
-          ::
+             %version
+           [(send [200 ~ [%json (version:enjs '2024-04-09.1')]]) state]
+           ::
             ::%members
           ::::  FIX: does not work due to reg containing non Urbit-ID
           ::::    members which get filtered out when comparing against
@@ -176,7 +176,20 @@
               .=(title ' ')
             ==
           [(send [422 ~ [%plain "422 - Unprocessable Entity"]]) state]
-        =/  action    [%add-group [id title host=our.bowl public]]
+        =/  action    [%add-group [gid title host=our.bowl public]]
+        :-  ^-  (list card)
+          %+  snoc
+            (send [200 ~ [%plain "ok"]])
+          [%pass ~ %agent [our.bowl %maat] %poke %maat-action !>(action)]
+        state
+        ::
+          [%apps %maat %api %lists @t %tasks ~]
+        =/  gid       (snag 4 `(list @t)`site)
+        =/  content   (need (de:json:html q.u.body.request.inbound-request))
+        =/  task      (task:dejs content)
+        ?:  ?|(=(title.task '') =(title.task ' '))
+          [(send [422 ~ [%plain "422 - Unprocessable Entity"]]) state]
+        =/  action    [%add-task gid task]
         :-  ^-  (list card)
           %+  snoc
             (send [200 ~ [%plain "ok"]])
@@ -192,12 +205,12 @@
           [%apps %maat %api %lists @t ~]
         ?.  auth
           [(send [401 ~ [%plain "401 - Unauthorized"]]) state]
-        =/  id        (snag 4 `(list @t)`site)
-        =/  path  /(scot %p our.bowl)/maat/(scot %da now.bowl)/[id]/noun
+        =/  gid        (snag 4 `(list @t)`site)
+        =/  path  /(scot %p our.bowl)/maat/(scot %da now.bowl)/[gid]/noun
         =,  .^([=group =acl =reg =led] %gx path)
         ?.  .=(our.bowl host.group)
           [(send [403 ~ [%plain "Forbidden"]]) state]
-        =/  action    [%del-group id]
+        =/  action    [%del-group gid]
         :-  ^-  (list card)
           %+  snoc
             (send [200 ~ [%plain "ok"]])

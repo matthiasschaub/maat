@@ -51,7 +51,7 @@ def gid():
 @pytest.fixture
 def list_(zod, gid) -> dict:
     list_ = {
-        "id": gid,
+        "gid": gid,
         "title": "assembly",
         "host": "~zod",
         "public": False,
@@ -64,7 +64,7 @@ def list_(zod, gid) -> dict:
 @pytest.fixture
 def list_public(zod, gid) -> dict:
     list_ = {
-        "id": gid,
+        "gid": gid,
         "title": "assembly",
         "host": "~zod",
         "public": True,

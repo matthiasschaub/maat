@@ -73,33 +73,63 @@
           .=(our.bowl src.bowl)
           .=(our.bowl host.group.action)
         ==
-    ?<  (~(has by groups) id.group.action)
+    ?<  (~(has by groups) gid.group.action)
     :-  ^-  (list card)
         ~
     %=  this
-      groups  (~(put by groups) id.group.action group.action)
-      acls    (~(put by acls) id.group.action ~)
-      regs    (~(put by regs) id.group.action ~)
-      leds    (~(put by leds) id.group.action ~)
+      groups  (~(put by groups) gid.group.action group.action)
+      acls    (~(put by acls) gid.group.action ~)
+      regs    (~(put by regs) gid.group.action ~)
+      leds    (~(put by leds) gid.group.action ~)
     ==
     ::  (delete group and kick all subscribers)
       ::
       %del-group
     ~&  >  '%maat (on-poke): delete group'
-    =/  group  (~(got by groups) id.action)
+    =/  group  (~(got by groups) gid.action)
     ?>  ?&
           .=(our.bowl src.bowl)
           .=(our.bowl host.group)
         ==
     :-  ^-  (list card)
-        :~  [%give %kick [/[id.action] ~] ~]
+        :~  [%give %kick [/[gid.action] ~] ~]
         ==
     %=  this
-      groups   (~(del by groups) id.action)
-      acls     (~(del by acls) id.action)
-      regs     (~(del by regs) id.action)
-      leds     (~(del by leds) id.action)
-      invs     (~(del by invs) id.action)
+      groups   (~(del by groups) gid.action)
+      acls     (~(del by acls) gid.action)
+      regs     (~(del by regs) gid.action)
+      leds     (~(del by leds) gid.action)
+      invs     (~(del by invs) gid.action)
+    ==
+    ::
+      %add-task
+    ~&  >  '%maat (on-poke): add task'
+    =/  group  (~(got by groups) gid.action)
+    =/  acl    (~(got by acls) gid.action)
+    =/  reg    (~(got by regs) gid.action)
+    ?>  ?|
+          (~(has in reg) `@tas`(scot %p src.bowl))
+          .=(src.bowl host.group)
+        ==
+    ?>  ?|
+          (~(has in acl) src.bowl)
+          .=(src.bowl host.group)
+        ==
+    ?.  =(our.bowl host.group)
+      :-  ^-  (list card)
+        :~  [%pass ~ %agent [host.group %maat] %poke %maat-action !>(action)]
+        ==
+      this
+    =/  led  (~(got by leds) gid.action)
+    =.  led  (~(put by led) tid.task.action task.action)
+    :-  ^-  (list card)
+      :~
+        :*  %give  %fact  [/[gid.action] ~]  %maat-update
+            !>  ^-  update  [%led gid.action led]
+        ==
+      ==
+    %=  this
+      leds  (~(put by leds) gid.action led)
     ==
   ==
 ++  on-arvo  on-arvo:default
@@ -112,20 +142,20 @@
   ?+  path  ~|('%maat (on-watch)' (on-watch:default path))
     ::  (send group data only to the new subscriber)
       ::
-      [=id ~]
+      [=gid ~]
     ~&  >  '%maat (on-watch)'
-    =/  group  (~(got by groups) id.path)
-    =/  acl    (~(got by acls) id.path)
-    =/  reg    (~(got by regs) id.path)
-    =/  led    (~(got by leds) id.path)
+    =/  group  (~(got by groups) gid.path)
+    =/  acl    (~(got by acls) gid.path)
+    =/  reg    (~(got by regs) gid.path)
+    =/  led    (~(got by leds) gid.path)
     ?>  (~(has in acl) src.bowl)
-    =/  reg    (~(got by regs) id.path)
+    =/  reg    (~(got by regs) gid.path)
     =.  reg  (~(put in reg) `@tas`(scot %p src.bowl))
     :-  ^-  (list card)
-        :~  (do-update [%group id.path group acl reg led])
+        :~  (do-update [%group gid.path group acl reg led])
         ==
     %=  this
-      regs  (~(put by regs) id.path reg)
+      regs  (~(put by regs) gid.path reg)
     ==
   ==
 ::
@@ -137,15 +167,15 @@
   ?+  path  ~|('%maat (on-leave)' (on-leave:default path))
     ::  (remove from access-control list)
       ::
-      [=id ~]
+      [=gid ~]
     ~&  >  '%maat (on-leave)'
-    =/  acl  (~(got by acls) id.path)
+    =/  acl  (~(got by acls) gid.path)
     =.  acl  (~(del in acl) src.bowl)
     :-  ^-  (list card)
-      :~  (do-update [%acl id.path acl])
+      :~  (do-update [%acl gid.path acl])
       ==
     %=  this
-      acls  (~(put by acls) id.path acl)
+      acls  (~(put by acls) gid.path acl)
     ==
   ==
 ::
@@ -160,14 +190,14 @@
     ~&  >  '%maat (on-peek): send list of groups'
     [~ ~ [%noun !>(groups.this)]]
     ::
-      [%x =id ~]
+      [%x =gid ~]
     ~&  >  '%maat (on-peek): send group data'
-    =/  group  (~(got by groups) id.path)
-    =/  acl    (~(got by acls) id.path)
-    =/  reg    (~(got by regs) id.path)
-    =/  led    (~(got by leds) id.path)
+    =/  group  (~(got by groups) gid.path)
+    =/  acl    (~(got by acls) gid.path)
+    =/  reg    (~(got by regs) gid.path)
+    =/  led    (~(got by leds) gid.path)
     =.  reg    (~(put in reg) `@tas`(scot %p host.group))
-    =/  reg    (~(got by regs) id.path)
+    =/  reg    (~(got by regs) gid.path)
     [~ ~ [%noun !>([group acl reg led])]]
   ==
 ::
@@ -188,47 +218,47 @@
       %fact
     ?>  ?=(%maat-update p.cage.sign)
     =/  =update  !<(update q.cage.sign)
-    =/  =id  `@tas`(head wire)
-    ?>  =(id id.update)
+    =/  =gid  `@tas`(head wire)
+    ?>  =(gid gid.update)
     :: ?>  =(our.bowl host.group.update)
     ?-  -.update
       ::
         %group
       ~&  >  '%maat (on-agent): update group'
       :-  ^-  (list card)
-          :~  (fact:agentio cage.sign [/[id] ~])
+          :~  (fact:agentio cage.sign [/[gid] ~])
           ==
       %=  this
-        groups   (~(put by groups) id group.update)
-        regs     (~(put by regs) id reg.update)
-        acls     (~(put by acls) id acl.update)
-        leds     (~(put by leds) id led.update)
+        groups   (~(put by groups) gid group.update)
+        regs     (~(put by regs) gid reg.update)
+        acls     (~(put by acls) gid acl.update)
+        leds     (~(put by leds) gid led.update)
       ==
       ::
         %acl
       ~&  >  '%maat (on-agent): update access-control list'
       :-  ^-  (list card)
-          :~  (fact:agentio cage.sign [/[id] ~])
+          :~  (fact:agentio cage.sign [/[gid] ~])
           ==
       %=  this
-        acls     (~(put by acls) id acl.update)
+        acls     (~(put by acls) gid acl.update)
       ==
       ::
         %reg
       ~&  >  '%maat (on-agent): update register'
       :-  ^-  (list card)
-          :~  (fact:agentio cage.sign [/[id] ~])
+          :~  (fact:agentio cage.sign [/[gid] ~])
           ==
       %=  this
-        regs  (~(put by regs) id reg.update)
+        regs  (~(put by regs) gid reg.update)
       ==
         %led
       ~&  >  '%maat (on-agent): update ledger'
       :-  ^-  (list card)
-          :~  (fact:agentio cage.sign [/[id] ~])
+          :~  (fact:agentio cage.sign [/[gid] ~])
           ==
       %=  this
-        leds     (~(put by leds) id led.update)
+        leds     (~(put by leds) gid led.update)
       ==
     ==
   ==
@@ -245,7 +275,7 @@
 ++  do-update
   |=  data=update
   ^-  card
-  =/  path  /[id.data]
+  =/  path  /[gid.data]
   =/  vase  !>  ^-  update  data
   [%give [%fact [path ~] [%maat-update vase]]]
 ::  (pass poke as task - or request action on agent)

@@ -38,7 +38,7 @@
       ^-  json
       %-  pairs:enjs:format
       :~
-        :-  'id'        [%s id.g]
+        :-  'gid'       [%s gid.g]
         :-  'title'     [%s title.g]
         :-  'host'      [%s (scot %p host.g)]
         :-  'public'    [%b public.g]
@@ -49,7 +49,24 @@
       |=  g=^groups
       ^-  json
       [%a (turn ~(val by g) group:enjs)]
-    --
+    ++  tag
+      |=  t=@t
+      ^-  json
+      [%s t]
+    ++  task
+      |=  t=^task
+      ^-  json
+      %-  pairs:enjs:format
+      :~
+        :-  'gid'       [%s gid.t]
+        :-  'tid'       [%s tid.t]
+        :-  'title'     [%s title.t]
+        :-  'desc'      [%s desc.t]
+        :-  'date'      (sect:enjs:format date.t)
+        :-  'done'      [%b done.t]
+        :-  'tags'      [%a (turn ~(tap in tags.t) tag:enjs)]
+      ==
+  --
 ::
 ++  dejs
   |%
@@ -66,12 +83,24 @@
       :-  %ship      (se:dejs:format %p)
     ==
   ++  group
-    ^-  $-(json [=id =title =public])
+    ^-  $-(json [=gid =title =public])
     %-  ot:dejs:format
     :~
-      :-  %id        so:dejs:format
+      :-  %gid       so:dejs:format
       :-  %title     so:dejs:format
       :-  %public    bo:dejs:format
+    ==
+  ++  task
+    ^-  $-(json ^task)
+    %-  ot:dejs:format
+    :~
+      :-  %gid       so:dejs:format
+      :-  %tid       so:dejs:format
+      :-  %title     so:dejs:format
+      :-  %desc      so:dejs:format
+      :-  %date      du:dejs:format
+      :-  %done      bo:dejs:format
+      :-  %tags      (as:dejs:format so:dejs:format):dejs:format
     ==
   --
 --

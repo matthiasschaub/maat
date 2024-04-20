@@ -11,7 +11,7 @@ def list_schema():
     """Response schema"""
     return Schema(
         {
-            "id": str,
+            "gid": str,
             "title": str,
             "host": str,
             "public": bool,
@@ -35,7 +35,7 @@ def test_lists_put_empty_payload(payload, zod):
 @pytest.mark.parametrize("title", (None, "", " "))
 def test_lists_put_invalid_title(title, zod):
     list_ = {
-        "lid": str(uuid4()),
+        "gid": str(uuid4()),
         "title": title,
         "public": False,
     }
@@ -54,7 +54,7 @@ def test_lists_put_invalid_title(title, zod):
 
 def test_lists_put(zod, uuid):
     list_ = {
-        "id": uuid,
+        "gid": uuid,
         "title": "assembly",
         "public": False,
     }
