@@ -1,4 +1,5 @@
 from time import sleep
+import time
 from uuid import uuid4
 
 import pytest
@@ -111,6 +112,29 @@ def test_lists_delete(zod, gid, list_):
     assert response.status_code == 200
     result = response.json()
     assert list_ not in result
+
+
+@pytest.mark.usefixtures("list_")
+def test_lists_update(zod, gid, list_):
+    list_2 = {
+        "gid": gid,
+        "title": "assembly2",
+        "host": "~zod",
+        "public": False,
+    }
+    assert list_ != list_2
+
+    url = f"/apps/maat/api/lists/{gid}"
+    response = zod.get(url)
+    result = response.json()
+    assert result == list_
+
+    url = "/apps/maat/api/lists"
+    zod.put(url, json=list_2)
+    url = f"/apps/maat/api/lists/{gid}"
+    response = zod.get(url)
+    result = response.json()
+    assert result == list_2
 
 
 # @pytest.mark.usefixtures("list_")

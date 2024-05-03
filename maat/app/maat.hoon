@@ -82,6 +82,23 @@
       regs    (~(put by regs) gid.group.action ~)
       leds    (~(put by leds) gid.group.action ~)
     ==
+    ::
+      %upt-group
+    ~&  >  '%maat (on-poke): update group'
+    =/  group  (~(got by groups) gid.group.action)
+    ?>  ?&
+          .=(our.bowl src.bowl)
+          .=(our.bowl host.group)
+        ==
+    ?>  ?&
+          .=(gid.group gid.group.action)
+          .=(host.group host.group.action)
+        ==
+    :-  ^-  (list card)
+        ~
+    %=  this
+      groups   (~(put by groups) gid.group group.action)
+    ==
     ::  (delete group and kick all subscribers)
       ::
       %del-group

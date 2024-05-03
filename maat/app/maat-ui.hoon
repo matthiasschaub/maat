@@ -15,12 +15,15 @@
 /*  svg-circle-plus           %svg    /app/ui/svg/circle-plus/svg
 /*  svg-circle-question       %svg    /app/ui/svg/circle-question/svg
 /*  svg-icon                  %svg    /app/ui/svg/icon/svg
-/*  woff2-soria               %woff2  /app/ui/woff2/soria/woff2
+/*  png-icon-16               %png    /app/ui/png/16/png
+/*  png-icon-180              %png    /app/ui/png/180/png
+/*  ttf-soria                 %ttf    /app/ui/ttf/soria/ttf
 /*  js-index                  %js     /app/ui/js/index/js
 /*  js-helper                 %js     /app/ui/js/helper/js
 /*  js-json-enc               %js     /app/ui/js/json-enc/js
 /*  js-path-deps              %js     /app/ui/js/path-deps/js
 /*  js-client-side-templates  %js     /app/ui/js/client-side-templates/js
+/*  json-manifest             %json   /app/ui/json/manifest/json
 ::
 |%
 +$  card  card:agent:gall
@@ -122,10 +125,17 @@
         [(send [200 ~ [%svg svg-circle-question]]) state]
       [%apps %maat %icon ~]
         [(send [200 ~ [%svg svg-icon]]) state]
+      ::  png
+      ::
+      [%apps %maat %icon180 ~]
+        [(send [200 ~ [%png png-icon-180]]) state]
+      [%apps %maat %icon16 ~]
+        [(send [200 ~ [%png png-icon-16]]) state]
       ::  woff2
       ::
       [%apps %maat %soria ~]
-        [(send [200 ~ [%font-woff2 q.woff2-soria]]) state]
+        :: [(send [200 ~ [%font-ttf q.dat.ttf-soria]]) state]
+        [(send [200 ~ [%font-ttf q.ttf-soria]]) state]
       ::  js
       ::
       [%apps %maat %index ~]
@@ -138,7 +148,11 @@
         [(send [200 ~ [%js js-path-deps]]) state]
       [%apps %maat %client-side-templates ~]
         [(send [200 ~ [%js js-client-side-templates]]) state]
-        ::  html
+      ::  json
+      ::
+      [%apps %maat %manifest ~]
+        [(send [200 ~ [%json json-manifest]]) state]
+      ::  html
       ::
       [%apps %maat %lists @t @t ~]
         =/  endpoint  (snag 4 `(list @t)`site)

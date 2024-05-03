@@ -26,6 +26,7 @@
     [%png p=@]
     [%svg p=@]
     [%font-woff2 p=@]
+    [%font-ttf p=@]
     ::
     [%login-redirect l=cord]
     [%hx-login-redirect l=cord]
@@ -84,6 +85,10 @@
     :_  `(as-octs:mimes:html p.resource)
     :-  http-status
     (weld headers ['content-type'^'fonts/woff2']~)
+      %font-ttf
+    :_  `(as-octs:mimes:html p.resource)
+    :-  http-status
+    (weld headers ['content-type'^'font/ttf']~)
     ::
       %login-redirect
     =+  %^  cat  3

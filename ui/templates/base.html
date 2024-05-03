@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Tasks</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="A Todo App for Urbit" />
+    <meta name="view-transition" content="same-origin" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Maat" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <link rel="apple-touch-icon" href="/apps/maat/icon180.png" />
+    <link rel="icon" href="/apps/maat/icon16.png" sizes="16x16" />
+    <link
+      rel="icon"
+      href="/apps/maat/icon.svg"
+      sizes="any"
+      type="image/svg+xml"
+    />
+    <link
+      rel="manifest"
+      href="/apps/maat/manifest.json"
+      crossorigin="use-credentials"
+    />
+    <link rel="stylesheet" href="/apps/maat/udjat.css" />
+    <link rel="stylesheet" href="/apps/maat/style.css" />
+    <link rel="preconnect" href="https://rsms.me/" />
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+    <script src="/apps/maat/index.js"></script>
+    <script src="/apps/maat/path-deps.js"></script>
+    <script src="/apps/maat/json-enc.js"></script>
+    <script src="/apps/maat/client-side-templates.js"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/debug.js"></script>
+  </head>
+
+  <body hx-boost="true" hx-ext="client-side-templates,path-deps">
+    <header>
+      <div id="error-div" class="error">
+        <pre hidden id="error-pre"></pre>
+      </div>
+    </header>
+    <div id="overlay" class="overlay htmx-indicator htmx-request">
+      <img class="spinner" src="/apps/maat/circles.svg" />
+    </div>
+    <div class="with-sidebar">
+      <div hx-indicator="#overlay">$sidebar</div>
+      <div>$main</div>
+    </div>
+    <script src="/apps/maat/helper.js"></script>
+  </body>
+</html>

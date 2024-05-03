@@ -104,16 +104,70 @@ def test_tasks_put(zod, gid):
 #     assert response.status_code == 401
 
 
-# @pytest.mark.usefixtures("group", "member_nus", "task")
-# def test_tasks_get(zod, nus, gid, eid, tasks_schema):
-#     sleep(0.5)
-#     url = f"/apps/maat/api/groups/{gid}/tasks"
-#     for pal in (zod, nus):
-#         response = pal.get(url)
-#         assert response.status_code == 200
-#         result = response.json()
-#         assert tasks_schema.is_valid(result)
-#         assert eid in ([r["eid"] for r in result])
+@pytest.mark.usefixtures("list_", "task")
+def test_tasks_get_all(zod, gid, tid, tasks_schema):
+    url = f"/apps/maat/api/lists/{gid}/tasks"
+    response = zod.get(url)
+    assert response.status_code == 200
+    result = response.json()
+    assert tasks_schema.is_valid(result)
+    assert tid in ([r["tid"] for r in result])
+
+
+@pytest.mark.usefixtures("list_")
+def test_tasks_get_single(zod, gid, tid, task, task_schema):
+    url = f"/apps/maat/api/lists/{gid}/tasks/{tid}"
+    response = zod.get(url)
+    assert response.status_code == 200
+    result = response.json()
+    assert task_schema.is_valid(result)
+    assert task == result
+
+
+@pytest.mark.usefixtures("list_")
+def test_tasks_update(zod, gid, tid, task):
+    task2 = {
+        "gid": gid,
+        "tid": tid,
+        "title": "book a train ticket",
+        "desc": "blah blah",
+        "date": 1699182124,
+        "done": False,
+        "tags": ["#areas"],
+    }
+    assert task != task2
+
+    url = f"/apps/maat/api/lists/{gid}/tasks/{tid}"
+    response = zod.get(url)
+    result = response.json()
+    assert result == task
+
+    url = f"/apps/maat/api/lists/{gid}/tasks"
+    zod.put(url, json=task2)
+    url = f"/apps/maat/api/lists/{gid}/tasks/{tid}"
+    response = zod.get(url)
+    result = response.json()
+    assert result == task2
+
+
+@pytest.mark.usefixtures("list_", "task")
+def test_tasks_get_filter_undone(zod, gid, tid, tasks_schema):
+    url = f"/apps/maat/api/lists/{gid}/tasks?done=false"
+    response = zod.get(url)
+    assert response.status_code == 200
+    result = response.json()
+    assert tasks_schema.is_valid(result)
+    assert tid in ([r["tid"] for r in result])
+
+
+@pytest.mark.usefixtures("list_", "task")
+def test_tasks_get_filter_done(zod, gid, tid, tasks_schema):
+    url = f"/apps/maat/api/lists/{gid}/tasks?done=true"
+    response = zod.get(url)
+    assert response.status_code == 200
+    result = response.json()
+    assert tasks_schema.is_valid(result)
+    assert tid not in ([r["tid"] for r in result])
 
 
 # @pytest.mark.usefixtures("group_public", "task")

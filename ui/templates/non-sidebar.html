@@ -1,0 +1,119 @@
+<!-- non-sidebar (main) -->
+<!-- <datalist id="tags"> -->
+<!--   <option>#hastag</option> -->
+<!--   <option>#tag</option> -->
+<!-- </datalist> -->
+<!--   <form method="get" action="#"> -->
+<!--     <fieldset> -->
+<!--       <input -->
+<!--         list="tags" -->
+<!--         name="task" -->
+<!--         type="text" -->
+<!--         id="task" -->
+<!--         autocomplete="off" -->
+<!--         placeholder="Filter by tags" -->
+<!--       /> -->
+<!--     </fieldset> -->
+<!--   </form> -->
+<h2
+  id="list"
+  hx-get="/api/lists/{gid}"
+  hx-trigger="load, path-deps"
+  path-deps="/apps/maat/api/lists/*/tasks"
+  mustache-template="list-template"
+></h2>
+<template id="list-template"
+  >{{title}}<img
+    style="visibility: hidden"
+    class="svg-ico"
+    src="/apps/maat/icon.svg"
+/></template>
+<ul id="filter-tasks">
+  <li>
+    <a class="icon icon-circle-question"></a>
+    <input class="inline-input" placeholder="Filter by tags" />
+  </li>
+</ul>
+<ul
+  id="tasks"
+  hx-get="/api/lists/{gid}/tasks"
+  hx-trigger="load, path-deps"
+  path-deps="/apps/maat/api/lists/*/tasks"
+  mustache-template="tasks-template"
+></ul>
+<template id="tasks-template">
+  {{#.}}
+  <li>
+    <a
+      id="{{tid}}"
+      class="icon icon-circle"
+      hx-put="/api/lists/{{gid}}/tasks"
+      hx-vals='{"gid": "{{gid}}", "tid": {{tid}}}, "desc": {{desc}}, "date": {{date}}, "done": "true", "tags": {{tags}}'
+      hx-trigger="click"
+    >
+    </a>
+    {{title}} <small><em>{{tags}}</em></small>
+    {{/.}}
+  </li>
+</template>
+<!-- <li> -->
+<!--   <a class="icon icon-circle-checked"> </a> -->
+<!--   <s>Cheese</s> -->
+<!-- </li> -->
+<ul>
+  <li>
+    <a class="icon icon-circle-plus"></a>
+    <form
+      id="put-tasks"
+      class="inline-form"
+      hx-put="/api/lists/{gid}/tasks"
+      hx-ext="json-enc"
+      hx-swap="none"
+      hx-vals="js:{tid: self.crypto.randomUUID(), gid: gid(), desc: '', date: new Date().valueOf(), done: false, tags: []}"
+      hx-on::after-request="if(event.detail.successful) this.reset();"
+    >
+      <!-- hx-on::after-request="document.getElementById('put-tasks').reset();"> -->
+      <input
+        class="inline-input"
+        name="title"
+        type="text"
+        placeholder="Add new task"
+      />
+    </form>
+  </li>
+</ul>
+<!-- <div class="done"> -->
+<!--   <h3>Done</h3> -->
+<!--   <ul> -->
+<!--     <li> -->
+<!--       <a class="icon icon-circle-checked"> </a> -->
+<!--       Bread -->
+<!--     </li> -->
+<!--     <li> -->
+<!--       <a class="icon icon-circle-checked"> </a> -->
+<!--       Milk -->
+<!--     </li> -->
+<!--     <li> -->
+<!--       <a class="icon icon-circle-checked"> </a> -->
+<!--       Apples -->
+<!--     </li> -->
+<!--     <li> -->
+<!--       <a class="icon icon-circle-checked"> </a> -->
+<!--       Grapefruit -->
+<!--     </li> -->
+<!--     <li> -->
+<!--       <a class="icon icon-circle-checked"> </a> -->
+<!--       Cat food -->
+<!--     </li> -->
+<!--     <li> -->
+<!--       <a class="icon icon-circle-checked"> </a> -->
+<!--       Cheese -->
+<!--     </li> -->
+<!--     <li> -->
+<!--       <a class="icon icon-circle-checked"> </a> -->
+<!--       Wine -->
+<!--     </li> -->
+<!--   </ul> -->
+<!-- </div> -->
+<!-- </main> -->
+

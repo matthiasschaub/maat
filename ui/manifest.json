@@ -1,0 +1,40 @@
+{
+  "lang": "en-us",
+  "name": "Maat",
+  "description": "A Todo App for Urbit",
+  "start_url": "/apps/maat",
+  "scope": "/apps/maat",
+  "background_color": "#fffff3",
+  "theme_color": "#fffff3",
+  "orientation": "any",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "/apps/maat/icon64.png",
+      "type": "image/png",
+      "sizes": "64x64"
+    },
+    {
+      "src": "/apps/maat/icon192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/apps/maat/icon180.png",
+      "type": "image/png",
+      "sizes": "180x180"
+    },
+    {
+      "src": "/apps/maat/icon512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    },
+    {
+      "src": "/apps/maat/icon512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+<!-- sidebar -->
+<nav>
+  <div class="header-icon">
+    <h2><img class="svg-ico" src="/apps/maat/icon.svg" />MAAT</h2>
+  </div>
+  <ul
+    id="lists"
+    hx-get="/api/lists"
+    hx-trigger="load, path-deps"
+    path-deps="/apps/maat/api/lists"
+    mustache-template="lists-template"
+  ></ul>
+  <template id="lists-template">
+    <!-- iterate over array of response object -->
+    {{#.}}
+    <li>
+      <a href="/lists/{{gid}}/tasks#filter-tasks">{{title}}</a>
+    </li>
+    {{/.}}
+  </template>
+  <ul>
+    <li>
+      <a>
+        <form
+          id="put-lists"
+          class="inline-form"
+          hx-put="/api/lists"
+          hx-ext="json-enc"
+          hx-swap="none"
+          hx-vals="js:{gid: self.crypto.randomUUID(), public: false}"
+          hx-on::after-request="if(event.detail.successful) this.reset();"
+        >
+          <input
+            class="inline-input"
+            name="title"
+            type="text"
+            placeholder="Add new list"
+            autocomplete="false"
+            spellcheck="false"
+            required
+          />
+        </form>
+      </a>
+    </li>
+    <li><a href="/lists/{gid}/settings">Settings</a></li>
+  </ul>
+</nav>

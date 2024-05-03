@@ -158,6 +158,13 @@
           ::=/  rei   .^(rei %gx path)
           ::[(send [200 ~ [%json (rei:enjs [rei currency.group])]]) state]
         ==
+          [%apps %maat %api %lists @t %tasks @t ~]
+        =/  gid       (snag 4 `(list @t)`site)
+        =/  tid       (snag 6 `(list @t)`site)
+        =/  path  /(scot %p our.bowl)/maat/(scot %da now.bowl)/[gid]/noun
+        =,  .^([=group =acl =reg =led] %gx path)
+        =/  task      (~(got by led) tid)
+        [(send [200 ~ [%json (task:enjs task)]]) state]
       ==
         ::
       ::
@@ -231,6 +238,25 @@
           [%pass ~ %agent [our.bowl %maat] %poke %maat-action !>(action)]
         state
       ==
+        ::
+      ::
+      ::   %'PATCH'
+      :: ~&  >  '%maat-api: PATCH'
+      :: ?+  site  [(send [404 ~ [%plain "404 - Not Found"]]) state]
+      ::   ::
+      ::     [%apps %maat %api %lists @t %tasks @t ~]
+      ::   ?.  auth
+      ::     [(send [401 ~ [%plain "401 - Unauthorized"]]) state]
+      ::   ~&  >  '%tahuti-api: PATCH /tasks/{tid}'
+      ::   =/  gid       (snag 4 `(list @t)`site)
+      ::   =/  tid       (snag 6 `(list @t)`site)
+      ::   =/  action    [%upt-task gid tid]
+      ::   :-  ^-  (list card)
+      ::     %+  snoc
+      ::       (send [200 ~ [%plain "ok"]])
+      ::     [%pass ~ %agent [our.bowl %maat] %poke %maat-action !>(action)]
+      ::   state
+      :: ==
     ==
   --
 ++  on-arvo

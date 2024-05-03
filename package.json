@@ -1,7 +1,7 @@
 {
   "name": "maat",
   "scripts": {
-    "build": "node esbuild.mjs"
+    "build": "watch poetry run python ui/build.py & node esbuild.mjs"
   },
   "author": "~talfus-laddus",
   "license": "MIT",

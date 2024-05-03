@@ -80,6 +80,7 @@
       :: group actions
       ::
       [%add-group =group]
+      [%upt-group =group]
       [%del-group =gid]
       ::
       :: task action
