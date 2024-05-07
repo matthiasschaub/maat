@@ -1,7 +1,9 @@
 <main>
   <div
+    id="details"
     hx-get="/api/lists/{gid}"
-    hx-trigger="load"
+    hx-trigger="load, path-deps"
+    path-deps="/apps/maat/api/lists"
     mustache-template="list-template"
   ></div>
   <template id="list-template">
@@ -13,7 +15,6 @@
       />
     </h2>
     <h3>Details</h3>
-    <form method="PUT" id="update-list"></form>
     <table class="col-two">
       <thead></thead>
       <tbody>
@@ -31,43 +32,9 @@
         </tr>
       </tbody>
     </table>
-    <h3>Update list</h3>
-    <form
-      id="update-list"
-      hx-put="/api/lists"
-      hx-ext="json-enc"
-      hx-vals='{"gid": "{{gid}}", "host": "{{host}}"'
-    >
-      <fieldset>
-        <label for="update-title">Title:</label>
-        <input
-          autocomplete="false"
-          id="update-title"
-          name="title"
-          placeholder="{{title}}"
-          required
-          spellcheck="false"
-          type="text"
-          aria-label="Title"
-        />
-        <label for="update-public">Public:</label>
-        <select
-          autocomplete="false"
-          id="update-public"
-          name="public"
-          required
-          spellcheck="false"
-          type="text"
-          aria-label="Title"
-        >
-          <option>true</option>
-          <option>false</option>
-        </select>
-        <button type="submit">Update list ▸</button>
-      </fieldset>
-    </form>
   </template>
-
+  <h3>Update list</h3>
+  <p><a href="/lists/{gid}/edit">Update</a> this lists metadata.</p>
   <h3>Export tasks</h3>
   <p>
     <a

@@ -1,7 +1,7 @@
 :~  title+'Maat (alpha)'
     info+'A Todo App'
     color+0xff.fff3
-    image+''
+    image+'https://raw.githubusercontent.com/matthiasschaub/maat/main/ui/png/ios/512.png'
     base+'maat'
     site+/apps/maat
     version+[0 0 1]

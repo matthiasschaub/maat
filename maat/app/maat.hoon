@@ -95,7 +95,10 @@
           .=(host.group host.group.action)
         ==
     :-  ^-  (list card)
-        ~
+      ~
+      ::  TODO
+      :: :~  (do-update [%group gid.group group.action])
+      :: ==
     %=  this
       groups   (~(put by groups) gid.group group.action)
     ==
@@ -144,6 +147,39 @@
         :*  %give  %fact  [/[gid.action] ~]  %maat-update
             !>  ^-  update  [%led gid.action led]
         ==
+      ==
+    %=  this
+      leds  (~(put by leds) gid.action led)
+    ==
+    ::
+      %upt-task
+    ~&  >  '%maat (on-poke): update task'
+    =/  group  (~(got by groups) gid.action)
+    =/  acl    (~(got by acls) gid.action)
+    =/  reg    (~(got by regs) gid.action)
+    ?>  ?|
+          (~(has in reg) `@tas`(scot %p src.bowl))
+          .=(src.bowl host.group)
+        ==
+    ?>  ?|
+          (~(has in acl) src.bowl)
+          .=(src.bowl host.group)
+        ==
+    ?.  =(our.bowl host.group)
+      :-  ^-  (list card)
+        :~  (do-action [host.group action])
+        ==
+      this
+    =/  led   (~(got by leds) gid.action)
+    =/  task  (~(got by led) tid.task.action)
+    ?>  ?&
+          .=(gid.task gid.task.action)
+          .=(tid.task tid.task.action)
+          .=(date.task date.task.action)
+        ==
+    =.  led  (~(put by led) tid.task.action task.action)
+    :-  ^-  (list card)
+      :~  (do-update [%led gid.action led])
       ==
     %=  this
       leds  (~(put by leds) gid.action led)
@@ -240,8 +276,6 @@
     =/  acl    (~(got by acls) gid.path)
     =/  reg    (~(got by regs) gid.path)
     =/  led    (~(got by leds) gid.path)
-    =.  reg    (~(put in reg) `@tas`(scot %p host.group))
-    =/  reg    (~(got by regs) gid.path)
     [~ ~ [%noun !>([group acl reg led])]]
   ==
 ::

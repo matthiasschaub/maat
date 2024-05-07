@@ -5,6 +5,7 @@ let ctx = await esbuild.context({
     "./ui/manifest.json",
     "./ui/html/index.html",
     "./ui/html/settings.html",
+    "./ui/html/edit-list.html",
     "./ui/css/udjat.css",
     "./ui/css/style.css",
     "./ui/css/soria.woff2",

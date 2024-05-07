@@ -67,6 +67,7 @@
     =/  request-line
       (parse-request-line:server url.request.inbound-request)
     =+  site=site.request-line
+    =+  args=args.request-line
     =+  send=(cury response:schooner eyre-id)
     =+  auth=authenticated.inbound-request
     =/  public=?
@@ -119,7 +120,7 @@
           [(send [404 ~ [%plain "404 - Not Found"]]) state]
           ::
              %version
-           [(send [200 ~ [%json (version:enjs '2024-04-09.1')]]) state]
+           [(send [200 ~ [%json (version:enjs '2024-05-06.1')]]) state]
            ::
             ::%members
           ::::  FIX: does not work due to reg containing non Urbit-ID
@@ -145,8 +146,15 @@
           ::[(send [200 ~ [%json (members:enjs invitees)]]) state]
           ::::
             %tasks
-          =/  val       ~(val by led)
-          =/  sorted    (sort val |=([a=task b=task] (gth date.a date.b)))
+          =/  filter
+            ?~  (find [[key='done' value='true'] ~] args)
+              |=(a=task .=(done.a %.n))
+            ?~  (find [[key='done' value='false'] ~] args)
+              |=(a=task .=(done.a %.y))
+            |=(a=task %.y)
+          =/  tasks   ~(val by led)
+          =.  tasks   (skim tasks filter)
+          =/  sorted  (sort tasks |=([a=task b=task] (gth date.a date.b)))
           [(send [200 ~ [%json (led:enjs sorted)]]) state]
           ::::
           ::  %balances
@@ -184,7 +192,12 @@
               .=(title ' ')
             ==
           [(send [422 ~ [%plain "422 - Unprocessable Entity"]]) state]
-        =/  action    [%add-group [gid title host=our.bowl public]]
+        =/  path      /(scot %p our.bowl)/maat/(scot %da now.bowl)/groups/noun
+        =/  groups    .^(groups %gx path)
+        =/  action
+          ?~  (~(get by groups) gid)
+            [%add-group [gid title host=our.bowl public]]
+          [%upt-group [gid title host=our.bowl public]]
         :-  ^-  (list card)
           %+  snoc
             (send [200 ~ [%plain "ok"]])

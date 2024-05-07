@@ -116,6 +116,7 @@ def test_lists_delete(zod, gid, list_):
 
 @pytest.mark.usefixtures("list_")
 def test_lists_update(zod, gid, list_):
+    """Put with existing ID."""
     list_2 = {
         "gid": gid,
         "title": "assembly2",

@@ -86,6 +86,7 @@
       :: task action
       ::
       [%add-task =gid =task]
+      [%upt-task =gid =task]
       [%del-task =gid =tid]
   ==
 ::

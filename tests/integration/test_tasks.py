@@ -132,7 +132,7 @@ def test_tasks_update(zod, gid, tid, task):
         "title": "book a train ticket",
         "desc": "blah blah",
         "date": 1699182124,
-        "done": False,
+        "done": True,
         "tags": ["#areas"],
     }
     assert task != task2
@@ -152,8 +152,9 @@ def test_tasks_update(zod, gid, tid, task):
 
 @pytest.mark.usefixtures("list_", "task")
 def test_tasks_get_filter_undone(zod, gid, tid, tasks_schema):
-    url = f"/apps/maat/api/lists/{gid}/tasks?done=false"
-    response = zod.get(url)
+    url = f"/apps/maat/api/lists/{gid}/tasks"
+    params = {"done": "false"}
+    response = zod.get(url, params=params)
     assert response.status_code == 200
     result = response.json()
     assert tasks_schema.is_valid(result)
@@ -162,8 +163,9 @@ def test_tasks_get_filter_undone(zod, gid, tid, tasks_schema):
 
 @pytest.mark.usefixtures("list_", "task")
 def test_tasks_get_filter_done(zod, gid, tid, tasks_schema):
-    url = f"/apps/maat/api/lists/{gid}/tasks?done=true"
-    response = zod.get(url)
+    url = f"/apps/maat/api/lists/{gid}/tasks"
+    params = {"done": "true"}
+    response = zod.get(url, params=params)
     assert response.status_code == 200
     result = response.json()
     assert tasks_schema.is_valid(result)

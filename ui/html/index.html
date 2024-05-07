@@ -66,7 +66,7 @@
     </li>
     {{/.}}
   </template>
-  <ul>
+  <ul class="sticky-bottom">
     <li>
       <a>
         <form
@@ -94,7 +94,7 @@
   </ul>
 </nav>
 </div>
-      <div><div>
+      <div><div id="main">
   <!-- non-sidebar -->
   <!-- <datalist id="tags"> -->
   <!--   <option>#hastag</option> -->
@@ -126,27 +126,55 @@
       class="svg-ico"
       src="/apps/maat/icon.svg"
   /></template>
-  <ul id="filter-tasks">
+  <ul class="sticky-top" id="filter-tasks">
     <li>
       <a class="icon icon-circle-question"></a>
-      <input class="inline-input" placeholder="Filter by tags" />
+      <form id="filter-tasks" class="inline-form">
+        <input class="inline-input" placeholder="Filter by tags" />
+      </form>
     </li>
   </ul>
   <ul
-    id="tasks"
+    id="tasks-todo"
     hx-get="/api/lists/{gid}/tasks"
+    hx-vals='{"done": "false"}'
     hx-trigger="load, path-deps"
     path-deps="/apps/maat/api/lists/*/tasks"
-    mustache-template="tasks-template"
+    mustache-template="tasks-todo-template"
   ></ul>
-  <template id="tasks-template">
+  <template id="tasks-todo-template">
     {{#.}}
     <li>
       <a
         id="{{tid}}"
         class="icon icon-circle"
         hx-put="/api/lists/{{gid}}/tasks"
-        hx-vals='{"gid": "{{gid}}", "tid": {{tid}}}, "desc": {{desc}}, "date": {{date}}, "done": "true", "tags": {{tags}}'
+        hx-vals='{"gid": "{{gid}}", "tid": "{{tid}}", "title": "{{title}}", "desc": "{{desc}}", "date": {{date}}, "done": true, "tags": []}'
+        hx-ext="json-enc"
+        hx-trigger="click"
+      >
+      </a>
+      {{title}} <small><em>{{tags}}</em></small>
+      {{/.}}
+    </li>
+  </template>
+  <ul
+    id="tasks-done"
+    hx-get="/api/lists/{gid}/tasks"
+    hx-vals='{"done": "true"}'
+    hx-trigger="load, path-deps"
+    path-deps="/apps/maat/api/lists/*/tasks"
+    mustache-template="tasks-done-template"
+  ></ul>
+  <template id="tasks-done-template">
+    {{#.}}
+    <li>
+      <a
+        id="{{tid}}"
+        class="icon icon-circle-checked"
+        hx-put="/api/lists/{{gid}}/tasks"
+        hx-vals='{"gid": "{{gid}}", "tid": "{{tid}}", "title": "{{title}}", "desc": "{{desc}}", "date": {{date}}, "done": false, "tags": []}'
+        hx-ext="json-enc"
         hx-trigger="click"
       >
       </a>
@@ -158,7 +186,7 @@
   <!--   <a class="icon icon-circle-checked"> </a> -->
   <!--   <s>Cheese</s> -->
   <!-- </li> -->
-  <ul>
+  <ul class="sticky-bottom">
     <li>
       <a class="icon icon-circle-plus"></a>
       <form
@@ -170,7 +198,6 @@
         hx-vals="js:{tid: self.crypto.randomUUID(), gid: gid(), desc: '', date: new Date().valueOf(), done: false, tags: []}"
         hx-on::after-request="if(event.detail.successful) this.reset();"
       >
-        <!-- hx-on::after-request="document.getElementById('put-tasks').reset();"> -->
         <input
           class="inline-input"
           name="title"

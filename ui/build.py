@@ -10,7 +10,7 @@ with open(base, "r") as f:
 
 sidebar = Path(templates_dir / "sidebar.html").read_text()
 
-for site in ("index.html", "settings.html"):
+for site in ("index.html", "settings.html", "edit-list.html"):
     main = Path(templates_dir / site).read_text()
     html = template.substitute(sidebar=sidebar, main=main)
     Path(html_dir / site).write_text(html)

@@ -7,6 +7,7 @@
 ::
 /*  html-index                %html   /app/ui/html/index/html
 /*  html-settings             %html   /app/ui/html/settings/html
+/*  html-edit-list            %html   /app/ui/html/edit-list/html
 /*  css-udjat                 %css    /app/ui/css/udjat/css
 /*  css-style                 %css    /app/ui/css/style/css
 /*  svg-circles               %svg    /app/ui/svg/circles/svg
@@ -159,6 +160,7 @@
         ?+  endpoint  [(send [404 ~ [%plain "404 - Not Found"]]) state]
           %tasks     [(send [200 ~ [%html html-index]]) state]
           %settings  [(send [200 ~ [%html html-settings]]) state]
+          %edit      [(send [200 ~ [%html html-edit-list]]) state]
           :: %settings
           ::   ?:  auth
           ::     ?:  .=(our.bowl host:(need group))

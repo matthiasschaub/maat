@@ -94,68 +94,72 @@
   </ul>
 </nav>
 </div>
-      <div><main>
-  <div
-    id="details"
-    hx-get="/api/lists/{gid}"
-    hx-trigger="load, path-deps"
-    path-deps="/apps/maat/api/lists"
-    mustache-template="list-template"
-  ></div>
-  <template id="list-template">
-    <h2>
-      Settings<img
-        style="visibility: hidden"
-        class="svg-ico"
-        src="/apps/maat/icon.svg"
+      <div><main
+  id="main"
+  hx-get="/api/lists/{gid}"
+  hx-trigger="load"
+  mustache-template="list-template"
+></main>
+<template id="list-template">
+  <h2>
+        Update <small>{{host}}/{{title}}</small><img
+      style="visibility: hidden"
+      class="svg-ico"
+      src="/apps/maat/icon.svg"
+    />
+  </h2>
+  <form
+    id="update-list"
+    hx-put="/api/lists"
+    hx-ext="json-enc"
+    hx-vals='{"gid": "{{gid}}"}'
+    hx-on::after-request='if(event.detail.successful) window.location.pathname = "/apps/maat/lists/" + gid() + "/settings";'
+  >
+    <fieldset>
+      <label for="update-title">Title:</label>
+      <input
+        autocomplete="false"
+        id="update-title"
+        name="title"
+        placeholder="{{title}}"
+        required
+        spellcheck="false"
+        type="text"
+        aria-label="Title"
       />
-    </h2>
-    <h3>Details</h3>
-    <table class="col-two">
-      <thead></thead>
-      <tbody>
-        <tr>
-          <th>Title</th>
-          <td>{{title}}</td>
-        </tr>
-        <tr>
-          <th>Host</th>
-          <td>{{host}}</td>
-        </tr>
-        <tr>
-          <th>Public</th>
-          <td>{{public}}</td>
-        </tr>
-      </tbody>
-    </table>
-  </template>
-  <h3>Update list</h3>
-  <p><a href="/lists/{gid}/edit">Update</a> this lists metadata.</p>
-  <h3>Export tasks</h3>
-  <p>
-    <a
-      onclick="window.location.pathname = '/apps/maat/api/lists/' + gid() + '/tasks'"
-      >Download</a
-    >
-    all expenses of this group as JSON.
-  </p>
-
-  <h3>Delete list</h3>
-  <p>
-    Permanently
-    <a
-      id="delete-list"
-      hx-delete="/api/lists/{gid}"
-      hx-confirm="Are you sure?"
-      hx-ext="json-enc"
-      hx-swap="none"
-      hx-vals="js:{gid: gid()}"
-      hx-on::after-request='if(event.detail.successful) window.location.pathname = "/apps/maat"'
-      >delete</a
-    >
-    this group.
-  </p>
-</main>
+      <label for="update-public">Public:</label>
+      <select
+        autocomplete="false"
+        id="update-public"
+        name="public"
+        required
+        spellcheck="false"
+        type="text"
+        aria-label="Title"
+      >
+        <option hidden disabled selected value> -- select an option -- </option>
+        <option>Yes</option>
+        <option>No</option>
+      </select>
+      <button type="submit">Update list ▸</button>
+    </fieldset>
+  </form>
+</template>
+<script>
+  var details = document.getElementById("main");
+  details.addEventListener("htmx:afterSettle", (event) => {
+    var form = document.getElementById("update-list");
+    form.addEventListener("htmx:configRequest", (event) => {
+      if ("public" in event.detail.parameters) {
+        if (event.detail.parameters["public"] === "Yes") {
+          event.detail.parameters.public = true;
+        } else {
+          event.detail.parameters.public = false;
+        }
+      }
+    });
+  });
+</script>
 </div>
     </div>
     <script src="/apps/maat/helper.js"></script>
