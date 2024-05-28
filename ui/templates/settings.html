@@ -7,14 +7,14 @@
     mustache-template="list-template"
   ></div>
   <template id="list-template">
-    <h2>
+    <h1>
       Settings<img
         style="visibility: hidden"
         class="svg-ico"
         src="/apps/maat/icon.svg"
       />
-    </h2>
-    <h3>Details</h3>
+    </h1>
+    <h2>Details</h2>
     <table class="col-two">
       <thead></thead>
       <tbody>
@@ -33,9 +33,9 @@
       </tbody>
     </table>
   </template>
-  <h3>Update list</h3>
+  <h2>Update list</h2>
   <p><a href="/lists/{gid}/edit">Update</a> this lists metadata.</p>
-  <h3>Export tasks</h3>
+  <h2>Export tasks</h2>
   <p>
     <a
       onclick="window.location.pathname = '/apps/maat/api/lists/' + gid() + '/tasks'"
@@ -44,7 +44,7 @@
     all expenses of this group as JSON.
   </p>
 
-  <h3>Delete list</h3>
+  <h2>Delete list</h2>
   <p>
     Permanently
     <a

@@ -24,7 +24,7 @@
       <a>
         <form
           id="put-lists"
-          class="inline-form"
+          class="inline"
           hx-put="/api/lists"
           hx-ext="json-enc"
           hx-swap="none"
@@ -32,7 +32,6 @@
           hx-on::after-request="if(event.detail.successful) this.reset();"
         >
           <input
-            class="inline-input"
             name="title"
             type="text"
             placeholder="Add new list"

@@ -17,24 +17,22 @@
   <!--     </fieldset> -->
   <!--   </form> -->
 
-  <h2
+  <h1
     id="list"
     hx-get="/api/lists/{gid}"
     hx-trigger="load, path-deps"
     path-deps="/apps/maat/api/lists/*/tasks"
     mustache-template="list-template"
-  ></h2>
+  ></h1>
   <template id="list-template"
-    >{{title}}<img
-      style="visibility: hidden"
-      class="svg-ico"
-      src="/apps/maat/icon.svg"
+    >{{title}}
+    <img style="visibility: hidden" class="svg-ico" src="/apps/maat/icon.svg"
   /></template>
   <ul class="sticky-top" id="filter-tasks">
     <li>
       <a class="icon icon-circle-question"></a>
-      <form id="filter-tasks" class="inline-form">
-        <input class="inline-input" placeholder="Filter by tags" />
+      <form id="filter-tasks" class="inline">
+        <input placeholder="Filter by tags" />
       </form>
     </li>
   </ul>
@@ -95,19 +93,14 @@
       <a class="icon icon-circle-plus"></a>
       <form
         id="put-tasks"
-        class="inline-form"
+        class="inline"
         hx-put="/api/lists/{gid}/tasks"
         hx-ext="json-enc"
         hx-swap="none"
         hx-vals="js:{tid: self.crypto.randomUUID(), gid: gid(), desc: '', date: new Date().valueOf(), done: false, tags: []}"
         hx-on::after-request="if(event.detail.successful) this.reset();"
       >
-        <input
-          class="inline-input"
-          name="title"
-          type="text"
-          placeholder="Add new task"
-        />
+        <input name="title" type="text" placeholder="Add new task" />
       </form>
     </li>
   </ul>

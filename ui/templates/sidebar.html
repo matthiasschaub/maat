@@ -1,7 +1,18 @@
 <!-- sidebar -->
 <nav>
   <div class="header-icon">
-    <h2><img class="svg-ico" src="/apps/maat/icon.svg" />MAAT</h2>
+    <h1>
+      <svg
+        class="svg-ico"
+        version="1.1"
+        viewBox="0 0 135.47 135.47"
+        xml:space="preserve"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <use xlink:href="/apps/maat/icon.svg#icon" />
+      </svg>
+      MAAT
+    </h1>
   </div>
   <ul
     id="lists"
@@ -23,7 +34,7 @@
       <a>
         <form
           id="put-lists"
-          class="inline-form"
+          class="inline"
           hx-put="/api/lists"
           hx-ext="json-enc"
           hx-swap="none"
@@ -31,7 +42,6 @@
           hx-on::after-request="if(event.detail.successful) this.reset();"
         >
           <input
-            class="inline-input"
             name="title"
             type="text"
             placeholder="Add new list"

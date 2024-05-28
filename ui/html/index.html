@@ -43,13 +43,58 @@
       </div>
     </header>
     <div id="overlay" class="overlay htmx-indicator htmx-request">
-      <img class="spinner" src="/apps/maat/circles.svg" />
+      <div class="spinner">
+        <svg
+          class="spinner"
+          width="35"
+          height="35"
+          viewBox="0 0 135 135"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="var(--color-primary)"
+        >
+          <path
+            d="M67.447 58c5.523 0 10-4.477 10-10s-4.477-10-10-10-10 4.477-10 10 4.477 10 10 10zm9.448 9.447c0 5.523 4.477 10 10 10 5.522 0 10-4.477 10-10s-4.478-10-10-10c-5.523 0-10 4.477-10 10zm-9.448 9.448c-5.523 0-10 4.477-10 10 0 5.522 4.477 10 10 10s10-4.478 10-10c0-5.523-4.477-10-10-10zM58 67.447c0-5.523-4.477-10-10-10s-10 4.477-10 10 4.477 10 10 10 10-4.477 10-10z"
+          >
+            <animateTransform
+              attributeName="transform"
+              type="rotate"
+              from="0 67 67"
+              to="-360 67 67"
+              dur="2.5s"
+              repeatCount="indefinite"
+            />
+          </path>
+          <path
+            d="M28.19 40.31c6.627 0 12-5.374 12-12 0-6.628-5.373-12-12-12-6.628 0-12 5.372-12 12 0 6.626 5.372 12 12 12zm30.72-19.825c4.686 4.687 12.284 4.687 16.97 0 4.686-4.686 4.686-12.284 0-16.97-4.686-4.687-12.284-4.687-16.97 0-4.687 4.686-4.687 12.284 0 16.97zm35.74 7.705c0 6.627 5.37 12 12 12 6.626 0 12-5.373 12-12 0-6.628-5.374-12-12-12-6.63 0-12 5.372-12 12zm19.822 30.72c-4.686 4.686-4.686 12.284 0 16.97 4.687 4.686 12.285 4.686 16.97 0 4.687-4.686 4.687-12.284 0-16.97-4.685-4.687-12.283-4.687-16.97 0zm-7.704 35.74c-6.627 0-12 5.37-12 12 0 6.626 5.373 12 12 12s12-5.374 12-12c0-6.63-5.373-12-12-12zm-30.72 19.822c-4.686-4.686-12.284-4.686-16.97 0-4.686 4.687-4.686 12.285 0 16.97 4.686 4.687 12.284 4.687 16.97 0 4.687-4.685 4.687-12.283 0-16.97zm-35.74-7.704c0-6.627-5.372-12-12-12-6.626 0-12 5.373-12 12s5.374 12 12 12c6.628 0 12-5.373 12-12zm-19.823-30.72c4.687-4.686 4.687-12.284 0-16.97-4.686-4.686-12.284-4.686-16.97 0-4.687 4.686-4.687 12.284 0 16.97 4.686 4.687 12.284 4.687 16.97 0z"
+          >
+            <animateTransform
+              attributeName="transform"
+              type="rotate"
+              from="0 67 67"
+              to="360 67 67"
+              dur="8s"
+              repeatCount="indefinite"
+            />
+          </path>
+        </svg>
+      </div>
     </div>
     <div class="with-sidebar">
       <div hx-indicator="#overlay"><!-- sidebar -->
 <nav>
   <div class="header-icon">
-    <h2><img class="svg-ico" src="/apps/maat/icon.svg" />MAAT</h2>
+    <h1>
+      <svg
+        class="svg-ico"
+        version="1.1"
+        viewBox="0 0 135.47 135.47"
+        xml:space="preserve"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <use xlink:href="/apps/maat/icon.svg#icon" />
+      </svg>
+      MAAT
+    </h1>
   </div>
   <ul
     id="lists"
@@ -71,7 +116,7 @@
       <a>
         <form
           id="put-lists"
-          class="inline-form"
+          class="inline"
           hx-put="/api/lists"
           hx-ext="json-enc"
           hx-swap="none"
@@ -79,7 +124,6 @@
           hx-on::after-request="if(event.detail.successful) this.reset();"
         >
           <input
-            class="inline-input"
             name="title"
             type="text"
             placeholder="Add new list"
@@ -113,24 +157,22 @@
   <!--     </fieldset> -->
   <!--   </form> -->
 
-  <h2
+  <h1
     id="list"
     hx-get="/api/lists/{gid}"
     hx-trigger="load, path-deps"
     path-deps="/apps/maat/api/lists/*/tasks"
     mustache-template="list-template"
-  ></h2>
+  ></h1>
   <template id="list-template"
-    >{{title}}<img
-      style="visibility: hidden"
-      class="svg-ico"
-      src="/apps/maat/icon.svg"
+    >{{title}}
+    <img style="visibility: hidden" class="svg-ico" src="/apps/maat/icon.svg"
   /></template>
   <ul class="sticky-top" id="filter-tasks">
     <li>
       <a class="icon icon-circle-question"></a>
-      <form id="filter-tasks" class="inline-form">
-        <input class="inline-input" placeholder="Filter by tags" />
+      <form id="filter-tasks" class="inline">
+        <input placeholder="Filter by tags" />
       </form>
     </li>
   </ul>
@@ -191,19 +233,14 @@
       <a class="icon icon-circle-plus"></a>
       <form
         id="put-tasks"
-        class="inline-form"
+        class="inline"
         hx-put="/api/lists/{gid}/tasks"
         hx-ext="json-enc"
         hx-swap="none"
         hx-vals="js:{tid: self.crypto.randomUUID(), gid: gid(), desc: '', date: new Date().valueOf(), done: false, tags: []}"
         hx-on::after-request="if(event.detail.successful) this.reset();"
       >
-        <input
-          class="inline-input"
-          name="title"
-          type="text"
-          placeholder="Add new task"
-        />
+        <input name="title" type="text" placeholder="Add new task" />
       </form>
     </li>
   </ul>
