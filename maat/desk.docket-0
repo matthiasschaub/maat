@@ -1,5 +1,5 @@
 :~  title+'Maat (alpha)'
-    info+'A Todo App'
+    info+'A todo app'
     color+0xff.fff3
     image+'https://raw.githubusercontent.com/matthiasschaub/maat/main/ui/png/ios/512.png'
     base+'maat'

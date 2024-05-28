@@ -1,6 +1,6 @@
 # Maat
 
-A Todo app for [Urbit](https://urbit.org/).
+A todo app for [Urbit](https://urbit.org/).
 
 Install from `~talfus-laddus/maat`.
 
