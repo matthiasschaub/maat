@@ -259,7 +259,30 @@
           .=(src.bowl host.group.action)
         ==
     :-  ^-  (list card)
-        ~
+      :~
+        :*  %pass
+          /notify
+          %agent
+          [our.bowl %hark]
+          %poke
+          %hark-action
+          !>  :*  %add-yarn
+                %.y
+                %.y
+                `@uvH`eny.bowl
+                [~ ~ %maat /apps/maat/invites]
+                now.bowl
+                :*  'You are invited to join '
+                  [%emph title.group.action]
+                  ' by '
+                  [%ship host.group.action]
+                  ~
+                ==
+                /[gid.group.action]
+                ~
+              ==
+        ==
+      ==
     %=  this
       invs  (~(put by invs) gid.group.action group.action)
     ==
@@ -267,7 +290,6 @@
       ::
       %join
     ~&  >  '%maat (on-poke): join'
-    ~&  action
     ?>  .=(our.bowl src.bowl)
     =/  path  /[gid.action]
     :-  ^-  (list card)

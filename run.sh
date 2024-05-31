@@ -6,11 +6,11 @@ alacritty --command \
     poetry run \
     pilothouse chain zod maat \
     &
-# sleep 1
-# alacritty --command \
-#     poetry run \
-#     pilothouse chain nus tahuti \
-#     &
+sleep 1
+alacritty --command \
+    poetry run \
+    pilothouse chain nus maat \
+    &
 # sleep 1
 # alacritty --command \
 #     poetry run \
