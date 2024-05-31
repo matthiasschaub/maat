@@ -6,9 +6,10 @@
 ::
 +$  versioned-state
   $%  state-0
+      state-1
   ==
-+$  state-0         :: latest state
-  $:  %0
++$  state-1         :: latest state
+  $:  %1
     =groups
     =acls
     =regs
@@ -19,7 +20,6 @@
 ::    general
 ::
 +$  title    @t
-+$  member   @tas
 +$  ship     @p
 ::
 ::    tag
@@ -62,16 +62,16 @@
 ::    ledger of tasks     (led)
 ::
 +$  acl      (set ship)
-+$  reg      (set member)
++$  reg      (set ship)
 +$  led      (map tid task)
 ::
 ::   maps
 ::
 +$  groups   (map gid group)
++$  invs     (map gid group)
 +$  acls     (map gid acl)
 +$  regs     (map gid reg)
 +$  leds     (map gid led)
-+$  invs     (map gid group)
 ::
 ::    input requests/actions
 ::
@@ -88,6 +88,14 @@
       [%add-task =gid =task]
       [%upt-task =gid =task]
       [%del-task =gid =tid]
+      ::
+      :: member actions
+      ::
+      [%add-invite =group]
+      :: [%del-invite =group]
+      ::
+      [%allow =gid =@p]     :: allow to subscribe
+      [%join =gid =host]    :: subscribe
   ==
 ::
 ::    output events/updater
@@ -100,4 +108,18 @@
       [%reg =gid =reg]
       [%led =gid =led]
     ==
+::
+::    old / legacy
+::
++$  state-0
+  $:  %0
+      =groups
+      =acls
+      regs=regs-0
+      =leds
+      =invs
+  ==
++$  regs-0     (map gid reg-0)
++$  reg-0      (set member-0)
++$  member-0   @tas
 --

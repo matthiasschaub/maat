@@ -90,12 +90,12 @@
           [%apps %maat %api @t ~]
         =/  endpoint  (snag 3 `(list @t)`site)
         ?+  endpoint  [(send [404 ~ [%plain "404 - Not Found"]]) state]
-          ::
-            :: %invites
-          :: =/  path      /(scot %p our.bowl)/maat/(scot %da now.bowl)/invites/noun
-          :: =/  invites   .^(invites %gx path)
-          :: [(send [200 ~ [%json (invites:enjs invites)]]) state]
-          ::
+
+            %invites
+          =/  path      /(scot %p our.bowl)/maat/(scot %da now.bowl)/invs/noun
+          =/  invs   .^(invs %gx path)
+          [(send [200 ~ [%json (groups:enjs invs)]]) state]
+
             %lists
           ?.  auth
             [(send [401 ~ [%plain "401 - Unauthorized"]]) state]
@@ -120,19 +120,10 @@
           [(send [404 ~ [%plain "404 - Not Found"]]) state]
           ::
              %version
-           [(send [200 ~ [%json (version:enjs '2024-05-06.1')]]) state]
-           ::
-            ::%members
-          ::::  FIX: does not work due to reg containing non Urbit-ID
-          ::::    members which get filtered out when comparing against
-          ::::    acl
-          ::::
-          ::=/  regmod    `(set @tas)`(silt (skim ~(tap in reg) |=(m=member ?~(`(unit @p)`(slaw %p `@t`m) %.n %.y))))
-          ::=/  aclmod    `(set @tas)`(~(run in acl) |=(=@p `@tas`(scot %p p)))
-          ::=/  castoffs  (~(dif in regmod) aclmod)
-          ::=/  members   (~(dif in reg) castoffs)
-          ::=.  members   (~(put in members) `@tas`(scot %p host.group))
-          ::[(send [200 ~ [%json (members:enjs members)]]) state]
+           [(send [200 ~ [%json (version:enjs '2024-05-07.1')]]) state]
+          ::
+            %members
+          [(send [200 ~ [%json (ships:enjs reg)]]) state]
           ::::
             ::%castoffs
           ::=/  regmod    `(set @tas)`(silt (skim ~(tap in reg) |=(m=member ?~(`(unit @p)`(slaw %p `@t`m) %.n %.y))))
@@ -140,10 +131,10 @@
           ::=/  castoffs   (~(dif in regmod) aclmod)
           ::[(send [200 ~ [%json (members:enjs castoffs)]]) state]
             ::::
-            ::%invitees
-          ::=/  aclmod    `(set @tas)`(~(run in acl) |=(=@p `@tas`(scot %p p)))
-          ::=/  invitees  (~(dif in aclmod) reg)
-          ::[(send [200 ~ [%json (members:enjs invitees)]]) state]
+          ::   %invitees
+          :: =/  path  /(scot %p our.bowl)/maat/(scot %da now.bowl)/invs/noun
+          :: =,  .^(=invs %gx path)
+          :: [(send [200 ~ [%json (ships:enjs (val by invs))]]) state]
           ::::
             %tasks
           =/  filter
@@ -178,14 +169,16 @@
       ::
         %'PUT'
       ~&  >  '%maat-api: PUT'
+      ?.  auth
+        [(send [401 ~ [%plain "401 - Unauthorized"]]) state]
       ?~  body.request.inbound-request
-        [(send [418 ~ [%plain "418 - I'm a teapot"]]) state]
+        [(send [422 ~ [%plain "422 - Unprocessable Entity"]]) state]
+      ?~  (de:json:html q.u.body.request.inbound-request)
+        [(send [422 ~ [%plain "422 - Unprocessable Entity"]]) state]
+      =/  content  (need (de:json:html q.u.body.request.inbound-request))
       ?+  site  [(send [404 ~ [%plain "404 - Not Found"]]) state]
         ::
           [%apps %maat %api %lists ~]
-        ?.  auth
-          [(send [401 ~ [%plain "401 - Unauthorized"]]) state]
-        =/  content   (need (de:json:html q.u.body.request.inbound-request))
         =,  (group:dejs content)
         ?:  ?|
               .=(title '')
@@ -206,11 +199,22 @@
         ::
           [%apps %maat %api %lists @t %tasks ~]
         =/  gid       (snag 4 `(list @t)`site)
-        =/  content   (need (de:json:html q.u.body.request.inbound-request))
         =/  task      (task:dejs content)
         ?:  ?|(=(title.task '') =(title.task ' '))
           [(send [422 ~ [%plain "422 - Unprocessable Entity"]]) state]
         =/  action    [%add-task gid task]
+        :-  ^-  (list card)
+          %+  snoc
+            (send [200 ~ [%plain "ok"]])
+          [%pass ~ %agent [our.bowl %maat] %poke %maat-action !>(action)]
+        state
+        ::
+          [%apps %maat %api %lists @t %invitees ~]
+        ~&  >  '%maat-api: PUT /invitees'
+        =/  gid      (snag 4 `(list @t)`site)
+        ?.  (head (mule |.((invitee:dejs content))))
+          [(send [422 ~ [%plain "422 - Unprocessable Entity"]]) state]
+        =/  action  [%allow gid (invitee:dejs content)]
         :-  ^-  (list card)
           %+  snoc
             (send [200 ~ [%plain "ok"]])
@@ -250,6 +254,30 @@
             (send [200 ~ [%plain "ok"]])
           [%pass ~ %agent [our.bowl %maat] %poke %maat-action !>(action)]
         state
+      ==
+      ::
+        %'POST'
+      ~&  >  '%maat-api: POST'
+      ?.  auth
+        [(send [401 ~ [%plain "401 - Unauthorized"]]) state]
+      ?~  body.request.inbound-request
+        [(send [422 ~ [%plain "422 - Unprocessable Entity"]]) state]
+      ?~  (de:json:html q.u.body.request.inbound-request)
+        [(send [422 ~ [%plain "422 - Unprocessable Entity"]]) state]
+      =/  content  (need (de:json:html q.u.body.request.inbound-request))
+      ?+  site  [(send [404 ~ [%plain "404 - Not Found"]]) state]
+        ::
+          [%apps %maat %api %join ~]
+        ~&  >  '%maat-api: POST /join'
+        ?.  (head (mule |.((join:dejs content))))
+          [(send [422 ~ [%plain "422 - Unprocessable Entity"]]) state]
+        =/  action  [%join (join:dejs content)]
+        :-  ^-  (list card)
+          %+  snoc
+            (send [200 ~ [%plain "ok"]])
+          [%pass ~ %agent [our.bowl %maat] %poke %maat-action !>(action)]
+        state
+        ::
       ==
         ::
       ::

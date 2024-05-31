@@ -51,7 +51,7 @@ def test_task_put_empty_body(zod, gid, payload):
     url = f"/apps/maat/api/lists/{gid}/tasks"
     # PUT /tasks
     response = zod.put(url, json=payload)
-    assert response.status_code in (500, 418)
+    assert response.status_code in (500, 422)
 
 
 @pytest.mark.usefixtures("list_")

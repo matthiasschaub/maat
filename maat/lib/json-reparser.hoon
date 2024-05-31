@@ -25,14 +25,6 @@
       |=  s=(set ^ship)
       ^-  json
       [%a (turn ~(tap in s) ship:enjs)]
-    ++  member
-      |=  m=^member
-      ^-  json
-      [%s m]
-    ++  members
-      |=  m=(set ^member)
-      ^-  json
-      [%a (turn ~(tap in m) member:enjs)]
     ++  group
       |=  g=^group
       ^-  json
@@ -74,11 +66,11 @@
 ::
 ++  dejs
   |%
-  ++  member
-    ^-  $-(json member=^member)
+  ++  invitee
+    ^-  $-(json invitee=@p)
     %-  ot:dejs:format
     :~
-      :-  %member    so:dejs:format
+      :-  %invitee   (se:dejs:format %p)
     ==
   ++  ship
     ^-  $-(json ship=^ship)
@@ -86,6 +78,14 @@
     :~
       :-  %ship      (se:dejs:format %p)
     ==
+  ++  join
+    ^-  $-(json [gid=@tas host=@p])
+    %-  ot:dejs:format
+    :~
+      :-  %gid       so:dejs:format
+      :-  %host      (se:dejs:format %p)
+    ==
+  ++  leave  join
   ++  group
     ^-  $-(json [=gid =title =public])
     %-  ot:dejs:format

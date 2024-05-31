@@ -88,3 +88,21 @@ def task(zod, gid, tid) -> dict:
     url = f"/apps/maat/api/lists/{gid}/tasks"
     zod.put(url, json=task)
     return task
+
+
+@pytest.fixture
+def invitee_nus(zod, gid):
+    url = f"/apps/maat/api/lists/{gid}/invitees"
+    response = zod.put(url, json={"invitee": "~nus"})
+    return "~nus"
+
+
+@pytest.fixture
+def member_nus(nus, gid, list_, invitee_nus):
+    join = {
+        "host": list_["host"],
+        "gid": gid,
+    }
+    url = "/apps/maat/api/join"
+    response = nus.post(url, json=join)
+    return "~nus"

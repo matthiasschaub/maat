@@ -9,7 +9,7 @@ from hypothesis import given, settings, strategies
 )
 def test_lists_put(uuid, title, public, zod):
     list_ = {
-        "id": str(uuid),
+        "gid": str(uuid),
         "title": title,
         "host": "~zod",
         "public": public,
@@ -27,4 +27,4 @@ def test_lists_put(uuid, title, public, zod):
     # the first one is successfully created
     #
     # assert group in result
-    assert str(uuid) in [r["id"] for r in result]
+    assert str(uuid) in [r["gid"] for r in result]

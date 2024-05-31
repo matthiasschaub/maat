@@ -8,7 +8,7 @@
 |%
 +$  card  card:agent:gall
 --
-=|  state-0
+=|  state-1
 =*  state  -
 ::  debug wrap
 ::
@@ -49,11 +49,31 @@
       ==
   ++  build-state
     |=  old=versioned-state
-    ^-  state-0
+    ^-  state-1
     |-
     |^  ?-  -.old
-          %0  old
+          %1  old
+          %0  $(old (state-0-to-1 old))
         ==
+    ++  state-0-to-1
+      |=  =state-0
+      ^-  state-1
+      |^  :*
+            %1
+            groups.state-0
+            acls.state-0
+            (~(run by regs.state-0) reg-0-to-1)
+            leds.state-0
+            invs.state-0
+          ==
+      ++  reg-0-to-1
+        |=  =reg-0
+        ^-  reg
+        (~(run in reg-0) member-0-to-ship)
+      ++  member-0-to-ship
+        |=  =@t
+        `@p`(slav %p t)
+      --
     --
   --
 ::
@@ -128,7 +148,7 @@
     =/  acl    (~(got by acls) gid.action)
     =/  reg    (~(got by regs) gid.action)
     ?>  ?|
-          (~(has in reg) `@tas`(scot %p src.bowl))
+          (~(has in reg) src.bowl)
           .=(src.bowl host.group)
         ==
     ?>  ?|
@@ -158,7 +178,7 @@
     =/  acl    (~(got by acls) gid.action)
     =/  reg    (~(got by regs) gid.action)
     ?>  ?|
-          (~(has in reg) `@tas`(scot %p src.bowl))
+          (~(has in reg) src.bowl)
           .=(src.bowl host.group)
         ==
     ?>  ?|
@@ -191,7 +211,7 @@
     =/  acl    (~(got by acls) gid.action)
     =/  reg    (~(got by regs) gid.action)
     ?>  ?|
-          (~(has in reg) `@tas`(scot %p src.bowl))
+          (~(has in reg) src.bowl)
           .=(src.bowl host.group)
         ==
     ?>  ?|
@@ -210,6 +230,51 @@
       ==
     %=  this
       leds  (~(put by leds) gid.action led)
+    ==
+    ::
+      %allow
+    ~&  >  '%maat (on-poke): allow'
+    =/  group  (~(got by groups) gid.action)
+    ?>  ?&
+          .=(our.bowl src.bowl)
+          .=(our.bowl host.group)
+          !=(our.bowl p.action)
+        ==
+    =/  acl  (~(got by acls) gid.action)
+    =.  acl  (~(put in acl) p.action)
+    :-  ^-  (list card)
+      :~
+        (do-update [%acl gid.action acl])
+        (do-action [p.action [%add-invite group]])
+      ==
+    %=  this
+      acls  (~(put by acls) gid.action acl)
+    ==
+    ::  (receive invitation to join a group)
+      ::
+      %add-invite
+    ~&  >  '%maat (on-poke): receive invite'
+    ?>  ?|
+          .=(our.bowl src.bowl)
+          .=(src.bowl host.group.action)
+        ==
+    :-  ^-  (list card)
+        ~
+    %=  this
+      invs  (~(put by invs) gid.group.action group.action)
+    ==
+    ::  (subscribe to a group and remove invite)
+      ::
+      %join
+    ~&  >  '%maat (on-poke): join'
+    ~&  action
+    ?>  .=(our.bowl src.bowl)
+    =/  path  /[gid.action]
+    :-  ^-  (list card)
+      :~  [%pass path [%agent [host.action %maat] [%watch path]]]
+      ==
+    %=  this
+      invs  (~(del by invs) gid.action)
     ==
   ==
 ++  on-arvo  on-arvo:default
@@ -230,7 +295,7 @@
     =/  led    (~(got by leds) gid.path)
     ?>  (~(has in acl) src.bowl)
     =/  reg    (~(got by regs) gid.path)
-    =.  reg  (~(put in reg) `@tas`(scot %p src.bowl))
+    =.  reg    (~(put in reg) src.bowl)
     :-  ^-  (list card)
         :~  (do-update [%group gid.path group acl reg led])
         ==
@@ -269,6 +334,10 @@
       [%x %groups ~]
     ~&  >  '%maat (on-peek): send list of groups'
     [~ ~ [%noun !>(groups.this)]]
+    ::
+      [%x %invs ~]
+    ~&  >  '%maat (on-peek): send group data'
+    [~ ~ [%noun !>(invs)]]
     ::
       [%x =gid ~]
     ~&  >  '%maat (on-peek): send group data'

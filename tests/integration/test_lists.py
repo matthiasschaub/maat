@@ -30,7 +30,7 @@ def lists_schema(list_schema):
 def test_lists_put_empty_payload(payload, zod):
     url = "/apps/maat/api/lists"
     response = zod.put(url, json=payload)
-    assert response.status_code in (418, 500)
+    assert response.status_code in (422, 500)
 
 
 @pytest.mark.parametrize("title", (None, "", " "))
