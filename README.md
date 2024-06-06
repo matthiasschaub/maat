@@ -4,7 +4,8 @@ A todo app for [Urbit](https://urbit.org/).
 
 Install from `~talfus-laddus/maat`.
 
-For details about this app, see the [proposal](proposal.md).
+For details about this app, see the [proposal](proposal.md) and take a look at
+the [Frequently Asked Questions page](docs/faq.md)
 
 ## Development
 
