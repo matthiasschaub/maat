@@ -6,6 +6,10 @@
 /+  schooner                  :: HTTP response handling
 ::
 /*  html-index                %html   /app/ui/html/index/html
+/*  html-tasks                %html   /app/ui/html/tasks/html
+/*  html-create               %html   /app/ui/html/create/html
+/*  html-invites              %html   /app/ui/html/invites/html
+/*  html-invite               %html   /app/ui/html/invite/html
 /*  html-settings             %html   /app/ui/html/settings/html
 /*  html-edit-list            %html   /app/ui/html/edit-list/html
 /*  css-udjat                 %css    /app/ui/css/udjat/css
@@ -95,7 +99,8 @@
     =+  ext=ext.request-line
     =+  send=(cury response:schooner eyre-id)
     =+  auth=authenticated.inbound-request
-    =/  public  %.n  :: TODO:
+    :: TODO:
+    =/  public  %.n
     ?.  ?|(auth public)
       ?.  hx-req
         [(send [302 ~ [%login-redirect './apps/maat']]) state]
@@ -106,6 +111,8 @@
       ::
       [%apps %maat ~]
         [(send [200 ~ [%html html-index]]) state]
+      [%apps %maat %invites ~]
+        [(send [200 ~ [%html html-invites]]) state]
       ::  css
       ::
       [%apps %maat %udjat ~]
@@ -141,6 +148,8 @@
       ::
       [%apps %maat %index ~]
         [(send [200 ~ [%js js-index]]) state]
+      [%apps %maat %create ~]
+        [(send [200 ~ [%html html-create]]) state]
       [%apps %maat %helper ~]
         [(send [200 ~ [%js js-helper]]) state]
       [%apps %maat %json-enc ~]
@@ -158,9 +167,10 @@
       [%apps %maat %lists @t @t ~]
         =/  endpoint  (snag 4 `(list @t)`site)
         ?+  endpoint  [(send [404 ~ [%plain "404 - Not Found"]]) state]
-          %tasks     [(send [200 ~ [%html html-index]]) state]
+          %tasks     [(send [200 ~ [%html html-tasks]]) state]
           %settings  [(send [200 ~ [%html html-settings]]) state]
           %edit      [(send [200 ~ [%html html-edit-list]]) state]
+          %invite    [(send [200 ~ [%html html-invite]]) state]
           :: %settings
           ::   ?:  auth
           ::     ?:  .=(our.bowl host:(need group))

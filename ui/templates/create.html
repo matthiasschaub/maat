@@ -1,0 +1,51 @@
+<h1>MAAT</h1>
+<h2>Create new list</h2>
+<form
+  id="put-lists"
+  hx-put="/apps/maat/api/lists"
+  hx-ext="json-enc"
+  hx-swap="none"
+  hx-vals="js:{gid: self.crypto.randomUUID()}"
+  hx-request="noHeaders"
+  hx-on::after-request='if(event.detail.successful) window.location.pathname = "/apps/maat";'
+>
+  <fieldset>
+    <label>Titel</label>
+    <input
+      id="list-title"
+      type="text"
+      name="title"
+      aria-label="List Title"
+      autocomplete="off"
+      required
+    />
+    <label>Access</label>
+    <select id="public" type="text" name="public" aria-label="Public" required>
+      <option value="false">Private</option>
+      <option value="true">Public</option>
+    </select>
+    <button class="button-primary" type="submit">Create list ▸</button>
+    <button
+      class="button-cancel"
+      onclick="window.location.href='/apps/maat'"
+      type="button"
+      value="Cancel"
+    >
+      Cancel
+    </button>
+  </fieldset>
+</form>
+<script>
+  var element = document.getElementById("overlay");
+  element.classList.remove("htmx-request");
+
+  var form = document.getElementById("put-lists");
+  form.addEventListener("htmx:configRequest", (event) => {
+    console.log(event);
+    if ("public" in event.detail.parameters) {
+      event.detail.parameters.public =
+        event.detail.parameters.public === "true";
+      console.log(event.detail.parameters.public === "true");
+    }
+  });
+</script>

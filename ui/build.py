@@ -8,9 +8,29 @@ base = templates_dir / "base.html"
 with open(base, "r") as f:
     template = Template(f.read())
 
-sidebar = Path(templates_dir / "sidebar.html").read_text()
+# sidebar = Path(templates_dir / "sidebar.html").read_text()
 
-for site in ("index.html", "settings.html", "edit-list.html"):
+# for site in ("index.html", "settings.html", "edit-list.html"):
+#     main = Path(templates_dir / site).read_text()
+#     html = template.substitute(sidebar=sidebar, main=main)
+#     Path(html_dir / site).write_text(html)
+
+
+header = Path(templates_dir / "header.html").read_text()
+header_index = Path(templates_dir / "header-index.html").read_text()
+
+for site in (
+    "index.html",
+    "create.html",
+    "invite.html",
+    "invites.html",
+    "tasks.html",
+    "settings.html",
+    "edit-list.html",
+):
     main = Path(templates_dir / site).read_text()
-    html = template.substitute(sidebar=sidebar, main=main)
+    if site in ("index.html", "create.html"):
+        html = template.substitute(header=header_index, main=main)
+    else:
+        html = template.substitute(header=header, main=main)
     Path(html_dir / site).write_text(html)

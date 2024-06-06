@@ -1,0 +1,41 @@
+<h1>MAAT</h1>
+<div
+  hx-get="/api/invites"
+  hx-trigger="load"
+  mustache-template="invites-template"
+></div>
+<template id="invites-template">
+  {{#.}}
+  <fieldset>
+    <label
+      >You got invited to join <em>{{title}}</em> by <em>{{host}}</em>.</label
+    >
+    <form>
+      <button
+        id="post-join"
+        class="button-primary"
+        hx-post="/api/join"
+        hx-ext="json-enc"
+        hx-swap="none"
+        hx-vals='{"gid": "{{gid}}", "host": "{{host}}", "public": "{{public}}"}'
+        hx-on::after-request='if(event.detail.successful) window.location.pathname = "/apps/maat/lists/{{gid}}"'
+        type="submit"
+      >
+        Join list ▸
+      </button>
+      <button
+        id="post-leave"
+        class="button-cancel"
+        hx-post="/api/leave"
+        hx-ext="json-enc"
+        hx-swap="none"
+        hx-vals='{"gid": "{{gid}}", "host": "{{host}}", "public": "{{public}}"}'
+        hx-on::after-request='if(event.detail.successful) window.location.pathname = "/apps/maat"'
+        type="submit"
+      >
+        Decline invitation ▸
+      </button>
+    </form>
+  </fieldset>
+  {{/.}}
+</template>

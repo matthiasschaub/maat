@@ -1,141 +1,70 @@
-<div id="main">
-  <!-- non-sidebar -->
-  <!-- <datalist id="tags"> -->
-  <!--   <option>#hastag</option> -->
-  <!--   <option>#tag</option> -->
-  <!-- </datalist> -->
-  <!--   <form method="get" action="#"> -->
-  <!--     <fieldset> -->
-  <!--       <input -->
-  <!--         list="tags" -->
-  <!--         name="task" -->
-  <!--         type="text" -->
-  <!--         id="task" -->
-  <!--         autocomplete="off" -->
-  <!--         placeholder="Filter by tags" -->
-  <!--       /> -->
-  <!--     </fieldset> -->
-  <!--   </form> -->
-
-  <h1
-    id="list"
-    hx-get="/api/lists/{gid}"
-    hx-trigger="load, path-deps"
-    path-deps="/apps/maat/api/lists/*/tasks"
-    mustache-template="list-template"
-  ></h1>
-  <template id="list-template"
-    >{{title}}
-    <img style="visibility: hidden" class="svg-ico" src="/apps/maat/icon.svg"
-  /></template>
-  <ul class="sticky-top" id="filter-tasks">
-    <li>
-      <a class="icon icon-circle-question"></a>
-      <form id="filter-tasks" class="inline">
-        <input placeholder="Filter by tags" />
-      </form>
-    </li>
-  </ul>
-  <ul
-    id="tasks-todo"
-    hx-get="/api/lists/{gid}/tasks"
-    hx-vals='{"done": "false"}'
-    hx-trigger="load, path-deps"
-    path-deps="/apps/maat/api/lists/*/tasks"
-    mustache-template="tasks-todo-template"
-  ></ul>
-  <template id="tasks-todo-template">
-    {{#.}}
-    <li>
-      <a
-        id="{{tid}}"
-        class="icon icon-circle"
-        hx-put="/api/lists/{{gid}}/tasks"
-        hx-vals='{"gid": "{{gid}}", "tid": "{{tid}}", "title": "{{title}}", "desc": "{{desc}}", "date": {{date}}, "done": true, "tags": []}'
-        hx-ext="json-enc"
-        hx-trigger="click"
-      >
-      </a>
-      {{title}} <small><em>{{tags}}</em></small>
-      {{/.}}
-    </li>
-  </template>
-  <ul
-    id="tasks-done"
-    hx-get="/api/lists/{gid}/tasks"
-    hx-vals='{"done": "true"}'
-    hx-trigger="load, path-deps"
-    path-deps="/apps/maat/api/lists/*/tasks"
-    mustache-template="tasks-done-template"
-  ></ul>
-  <template id="tasks-done-template">
-    {{#.}}
-    <li>
-      <a
-        id="{{tid}}"
-        class="icon icon-circle-checked"
-        hx-put="/api/lists/{{gid}}/tasks"
-        hx-vals='{"gid": "{{gid}}", "tid": "{{tid}}", "title": "{{title}}", "desc": "{{desc}}", "date": {{date}}, "done": false, "tags": []}'
-        hx-ext="json-enc"
-        hx-trigger="click"
-      >
-      </a>
-      {{title}} <small><em>{{tags}}</em></small>
-      {{/.}}
-    </li>
-  </template>
-  <!-- <li> -->
-  <!--   <a class="icon icon-circle-checked"> </a> -->
-  <!--   <s>Cheese</s> -->
-  <!-- </li> -->
-  <ul class="sticky-bottom">
-    <li>
-      <a class="icon icon-circle-plus"></a>
-      <form
-        id="put-tasks"
-        class="inline"
-        hx-put="/api/lists/{gid}/tasks"
-        hx-ext="json-enc"
-        hx-swap="none"
-        hx-vals="js:{tid: self.crypto.randomUUID(), gid: gid(), desc: '', date: new Date().valueOf(), done: false, tags: []}"
-        hx-on::after-request="if(event.detail.successful) this.reset();"
-      >
-        <input name="title" type="text" placeholder="Add new task" />
-      </form>
-    </li>
-  </ul>
-  <!-- <div class="done"> -->
-  <!--   <h3>Done</h3> -->
-  <!--   <ul> -->
-  <!--     <li> -->
-  <!--       <a class="icon icon-circle-checked"> </a> -->
-  <!--       Bread -->
-  <!--     </li> -->
-  <!--     <li> -->
-  <!--       <a class="icon icon-circle-checked"> </a> -->
-  <!--       Milk -->
-  <!--     </li> -->
-  <!--     <li> -->
-  <!--       <a class="icon icon-circle-checked"> </a> -->
-  <!--       Apples -->
-  <!--     </li> -->
-  <!--     <li> -->
-  <!--       <a class="icon icon-circle-checked"> </a> -->
-  <!--       Grapefruit -->
-  <!--     </li> -->
-  <!--     <li> -->
-  <!--       <a class="icon icon-circle-checked"> </a> -->
-  <!--       Cat food -->
-  <!--     </li> -->
-  <!--     <li> -->
-  <!--       <a class="icon icon-circle-checked"> </a> -->
-  <!--       Cheese -->
-  <!--     </li> -->
-  <!--     <li> -->
-  <!--       <a class="icon icon-circle-checked"> </a> -->
-  <!--       Wine -->
-  <!--     </li> -->
-  <!--   </ul> -->
-  <!-- </div> -->
-  <!-- </main> -->
+<h1>MAAT</h1>
+<div id="error-div" class="error">
+  <p id="error-pre"></p>
 </div>
+
+<table class="lists two-col">
+  <thead>
+    <tr>
+      <th>List</th>
+      <th>Host</th>
+    </tr>
+  </thead>
+  <!-- TODO: add default message: no groups yet -->
+  <tbody
+    id="lists"
+    hx-get="/api/lists"
+    hx-trigger="load"
+    mustache-template="lists-template"
+  ></tbody>
+</table>
+<template id="lists-template">
+  <!-- iterate over array of members object -->
+  {{#.}}
+  <tr
+    hx-get="/lists/{{gid}}/tasks"
+    hx-target="body"
+    hx-trigger="click"
+    hx-push-url="true"
+  >
+    <td>{{title}}</td>
+    <td>{{host}}</td>
+  </tr>
+  {{/.}}
+</template>
+<footer>
+  <div class="footer-icon">
+    <a href="/apps/maat/create">
+      <svg
+        id="add-btn"
+        width="24px"
+        height="24px"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        color="var(--color-fg)"
+      >
+        <path
+          d="M22 14V8.5M6 13V6a3 3 0 013-3h5M16.992 4h3m3 0h-3m0 0V1m0 3v3M12 21H6a4 4 0 010-8h12a4 4 0 104 4v-3"
+          stroke="var(--color-fg)"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></path>
+      </svg>
+    </a>
+  </div>
+</footer>
+<p
+  id="invites"
+  hx-get="/api/invites"
+  hx-trigger="load"
+  hx-ext="client-side-formats"
+  mustache-template="invites-temp"
+></p>
+<template id="invites-temp">
+  {{#invites}} You are invited to join another list. See
+  <a href="/apps/maat/invites">invites</a>. {{/invites}}
+  {{^invites}}{{/invites}}
+</template>

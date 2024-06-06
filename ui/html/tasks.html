@@ -92,74 +92,127 @@
       <div id="error-div" class="error">
         <pre hidden id="error-pre"></pre>
       </div>
-      <div
-  id="update"
+      <h1
+  id="list"
   hx-get="/api/lists/{gid}"
-  hx-trigger="load"
+  hx-trigger="load, path-deps"
+  path-deps="/apps/maat/api/lists/*/tasks"
   mustache-template="list-template"
-></div>
-<template id="list-template">
-  <h1>Update {{host}}/{{title}}</h1>
-  <form
-    id="update-list"
-    hx-put="/api/lists"
-    hx-ext="json-enc"
-    hx-vals='{"gid": "{{gid}}"}'
-    hx-on::after-request='if(event.detail.successful) window.location.pathname = "/apps/maat/lists/" + gid() + "/settings";'
-  >
-    <fieldset>
-      <label for="update-title">Title:</label>
-      <input
-        autocomplete="false"
-        id="update-title"
-        name="title"
-        placeholder="{{title}}"
-        required
-        spellcheck="false"
-        type="text"
-        aria-label="Title"
-      />
-      <label for="update-public">Public:</label>
-      <select
-        autocomplete="false"
-        id="update-public"
-        name="public"
-        required
-        spellcheck="false"
-        type="text"
-        aria-label="Title"
-      >
-        <option hidden disabled selected value>-- select an option --</option>
-        <option>Yes</option>
-        <option>No</option>
-      </select>
-      <button class="button-primary" type="submit">Update list ▸</button>
-      <button
-        class="button-cancel"
-        onclick="window.location.href='/apps/maat/lists/' + gid() + '/settings';"
-        type="button"
-        value="Cancel"
-      >
-        Cancel
-      </button>
-    </fieldset>
-  </form>
+></h1>
+<template id="list-template">{{title}} </template>
+<ul class="sticky-top" id="filter-tasks">
+  <li>
+    <a class="icon icon-circle-question"></a>
+    <form id="filter-tasks" class="inline">
+      <input placeholder="Filter by tags" />
+    </form>
+  </li>
+</ul>
+<ul
+  id="tasks"
+  hx-get="/api/lists/{gid}/tasks"
+  hx-vals='{"done": "false"}'
+  hx-trigger="load, path-deps"
+  path-deps="/apps/maat/api/lists/*/tasks"
+  mustache-template="tasks-todo-template"
+></ul>
+<template id="tasks-todo-template">
+  {{#.}}
+  <li>
+    <a
+      id="{{tid}}"
+      class="icon icon-circle"
+      hx-put="/api/lists/{{gid}}/tasks"
+      hx-vals='{"gid": "{{gid}}", "tid": "{{tid}}", "title": "{{title}}", "desc": "{{desc}}", "date": {{date}}, "done": true, "tags": []}'
+      hx-ext="json-enc"
+      hx-trigger="click"
+    >
+    </a>
+    {{title}} <small><em>{{tags}}</em></small>
+    {{/.}}
+  </li>
 </template>
-<script>
-  var details = document.getElementById("update");
-  details.addEventListener("htmx:afterSettle", (event) => {
-    var form = document.getElementById("update-list");
-    form.addEventListener("htmx:configRequest", (event) => {
-      if ("public" in event.detail.parameters) {
-        if (event.detail.parameters["public"] === "Yes") {
-          event.detail.parameters.public = true;
-        } else {
-          event.detail.parameters.public = false;
-        }
-      }
-    });
-  });
-</script>
+<ul
+  id="tasks-done"
+  class="tasks__done"
+  hx-get="/api/lists/{gid}/tasks"
+  hx-vals='{"done": "true"}'
+  hx-trigger="load, path-deps"
+  path-deps="/apps/maat/api/lists/*/tasks"
+  mustache-template="tasks-done-template"
+></ul>
+<template id="tasks-done-template">
+  {{#.}}
+  <li>
+    <a
+      id="{{tid}}"
+      class="icon icon-circle-checked"
+      hx-put="/api/lists/{{gid}}/tasks"
+      hx-vals='{"gid": "{{gid}}", "tid": "{{tid}}", "title": "{{title}}", "desc": "{{desc}}", "date": {{date}}, "done": false, "tags": []}'
+      hx-ext="json-enc"
+      hx-trigger="click"
+    >
+    </a>
+    <s
+      >{{title}} <small><em>{{tags}}</em></small></s
+    >
+    {{/.}}
+  </li>
+</template>
+<!-- <li> -->
+<!--   <a class="icon icon-circle-checked"> </a> -->
+<!--   <s>Cheese</s> -->
+<!-- </li> -->
+<ul class="sticky-bottom">
+  <li>
+    <a class="icon icon-circle-plus"></a>
+    <form
+      id="put-tasks"
+      class="inline"
+      hx-put="/api/lists/{gid}/tasks"
+      hx-ext="json-enc"
+      hx-swap="none"
+      hx-vals="js:{tid: self.crypto.randomUUID(), gid: gid(), desc: '', date: new Date().valueOf(), done: false, tags: []}"
+      hx-on::after-request="if(event.detail.successful) this.reset();"
+    >
+      <input name="title" type="text" placeholder="Add new task" />
+    </form>
+  </li>
+</ul>
+<!-- <div class="done"> -->
+<!--   <h3>Done</h3> -->
+<!--   <ul> -->
+<!--     <li> -->
+<!--       <a class="icon icon-circle-checked"> </a> -->
+<!--       Bread -->
+<!--     </li> -->
+<!--     <li> -->
+<!--       <a class="icon icon-circle-checked"> </a> -->
+<!--       Milk -->
+<!--     </li> -->
+<!--     <li> -->
+<!--       <a class="icon icon-circle-checked"> </a> -->
+<!--       Apples -->
+<!--     </li> -->
+<!--     <li> -->
+<!--       <a class="icon icon-circle-checked"> </a> -->
+<!--       Grapefruit -->
+<!--     </li> -->
+<!--     <li> -->
+<!--       <a class="icon icon-circle-checked"> </a> -->
+<!--       Cat food -->
+<!--     </li> -->
+<!--     <li> -->
+<!--       <a class="icon icon-circle-checked"> </a> -->
+<!--       Cheese -->
+<!--     </li> -->
+<!--     <li> -->
+<!--       <a class="icon icon-circle-checked"> </a> -->
+<!--       Wine -->
+<!--     </li> -->
+<!--   </ul> -->
+<!-- </div> -->
+<!-- </main> -->
 
     </main>
     <script src="/apps/maat/helper.js"></script>

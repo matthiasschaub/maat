@@ -36,12 +36,13 @@
     <script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/debug.js"></script>
   </head>
 
-  <body hx-boost="true" hx-ext="client-side-templates,path-deps">
-    <header>
-      <div id="error-div" class="error">
-        <pre hidden id="error-pre"></pre>
-      </div>
-    </header>
+  <body
+    hx-boost="true"
+    hx-ext="client-side-templates,path-deps"
+    hx-indicator="#overlay"
+  >
+    <header>$header</header>
+
     <div id="overlay" class="overlay htmx-indicator htmx-request">
       <div class="spinner">
         <svg
@@ -79,10 +80,13 @@
         </svg>
       </div>
     </div>
-    <div class="with-sidebar">
-      <div hx-indicator="#overlay">$sidebar</div>
-      <div>$main</div>
-    </div>
+
+    <main>
+      <div id="error-div" class="error">
+        <pre hidden id="error-pre"></pre>
+      </div>
+      $main
+    </main>
     <script src="/apps/maat/helper.js"></script>
   </body>
 </html>

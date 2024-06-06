@@ -4,6 +4,10 @@ let ctx = await esbuild.context({
   entryPoints: [
     "./ui/manifest.json",
     "./ui/html/index.html",
+    "./ui/html/create.html",
+    "./ui/html/invite.html",
+    "./ui/html/invites.html",
+    "./ui/html/tasks.html",
     "./ui/html/settings.html",
     "./ui/html/edit-list.html",
     "./ui/css/udjat.css",

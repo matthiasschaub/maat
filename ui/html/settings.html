@@ -36,12 +36,20 @@
     <script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/debug.js"></script>
   </head>
 
-  <body hx-boost="true" hx-ext="client-side-templates,path-deps">
-    <header>
-      <div id="error-div" class="error">
-        <pre hidden id="error-pre"></pre>
-      </div>
-    </header>
+  <body
+    hx-boost="true"
+    hx-ext="client-side-templates,path-deps"
+    hx-indicator="#overlay"
+  >
+    <header><nav>
+  <ul>
+    <li><a href="/apps/maat">↜ Lists</a></li>
+    <li><a href="/lists/{gid}/settings">Settings</a></li>
+    <li><a href="/lists/{gid}/about">About</a></li>
+  </ul>
+</nav>
+</header>
+
     <div id="overlay" class="overlay htmx-indicator htmx-request">
       <div class="spinner">
         <svg
@@ -79,129 +87,78 @@
         </svg>
       </div>
     </div>
-    <div class="with-sidebar">
-      <div hx-indicator="#overlay"><!-- sidebar -->
-<nav>
-  <div class="header-icon">
-    <h1>
-      <svg
-        class="svg-ico"
-        version="1.1"
-        viewBox="0 0 135.47 135.47"
-        xml:space="preserve"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <use xlink:href="/apps/maat/icon.svg#icon" />
-      </svg>
-      MAAT
-    </h1>
-  </div>
-  <ul
-    id="lists"
-    hx-get="/api/lists"
-    hx-trigger="load, path-deps"
-    path-deps="/apps/maat/api/lists"
-    mustache-template="lists-template"
-  ></ul>
-  <template id="lists-template">
-    <!-- iterate over array of response object -->
-    {{#.}}
-    <li>
-      <a href="/lists/{{gid}}/tasks#filter-tasks">{{title}}</a>
-    </li>
-    {{/.}}
-  </template>
-  <ul class="sticky-bottom">
-    <li>
-      <a>
-        <form
-          id="put-lists"
-          class="inline"
-          hx-put="/api/lists"
-          hx-ext="json-enc"
-          hx-swap="none"
-          hx-vals="js:{gid: self.crypto.randomUUID(), public: false}"
-          hx-on::after-request="if(event.detail.successful) this.reset();"
-        >
-          <input
-            name="title"
-            type="text"
-            placeholder="Add new list"
-            autocomplete="false"
-            spellcheck="false"
-            required
-          />
-        </form>
-      </a>
-    </li>
-    <li><a href="/lists/{gid}/settings">Settings</a></li>
-  </ul>
-</nav>
-</div>
-      <div><main>
-  <div
-    id="details"
-    hx-get="/api/lists/{gid}"
-    hx-trigger="load, path-deps"
-    path-deps="/apps/maat/api/lists"
-    mustache-template="list-template"
-  ></div>
-  <template id="list-template">
-    <h1>
-      Settings<img
-        style="visibility: hidden"
-        class="svg-ico"
-        src="/apps/maat/icon.svg"
-      />
-    </h1>
-    <h2>Details</h2>
-    <table class="col-two">
-      <thead></thead>
-      <tbody>
-        <tr>
-          <th>Title</th>
-          <td>{{title}}</td>
-        </tr>
-        <tr>
-          <th>Host</th>
-          <td>{{host}}</td>
-        </tr>
-        <tr>
-          <th>Public</th>
-          <td>{{public}}</td>
-        </tr>
-      </tbody>
-    </table>
-  </template>
-  <h2>Update list</h2>
-  <p><a href="/lists/{gid}/edit">Update</a> this lists metadata.</p>
-  <h2>Export tasks</h2>
-  <p>
-    <a
-      onclick="window.location.pathname = '/apps/maat/api/lists/' + gid() + '/tasks'"
-      >Download</a
-    >
-    all expenses of this group as JSON.
-  </p>
 
-  <h2>Delete list</h2>
-  <p>
-    Permanently
-    <a
-      id="delete-list"
-      hx-delete="/api/lists/{gid}"
-      hx-confirm="Are you sure?"
-      hx-ext="json-enc"
-      hx-swap="none"
-      hx-vals="js:{gid: gid()}"
-      hx-on::after-request='if(event.detail.successful) window.location.pathname = "/apps/maat"'
-      >delete</a
-    >
-    this group.
-  </p>
-</main>
-</div>
-    </div>
+    <main>
+      <div id="error-div" class="error">
+        <pre hidden id="error-pre"></pre>
+      </div>
+      <div
+  id="details"
+  hx-get="/api/lists/{gid}"
+  hx-trigger="load, path-deps"
+  path-deps="/apps/maat/api/lists"
+  mustache-template="list-template"
+></div>
+<template id="list-template">
+  <h1>Settings</h1>
+  <h2>Details</h2>
+  <table class="col-two">
+    <thead></thead>
+    <tbody>
+      <tr>
+        <th>Title</th>
+        <td>{{title}}</td>
+      </tr>
+      <tr>
+        <th>Host</th>
+        <td>{{host}}</td>
+      </tr>
+      <tr>
+        <th>Public</th>
+        <td>{{public}}</td>
+      </tr>
+    </tbody>
+  </table>
+</template>
+<h2>Update list</h2>
+<p><a href="/lists/{gid}/edit">Update</a> this lists metadata.</p>
+<h2>Add members</h2>
+<p>
+  <a
+    hx-get="/lists/{gid}/invite"
+    hx-target="body"
+    hx-trigger="click"
+    hx-push-url="true"
+    >Add</a
+  >
+  members to this list.
+</p>
+<h2>Export tasks</h2>
+<p>
+  <a
+    onclick="window.location.pathname = '/apps/maat/api/lists/' + gid() + '/tasks'"
+    >Download</a
+  >
+  all tasks of this list as JSON.
+</p>
+
+<h2>Delete list</h2>
+<p>
+  Permanently
+  <a
+    id="delete-list"
+    hx-delete="/api/lists/{gid}"
+    hx-confirm="Are you sure?"
+    hx-ext="json-enc"
+    hx-swap="none"
+    hx-vals="js:{gid: gid()}"
+    hx-on::after-request='if(event.detail.successful) window.location.pathname = "/apps/maat"'
+    >delete</a
+  >
+  this group.
+</p>
+
+    </main>
     <script src="/apps/maat/helper.js"></script>
   </body>
 </html>
