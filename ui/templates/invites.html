@@ -18,7 +18,7 @@
         hx-ext="json-enc"
         hx-swap="none"
         hx-vals='{"gid": "{{gid}}", "host": "{{host}}", "public": "{{public}}"}'
-        hx-on::after-request='if(event.detail.successful) window.location.pathname = "/apps/maat/lists/{{gid}}"'
+        hx-on::after-request='if(event.detail.successful) window.location.pathname = "/apps/maat/lists/{{gid}}/tasks"'
         type="submit"
       >
         Join list ▸

@@ -122,6 +122,21 @@
 </template>
 <h2>Update list</h2>
 <p><a href="/lists/{gid}/edit">Update</a> this lists metadata.</p>
+
+<h2>Members</h2>
+<ul
+  id="members"
+  hx-get="/api/lists/{gid}/members"
+  hx-trigger="load"
+  hx-swap="outerHTML"
+  mustache-template="members-template"
+>
+  <template id="members-template">
+    {{#.}}
+    <li>{{.}}</li>
+    {{/.}}
+  </template>
+</ul>
 <h2>Add members</h2>
 <p>
   <a
