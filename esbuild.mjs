@@ -10,6 +10,7 @@ let ctx = await esbuild.context({
     "./ui/html/tasks.html",
     "./ui/html/settings.html",
     "./ui/html/edit-list.html",
+    "./ui/html/edit-task.html",
     "./ui/css/udjat.css",
     "./ui/css/style.css",
     "./ui/css/soria.woff2",

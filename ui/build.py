@@ -27,6 +27,7 @@ for site in (
     "tasks.html",
     "settings.html",
     "edit-list.html",
+    "edit-task.html",
 ):
     main = Path(templates_dir / site).read_text()
     if site in ("index.html", "create.html"):

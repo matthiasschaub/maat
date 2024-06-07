@@ -1,17 +1,11 @@
-<main
-  id="main"
+<div
+  id="update"
   hx-get="/api/lists/{gid}"
   hx-trigger="load"
   mustache-template="list-template"
-></main>
+></div>
 <template id="list-template">
-  <h2>
-        Update <small>{{host}}/{{title}}</small><img
-      style="visibility: hidden"
-      class="svg-ico"
-      src="/apps/maat/icon.svg"
-    />
-  </h2>
+  <h1>Update {{host}}/{{title}}</h1>
   <form
     id="update-list"
     hx-put="/api/lists"
@@ -41,16 +35,24 @@
         type="text"
         aria-label="Title"
       >
-        <option hidden disabled selected value> -- select an option -- </option>
+        <option hidden disabled selected value>-- select an option --</option>
         <option>Yes</option>
         <option>No</option>
       </select>
-      <button type="submit">Update list ▸</button>
+      <button class="button-primary" type="submit">Update list ▸</button>
+      <button
+        class="button-cancel"
+        onclick="window.location.href='/apps/maat/lists/' + gid() + '/settings';"
+        type="button"
+        value="Cancel"
+      >
+        Cancel
+      </button>
     </fieldset>
   </form>
 </template>
 <script>
-  var details = document.getElementById("main");
+  var details = document.getElementById("update");
   details.addEventListener("htmx:afterSettle", (event) => {
     var form = document.getElementById("update-list");
     form.addEventListener("htmx:configRequest", (event) => {

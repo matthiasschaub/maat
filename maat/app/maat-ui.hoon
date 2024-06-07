@@ -12,6 +12,7 @@
 /*  html-invite               %html   /app/ui/html/invite/html
 /*  html-settings             %html   /app/ui/html/settings/html
 /*  html-edit-list            %html   /app/ui/html/edit-list/html
+/*  html-edit-task            %html   /app/ui/html/edit-task/html
 /*  css-udjat                 %css    /app/ui/css/udjat/css
 /*  css-style                 %css    /app/ui/css/style/css
 /*  svg-circles               %svg    /app/ui/svg/circles/svg
@@ -164,6 +165,8 @@
         [(send [200 ~ [%json json-manifest]]) state]
       ::  html
       ::
+      [%apps %maat %lists @t %tasks @t %edit ~]
+        [(send [200 ~ [%html html-edit-task]]) state]
       [%apps %maat %lists @t @t ~]
         =/  endpoint  (snag 4 `(list @t)`site)
         ?+  endpoint  [(send [404 ~ [%plain "404 - Not Found"]]) state]

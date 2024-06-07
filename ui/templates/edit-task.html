@@ -1,0 +1,40 @@
+<div
+  id="update"
+  hx-get="/api/lists/{gid}/tasks/{tid}"
+  hx-trigger="load"
+  mustache-template="task-template"
+></div>
+<template id="task-template">
+  <h1>Update Task</h1>
+  <form
+    id="update-task"
+    hx-put="/api/lists/{{gid}}/tasks"
+    hx-vals='js:{gid: "{{gid}}", tid: "{{tid}}", desc: "{{desc}}", date: parseInt("{{date}}"), done: JSON.parse("{{done}}"), tags: []}'
+    hx-ext="json-enc"
+    hx-on::after-request='if(event.detail.successful) window.location.pathname = "/apps/maat/lists/" + gid() + "/tasks";'
+  >
+    <fieldset>
+      <label for="update-title">Title:</label>
+      <input
+        autocomplete="false"
+        id="update-title"
+        name="title"
+        placeholder="{{title}}"
+        required
+        spellcheck="false"
+        type="text"
+        aria-label="Title"
+        value="{{title}}"
+      />
+      <button class="button-primary" type="submit">Update list ▸</button>
+      <button
+        class="button-cancel"
+        onclick="window.location.href='/apps/maat/lists/' + gid() + '/tasks';"
+        type="button"
+        value="Cancel"
+      >
+        Cancel
+      </button>
+    </fieldset>
+  </form>
+</template>
