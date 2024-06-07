@@ -164,6 +164,18 @@ main > ul > li {
   /* white-space: nowrap; */
   /* text-overflow: ellipsis; */
   /* width: calc(var(--max-width)/2); */
+
+  &:active {
+    /* give list item a "pressed" feel */
+    transform: scale(0.975);
+    border-color: var(--color-primary);
+  }
+  &:hover {
+    /* transform: scale(1.05); */
+    /* border: 1px solid #f90; */
+    /* font-weight: bold; */
+    cursor: pointer;
+  }
 }
 
 /* li::marker { */
@@ -181,13 +193,6 @@ main > ul > li {
 /* .done > * > li:hover::marker { */
 /*   content: "○ "; */
 /* } */
-
-li:hover {
-  /* transform: scale(1.05); */
-  /* border: 1px solid #f90; */
-  /* font-weight: bold; */
-  cursor: pointer;
-}
 
 .icon {
   display: inline-block;
@@ -290,13 +295,28 @@ li:hover {
   padding-bottom: var(--vspace-3);
 }
 
-.lists > tbody > tr:hover {
-  cursor: pointer;
+/* lists table */
+
+.lists > tbody > tr {
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:active {
+    /* give row a "pressed" feel */
+    transform: scale(0.975);
+    border-color: var(--color-primary);
+  }
 }
 
 .lists > :is(thead, tbody) > tr > :is(th, td) {
   overflow: hidden;
   text-overflow: ellipsis;
+  padding-bottom: var(--vspace-4);
+
+  &:first-child {
+    padding-top: var(--vspace-4);
+  }
 }
 
 .two-col > :is(thead, tbody) > tr > :is(th, td):nth-child(2) {
