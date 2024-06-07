@@ -88,6 +88,7 @@ header > .header-icon {
   /* height: 2em; */
   /* width: 2em; */
 }
+
 /**/
 /* .inline-input { */
 /*   color: var(--fg); */
@@ -228,7 +229,11 @@ li:hover {
 }
 
 .tasks__done {
-    opacity: 0.50;
+  opacity: 0.5;
+}
+
+.tasks > li:not(:last-child) {
+  margin-bottom: var(--vspace-4);
 }
 
 /* .column { */
