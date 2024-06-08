@@ -9,7 +9,7 @@
   <form
     id="update-task"
     hx-put="/api/lists/{{gid}}/tasks"
-    hx-vals='js:{gid: "{{gid}}", tid: "{{tid}}", desc: "{{desc}}", date: parseInt("{{date}}"), done: JSON.parse("{{done}}"), tags: []}'
+    hx-vals='js:{gid: "{{gid}}", tid: "{{tid}}", date: parseInt("{{date}}"), done: JSON.parse("{{done}}"), tags: []}'
     hx-ext="json-enc"
     hx-on::after-request='if(event.detail.successful) window.location.pathname = "/apps/maat/lists/" + gid() + "/tasks";'
   >
@@ -26,6 +26,15 @@
         aria-label="Title"
         value="{{title}}"
       />
+      <label for="update-desc">Description:</label>
+      <textarea id="update-desc" name="desc" aria-label="Description">
+{{desc}}</textarea
+      >
+      <!-- <label for="update-tags">Tags:</label> -->
+      <!-- <select multiple="multiple" name="tags" id="update-tags"> -->
+      <!--   <option value="#appelunei">#appelunei</option> -->
+      <!--   <option value="#high">#high</option> -->
+      <!-- </select> -->
       <button class="button-primary" type="submit">Update list ▸</button>
       <button
         class="button-cancel"

@@ -57,9 +57,9 @@ h2 {
 form.inline {
   display: inline-block;
 
-  > input {
-    border: none;
-  }
+  /* > input { */
+    /* border: none; */
+  /* } */
 }
 
 header {
