@@ -85,6 +85,8 @@
       ::
         %'GET'
       ~&  >  '%maat-api: GET'
+      ?.  auth
+        [(send [401 ~ [%plain "401 - Unauthorized"]]) state]
       ?+  site  [(send [404 ~ [%plain "404 - Not Found"]]) state]
         ::
           [%apps %maat %api @t ~]
@@ -97,8 +99,6 @@
           [(send [200 ~ [%json (groups:enjs invs)]]) state]
 
             %lists
-          ?.  auth
-            [(send [401 ~ [%plain "401 - Unauthorized"]]) state]
           =/  path      /(scot %p our.bowl)/maat/(scot %da now.bowl)/groups/noun
           =/  groups    .^(groups %gx path)
           [(send [200 ~ [%json (groups:enjs groups)]]) state]
@@ -120,7 +120,7 @@
           [(send [404 ~ [%plain "404 - Not Found"]]) state]
           ::
              %version
-           [(send [200 ~ [%json (version:enjs '2024-05-07.1')]]) state]
+           [(send [200 ~ [%json (version:enjs '2024-06-08.2')]]) state]
           ::
             %members
           [(send [200 ~ [%json (ships:enjs reg)]]) state]

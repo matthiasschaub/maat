@@ -14,6 +14,10 @@ htmx.defineExtension("client-side-formats", {
         }
         break;
       }
+      case "tags": {
+        data = data.join();
+        break;
+      }
     }
 
     return JSON.stringify(data);

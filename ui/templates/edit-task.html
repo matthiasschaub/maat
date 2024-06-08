@@ -1,3 +1,4 @@
+<h1>Update Task</h1>
 <div
   id="update"
   hx-get="/api/lists/{gid}/tasks/{tid}"
@@ -5,7 +6,6 @@
   mustache-template="task-template"
 ></div>
 <template id="task-template">
-  <h1>Update Task</h1>
   <form
     id="update-task"
     hx-put="/api/lists/{{gid}}/tasks"
@@ -30,11 +30,10 @@
       <textarea id="update-desc" name="desc" aria-label="Description">
 {{desc}}</textarea
       >
-      <!-- <label for="update-tags">Tags:</label> -->
-      <!-- <select multiple="multiple" name="tags" id="update-tags"> -->
-      <!--   <option value="#appelunei">#appelunei</option> -->
-      <!--   <option value="#high">#high</option> -->
-      <!-- </select> -->
+      <label for="update-tags">Tags <small>(Comma-separated)</small>:</label>
+      <textarea id="update-tags" name="tags" aria-label="Tags">
+{{tags}}</textarea
+      >
       <button class="button-primary" type="submit">Update list ▸</button>
       <button
         class="button-cancel"
@@ -47,3 +46,4 @@
     </fieldset>
   </form>
 </template>
+<script src="/apps/maat/edit-task.js"></script>
