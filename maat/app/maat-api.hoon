@@ -5,6 +5,7 @@
 /+  server         :: HTTP request processing
 /+  schooner       :: HTTP response handling
 /+  *json-reparser
+/+  seq
 ::  types
 ::
 |%
@@ -137,14 +138,25 @@
           :: [(send [200 ~ [%json (ships:enjs (val by invs))]]) state]
           ::::
             %tasks
-          =/  filter
+          =/  filter-by-done
             ?~  (find [[key='done' value='true'] ~] args)
-              |=(a=task .=(done.a %.n))
+              |=(=task .=(done.task %.n))
             ?~  (find [[key='done' value='false'] ~] args)
-              |=(a=task .=(done.a %.y))
-            |=(a=task %.y)
+              |=(=task .=(done.task %.y))
+            |=(=task %.y)
+          =/  filter-by-tags
+            ::  args contain tags?'
+            ::
+            ~&  (~(has in (silt (turn args |=(a=[k=@t v=@t] k.a)))) 'tags')
+            ?:  ?!  (~(has in (silt (turn args |=(a=[k=@t v=@t] k.a)))) 'tags')
+              |=(=task %.y)
+            ::  matching tags?
+            ::
+            =/  =tags  (silt (turn args |=(a=[k=@t v=@t] ?:(.=(k.a 'tags') v.a ''))))
+            |=(=task (~(any in tags) |=(=tag (~(has in tags.task) tag))))
           =/  tasks   ~(val by led)
-          =.  tasks   (skim tasks filter)
+          =.  tasks   (skim tasks filter-by-done)
+          =.  tasks   (skim tasks filter-by-tags)
           =/  sorted  (sort tasks |=([a=task b=task] (gth date.a date.b)))
           [(send [200 ~ [%json (led:enjs sorted)]]) state]
           ::::

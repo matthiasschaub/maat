@@ -37,7 +37,7 @@ def test_task_put_invalid_title(zod, gid, title):
         "desc": "blah",
         "date": 1699182124,
         "done": False,
-        "tags": ["#areas"],
+        "tags": ["areas"],
     }
     url = f"/apps/maat/api/lists/{gid}/tasks"
     # PUT /tasks
@@ -63,7 +63,7 @@ def test_tasks_put(zod, gid):
         "desc": "blah",
         "date": 1699182124,
         "done": False,
-        "tags": ["#areas"],
+        "tags": ["areas"],
     }
 
     url = f"/apps/maat/api/lists/{gid}/tasks"
@@ -80,7 +80,7 @@ def test_tasks_put_public(gid):
         "desc": "blah",
         "date": 1699182124,
         "done": False,
-        "tags": ["#areas"],
+        "tags": ["areas"],
     }
     url = f"http://localhost:8080/apps/maat/api/lists/{gid}/tasks"
     response = requests.put(url, json=task)
@@ -133,7 +133,7 @@ def test_tasks_update(zod, gid, tid, task):
         "desc": "blah blah",
         "date": 1699182124,
         "done": True,
-        "tags": ["#areas"],
+        "tags": ["areas"],
     }
     assert task != task2
 
@@ -183,6 +183,64 @@ def test_tasks_get_filter_done(zod, gid, tid, tasks_schema):
     assert tid not in ([r["tid"] for r in result])
 
 
+@pytest.mark.usefixtures("list_", "task")
+def test_tasks_get_filter_tag(zod, gid, tid, tasks_schema):
+    url = f"/apps/maat/api/lists/{gid}/tasks"
+    params = {"tags": ["areas"]}
+    response = zod.get(url, params=params)
+    assert response.status_code == 200
+    result = response.json()
+    assert tasks_schema.is_valid(result)
+    assert tid in ([r["tid"] for r in result])
+
+
+@pytest.mark.usefixtures("list_", "task")
+def test_tasks_get_filter_some_tag(zod, gid, tid, tasks_schema):
+    url = f"/apps/maat/api/lists/{gid}/tasks"
+    params = {"tags": ["some"]}
+    response = zod.get(url, params=params)
+    assert response.status_code == 200
+    result = response.json()
+    assert tasks_schema.is_valid(result)
+    assert tid not in ([r["tid"] for r in result])
+
+
+@pytest.mark.usefixtures("list_", "task")
+def test_tasks_get_filter_no_tag(zod, gid, tid, tasks_schema):
+    url = f"/apps/maat/api/lists/{gid}/tasks"
+    params = {"tags": []}
+    response = zod.get(url, params=params)
+    assert response.status_code == 200
+    result = response.json()
+    assert tasks_schema.is_valid(result)
+    assert tid in ([r["tid"] for r in result])
+
+
+@pytest.mark.usefixtures("list_", "task")
+def test_tasks_get_filter_multiple_tags_or(zod, gid, tid, tasks_schema):
+    """Get all tasks if any one tag matches (OR)"""
+    url = f"/apps/maat/api/lists/{gid}/tasks"
+    params = {"tags": ["areas", "projects"]}
+    response = zod.get(url, params=params)
+    assert response.status_code == 200
+    result = response.json()
+    assert tasks_schema.is_valid(result)
+    assert tid in ([r["tid"] for r in result])
+
+
+# @pytest.mark.usefixtures("list_", "task")
+# def test_tasks_get_filter_multiple_tags_and(zod, gid, tid, tasks_schema):
+#     """Get all tasks if any one tag matches (AND)"""
+#     # TODO
+#     url = f"/apps/maat/api/lists/{gid}/tasks"
+#     params = {"tags": ["areas", "projects"]}
+#     response = zod.get(url, params=params)
+#     assert response.status_code == 200
+#     result = response.json()
+#     assert tasks_schema.is_valid(result)
+#     assert tid not in ([r["tid"] for r in result])
+
+
 @pytest.mark.usefixtures("list_public", "task")
 def test_tasks_get_public(gid, tid, tasks_schema):
     url = f"http://localhost:8080/apps/maat/api/lists/{gid}/tasks"
@@ -210,7 +268,7 @@ def test_task_put_multi(zod, gid, task, tasks_schema):
         "desc": "blah",
         "date": 1699182124,
         "done": False,
-        "tags": ["#areas"],
+        "tags": ["areas"],
     }
     url = f"/apps/maat/api/lists/{gid}/tasks"
     response = zod.put(url, json=task_2)
@@ -233,7 +291,7 @@ def test_task_put_by_nus(zod, nus, gid, uuid, task_schema):
         "desc": "blah",
         "date": 1699182124,
         "done": False,
-        "tags": ["#areas"],
+        "tags": ["areas"],
     }
     url = f"/apps/maat/api/lists/{gid}/tasks"
 

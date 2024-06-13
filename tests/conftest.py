@@ -83,7 +83,7 @@ def task(zod, gid, tid) -> dict:
         "desc": "blah",
         "date": 1699182124,
         "done": False,
-        "tags": ["#areas"],
+        "tags": ["areas"],
     }
     url = f"/apps/maat/api/lists/{gid}/tasks"
     zod.put(url, json=task)
