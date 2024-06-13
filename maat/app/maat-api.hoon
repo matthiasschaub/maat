@@ -5,7 +5,6 @@
 /+  server         :: HTTP request processing
 /+  schooner       :: HTTP response handling
 /+  *json-reparser
-/+  seq
 ::  types
 ::
 |%
@@ -147,7 +146,6 @@
           =/  filter-by-tags
             ::  args contain tags?'
             ::
-            ~&  (~(has in (silt (turn args |=(a=[k=@t v=@t] k.a)))) 'tags')
             ?:  ?!  (~(has in (silt (turn args |=(a=[k=@t v=@t] k.a)))) 'tags')
               |=(=task %.y)
             ::  matching tags?

@@ -116,7 +116,7 @@
         ==
     :-  ^-  (list card)
       ~
-      ::  TODO
+      ::  TODO:
       :: :~  (do-update [%group gid.group group.action])
       :: ==
     %=  this
@@ -155,18 +155,19 @@
           (~(has in acl) src.bowl)
           .=(src.bowl host.group)
         ==
-    ?.  =(our.bowl host.group)
-      :-  ^-  (list card)
-        :~  [%pass ~ %agent [host.group %maat] %poke %maat-action !>(action)]
-        ==
-      this
     =/  led  (~(got by leds) gid.action)
     =.  led  (~(put by led) tid.task.action task.action)
     :-  ^-  (list card)
       :~
-        :*  %give  %fact  [/[gid.action] ~]  %maat-update
-            !>  ^-  update  [%led gid.action led]
-        ==
+        :: if, ship is not host
+        ::
+        ?.  =(our.bowl host.group)
+          :: then, send data to host
+          ::
+          (do-action [host.group action])
+        :: else, send data to subscribers
+        ::
+        (do-update [%led gid.action led])
       ==
     %=  this
       leds  (~(put by leds) gid.action led)
@@ -185,11 +186,6 @@
           (~(has in acl) src.bowl)
           .=(src.bowl host.group)
         ==
-    ?.  =(our.bowl host.group)
-      :-  ^-  (list card)
-        :~  (do-action [host.group action])
-        ==
-      this
     =/  led   (~(got by leds) gid.action)
     =/  task  (~(got by led) tid.task.action)
     ?>  ?&
@@ -199,7 +195,16 @@
         ==
     =.  led  (~(put by led) tid.task.action task.action)
     :-  ^-  (list card)
-      :~  (do-update [%led gid.action led])
+      :~
+        :: if, ship is not host
+        ::
+        ?.  =(our.bowl host.group)
+          :: then, send data to host
+          ::
+          (do-action [host.group action])
+        :: else, send data to subscribers
+        ::
+        (do-update [%led gid.action led])
       ==
     %=  this
       leds  (~(put by leds) gid.action led)
@@ -218,15 +223,19 @@
           (~(has in acl) src.bowl)
           .=(src.bowl host.group)
         ==
-    ?.  =(our.bowl host.group)
-      :-  ^-  (list card)
-        :~  (do-action [host.group action])
-        ==
-      this
     =/  led  (~(got by leds) gid.action)
     =.  led  (~(del by led) tid.action)
     :-  ^-  (list card)
-      :~  (do-update [%led gid.action led])
+      :~
+        :: if, ship is not host
+        ::
+        ?.  =(our.bowl host.group)
+          :: then, send data to host
+          ::
+          (do-action [host.group action])
+        :: else, send data to subscribers
+        ::
+        (do-update [%led gid.action led])
       ==
     %=  this
       leds  (~(put by leds) gid.action led)
