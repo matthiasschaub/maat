@@ -95,8 +95,20 @@
 <ul class="sticky-top" id="filter-tasks">
   <li>
     <a class="icon icon-circle-question"></a>
-    <form id="filter-tasks" class="inline">
-      <input placeholder="Filter by tags" />
+    <form
+      id="filter-tasks"
+      class="inline"
+      hx-get="/api/lists/{gid}/tasks"
+      hx-vals='{"done": "false"}'
+      hx-target="#tasks"
+      mustache-template="tasks-todo-template"
+    >
+      <input
+        id="filter-tasks-input"
+        name="tags"
+        type="text"
+        placeholder="Filter by tags"
+      />
     </form>
   </li>
 </ul>
@@ -174,6 +186,7 @@
     </form>
   </li>
 </ul>
+<script src="/apps/maat/tasks.js"></script>
 <!-- <div class="done"> -->
 <!--   <h3>Done</h3> -->
 <!--   <ul> -->
