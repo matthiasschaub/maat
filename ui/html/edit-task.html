@@ -40,7 +40,14 @@
     hx-ext="client-side-templates,path-deps"
     hx-indicator="#overlay"
   >
-    <header></header>
+    <header><nav>
+  <ul>
+    <li><a href="/apps/maat">↜ Lists</a></li>
+    <li><a href="/lists/{gid}/settings">Settings</a></li>
+    <li><a href="/lists/{gid}/about">About</a></li>
+  </ul>
+</nav>
+</header>
 
     <div id="overlay" class="overlay htmx-indicator htmx-request">
       <div class="spinner">
@@ -95,8 +102,9 @@
   <form
     id="update-task"
     hx-put="/api/lists/{{gid}}/tasks"
-    hx-vals='js:{gid: "{{gid}}", tid: "{{tid}}", date: parseInt("{{date}}"), done: JSON.parse("{{done}}"), tags: []}'
+    hx-vals='{"gid": "{{gid}}", "tid": "{{tid}}", "date": {{date}}, "done": {{done}}}'
     hx-ext="json-enc"
+    hx-swap="none"
     hx-on::after-request='if(event.detail.successful) window.location.pathname = "/apps/maat/lists/" + gid() + "/tasks";'
   >
     <fieldset>
@@ -113,14 +121,22 @@
         value="{{title}}"
       />
       <label for="update-desc">Description:</label>
-      <textarea id="update-desc" name="desc" aria-label="Description">
+      <div class="grow-wrap">
+        <textarea
+          row="1"
+          id="update-desc"
+          name="desc"
+          aria-label="Description"
+          onInput="this.parentNode.dataset.replicatedValue = this.value"
+        >
 {{desc}}</textarea
-      >
+        >
+      </div>
       <label for="update-tags">Tags <small>(Comma-separated)</small>:</label>
       <textarea id="update-tags" name="tags" aria-label="Tags">
 {{tags}}</textarea
       >
-      <button class="button-primary" type="submit">Update list ▸</button>
+      <button class="button-primary" type="submit">Update task ▸</button>
       <button
         class="button-cancel"
         onclick="window.location.href='/apps/maat/lists/' + gid() + '/tasks';"

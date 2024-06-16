@@ -33,5 +33,5 @@ for site in (
     if site in ("index.html", "create.html"):
         html = template.substitute(header=header_index, main=main)
     else:
-        html = template.substitute(header="", main=main)
+        html = template.substitute(header=header, main=main)
     Path(html_dir / site).write_text(html)

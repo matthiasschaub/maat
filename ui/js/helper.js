@@ -34,7 +34,7 @@ document.body.addEventListener("htmx:configRequest", (event) => {
 
 // error display
 //
-document.body.addEventListener("htmx:responseError", function (evt) {
+document.body.addEventListener("htmx:responseError", (evt) => {
   const errorPre = document.getElementById("error-pre");
   const errorDiv = document.getElementById("error-div");
   if (evt.detail.xhr) {
@@ -44,7 +44,7 @@ document.body.addEventListener("htmx:responseError", function (evt) {
       errorPre.innerText = "500 - Internal Server Error";
       errorDiv.style.display = "grid";
     } else {
-      errorPre.innerText = event.detail.xhr.response;
+      errorPre.innerText = evt.detail.xhr.response;
       errorDiv.style.display = "grid";
     }
   } else {

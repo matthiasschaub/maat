@@ -2,26 +2,41 @@ import htmx from "htmx.org";
 import Mustache from "mustache";
 
 htmx.defineExtension("client-side-formats", {
-  transformResponse: function (text, xhr, elt) {
-    var data = JSON.parse(text);
-
+  transformResponse: (text, _xhr, elt) => {
     switch (elt.id) {
       case "invites": {
+        let data = JSON.parse(text);
         if (data.length > 0) {
           data = { invites: [true] };
         } else {
           data = { invites: [] };
         }
-        break;
+        return JSON.stringify(data);
       }
       case "tags": {
+        let data = JSON.parse(text);
         data = data.join();
-        break;
+        return JSON.stringify(data);
       }
     }
-
-    return JSON.stringify(data);
   },
+});
+
+window.addEventListener("htmx:configRequest", (event) => {
+  // send tags as list
+  if ("tags" in event.detail.parameters) {
+    const tags = event.detail.parameters.tags;
+    console.log(tags);
+    if (typeof tags === "string" || tags instanceof String) {
+      console.log("yes");
+      const tagsArray = tags
+        .replace(/\s+/g, " ")
+        .trim()
+        .replaceAll(" ", "")
+        .split(",");
+      event.detail.parameters.tags = tagsArray.filter((str) => str !== "");
+    }
+  }
 });
 
 window.htmx = htmx;

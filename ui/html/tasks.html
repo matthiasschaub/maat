@@ -40,7 +40,14 @@
     hx-ext="client-side-templates,path-deps"
     hx-indicator="#overlay"
   >
-    <header></header>
+    <header><nav>
+  <ul>
+    <li><a href="/apps/maat">↜ Lists</a></li>
+    <li><a href="/lists/{gid}/settings">Settings</a></li>
+    <li><a href="/lists/{gid}/about">About</a></li>
+  </ul>
+</nav>
+</header>
 
     <div id="overlay" class="overlay htmx-indicator htmx-request">
       <div class="spinner">
@@ -124,17 +131,19 @@
 <template id="tasks-todo-template">
   {{#.}}
   <li>
+    <!-- mark task as done -->
+    <!-- NOTE: be careful with the js prefix for hx-vals when dealing with user input -->
     <a
       id="{{tid}}"
       class="icon icon-circle"
       hx-put="/api/lists/{{gid}}/tasks"
-      hx-vals='{"gid": "{{gid}}", "tid": "{{tid}}", "title": "{{title}}", "desc": "{{desc}}", "date": {{date}}, "done": true, "tags": []}'
+      hx-vals='js:{gid: "{{gid}}", tid: "{{tid}}", title: "{{title}}", desc: `{{desc}}`, date: {{date}}, done: true, tags: {{tags}}}'
       hx-ext="json-enc"
       hx-trigger="click"
     >
     </a>
     <a style="text-decoration: none" href="/lists/{{gid}}/tasks/{{tid}}/edit"
-      >{{title}} <small><em>{{tags}}</em></small></a
+      >{{title}} <code>{{tags}}</code></a
     >
     {{/.}}
   </li>
@@ -155,14 +164,16 @@
       id="{{tid}}"
       class="icon icon-circle-checked"
       hx-put="/api/lists/{{gid}}/tasks"
-      hx-vals='{"gid": "{{gid}}", "tid": "{{tid}}", "title": "{{title}}", "desc": "{{desc}}", "date": {{date}}, "done": false, "tags": []}'
+      hx-vals='{"gid": "{{gid}}", "tid": "{{tid}}", "title": "{{title}}", "desc": "{{desc}}", "date": {{date}}, "done": false, "tags": "{{tags}}"}'
       hx-ext="json-enc"
       hx-trigger="click"
     >
     </a>
-    <s
-      >{{title}} <small><em>{{tags}}</em></small></s
-    >
+    <s>
+      <a style="text-decoration: none" href="/lists/{{gid}}/tasks/{{tid}}/edit">
+        {{title}} <code>{{tags}}</code>
+      </a>
+    </s>
     {{/.}}
   </li>
 </template>

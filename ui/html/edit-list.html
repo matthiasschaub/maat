@@ -40,7 +40,14 @@
     hx-ext="client-side-templates,path-deps"
     hx-indicator="#overlay"
   >
-    <header></header>
+    <header><nav>
+  <ul>
+    <li><a href="/apps/maat">↜ Lists</a></li>
+    <li><a href="/lists/{gid}/settings">Settings</a></li>
+    <li><a href="/lists/{gid}/about">About</a></li>
+  </ul>
+</nav>
+</header>
 
     <div id="overlay" class="overlay htmx-indicator htmx-request">
       <div class="spinner">
@@ -85,9 +92,10 @@
         <pre hidden id="error-pre"></pre>
       </div>
       <div
-  id="update"
+  id="update-task"
   hx-get="/api/lists/{gid}"
   hx-trigger="load"
+  hx-ext="client-side-formats"
   mustache-template="list-template"
 ></div>
 <template id="list-template">
@@ -138,7 +146,7 @@
   </form>
 </template>
 <script>
-  var details = document.getElementById("update");
+  var details = document.getElementById("update-task");
   details.addEventListener("htmx:afterSettle", (event) => {
     var form = document.getElementById("update-list");
     form.addEventListener("htmx:configRequest", (event) => {

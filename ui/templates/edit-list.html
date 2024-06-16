@@ -1,7 +1,8 @@
 <div
-  id="update"
+  id="update-task"
   hx-get="/api/lists/{gid}"
   hx-trigger="load"
+  hx-ext="client-side-formats"
   mustache-template="list-template"
 ></div>
 <template id="list-template">
@@ -52,7 +53,7 @@
   </form>
 </template>
 <script>
-  var details = document.getElementById("update");
+  var details = document.getElementById("update-task");
   details.addEventListener("htmx:afterSettle", (event) => {
     var form = document.getElementById("update-list");
     form.addEventListener("htmx:configRequest", (event) => {

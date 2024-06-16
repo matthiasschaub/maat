@@ -1,9 +1,7 @@
-const form = document.getElementById("filter-tasks");
-form.addEventListener("htmx:configRequest", (event) => {
+window.addEventListener("htmx:configRequest", (event) => {
   // send tags as list
   if ("tags" in event.detail.parameters) {
-    const tagsString = document.getElementById("filter-tasks-input").value;
-    console.log(tagsString);
+    const tagsString = event.detail.parameters.tags;
     const tagsArray = tagsString
       .replace(/\s+/g, " ")
       .trim()
