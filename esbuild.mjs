@@ -25,7 +25,6 @@ let ctx = await esbuild.context({
     "./ui/png/ios/180.png",
     "./ui/js/index.js",
     "./ui/js/helper.js",
-    "./ui/js/tasks.js",
     "./ui/js/edit-task.js",
     "./node_modules/htmx.org/dist/ext/path-deps.js",
     "./node_modules/htmx.org/dist/ext/json-enc.js",

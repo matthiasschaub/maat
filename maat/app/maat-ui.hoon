@@ -26,7 +26,6 @@
 /*  ttf-soria                 %ttf    /app/ui/ttf/soria/ttf
 /*  js-index                  %js     /app/ui/js/index/js
 /*  js-helper                 %js     /app/ui/js/helper/js
-/*  js-tasks                  %js     /app/ui/js/tasks/js
 /*  js-edit-task              %js     /app/ui/js/edit-task/js
 /*  js-json-enc               %js     /app/ui/js/json-enc/js
 /*  js-path-deps              %js     /app/ui/js/path-deps/js
@@ -155,8 +154,6 @@
         [(send [200 ~ [%html html-create]]) state]
       [%apps %maat %helper ~]
         [(send [200 ~ [%js js-helper]]) state]
-      [%apps %maat %tasks ~]
-        [(send [200 ~ [%js js-tasks]]) state]
       [%apps %maat %edit-task ~]
         [(send [200 ~ [%js js-edit-task]]) state]
       [%apps %maat %json-enc ~]
