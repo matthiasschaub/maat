@@ -44,6 +44,11 @@ def tid():
 
 
 @pytest.fixture
+def tid_2():
+    return str(uuid4())
+
+
+@pytest.fixture
 def gid():
     return str(uuid4())
 
@@ -91,6 +96,22 @@ def task(zod, gid, tid) -> dict:
 
 
 @pytest.fixture
+def task_2(zod, gid, tid_2) -> dict:
+    task = {
+        "gid": gid,
+        "tid": tid_2,
+        "title": "book a train ticket",
+        "desc": "blah",
+        "date": 1699182124,
+        "done": False,
+        "tags": ["areas", "resources"],
+    }
+    url = f"/apps/maat/api/lists/{gid}/tasks"
+    zod.put(url, json=task)
+    return task
+
+
+@pytest.fixture
 def invitee_nus(zod, gid):
     url = f"/apps/maat/api/lists/{gid}/invitees"
     response = zod.put(url, json={"invitee": "~nus"})
@@ -105,4 +126,5 @@ def member_nus(nus, gid, list_, invitee_nus):
     }
     url = "/apps/maat/api/join"
     response = nus.post(url, json=join)
+    return "~nus"
     return "~nus"

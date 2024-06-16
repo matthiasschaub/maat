@@ -42,9 +42,13 @@
       ^-  json
       [%a (turn ~(val by g) group:enjs)]
     ++  tag
-      |=  t=@t
+      |=  =^tag
       ^-  json
-      [%s t]
+      [%s tag]
+    ++  tags
+      |=  =^tags
+      ^-  json
+      [%a (turn ~(tap in tags) tag:enjs)]
     ++  task
       |=  t=^task
       ^-  json

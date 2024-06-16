@@ -5,6 +5,7 @@
 /+  server         :: HTTP request processing
 /+  schooner       :: HTTP response handling
 /+  *json-reparser
+/+  *list
 ::  types
 ::
 |%
@@ -120,7 +121,7 @@
           [(send [404 ~ [%plain "404 - Not Found"]]) state]
           ::
              %version
-           [(send [200 ~ [%json (version:enjs '2024-06-08.2')]]) state]
+           [(send [200 ~ [%json (version:enjs '2024-06-16.3')]]) state]
           ::
             %members
           [(send [200 ~ [%json (ships:enjs reg)]]) state]
@@ -157,6 +158,11 @@
           =.  tasks   (skim tasks filter-by-tags)
           =/  sorted  (sort tasks |=([a=task b=task] (gth date.a date.b)))
           [(send [200 ~ [%json (led:enjs sorted)]]) state]
+            %tags
+          =/  tasks  ~(val by led)
+          =/  raw    (apply tasks |=(=task ~(tap in tags.task)))
+          =/  =tags  (silt `(list @tas)`(flatten raw))
+          [(send [200 ~ [%json (tags:enjs tags)]]) state]
           ::::
           ::  %balances
           ::=/  path  /(scot %p our.bowl)/tahuti/(scot %da now.bowl)/[gid]/net/noun
