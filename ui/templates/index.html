@@ -13,13 +13,13 @@
   </thead>
   <!-- TODO: add default message: no groups yet -->
   <tbody
-    id="lists"
     hx-get="/api/lists"
     hx-trigger="load"
-    mustache-template="lists-template"
+    hx-ext="client-side-templates"
+    mustache-template="index__lists-template"
   ></tbody>
 </table>
-<template id="lists-template">
+<template id="index__lists-template">
   <!-- iterate over array of members object -->
   {{#.}}
   <tr>
@@ -28,6 +28,7 @@
       hx-target="body"
       hx-trigger="click"
       hx-push-url="true"
+      hx-ext="ignore:client-side-templates"
     >
       {{title}}
     </td>
@@ -36,6 +37,7 @@
       hx-target="body"
       hx-trigger="click"
       hx-push-url="true"
+      hx-ext="ignore:client-side-templates"
     >
       {{host}}
     </td>
@@ -44,6 +46,7 @@
       hx-target="body"
       hx-trigger="click"
       hx-push-url="true"
+      hx-ext="ignore:client-side-templates"
     >
       <svg
         width="15"
@@ -91,10 +94,10 @@
   id="invites"
   hx-get="/api/invites"
   hx-trigger="load"
-  hx-ext="client-side-formats"
-  mustache-template="invites-temp"
+  hx-ext="client-side-templates,client-side-formats"
+  mustache-template="index__invites-temp"
 ></p>
-<template id="invites-temp">
+<template id="index__invites-temp">
   {{#invites}} You are invited to join another list. See
   <a href="/apps/maat/invites">invites</a>. {{/invites}}
   {{^invites}}{{/invites}}

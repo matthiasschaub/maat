@@ -27,22 +27,27 @@
     />
     <link rel="stylesheet" href="/apps/maat/udjat.css" />
     <link rel="stylesheet" href="/apps/maat/style.css" />
-    <link rel="preconnect" href="https://rsms.me/" />
-    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+    <!-- TODO: serve Inter font from urbit-->
+    <!-- <link rel="preconnect" href="https://rsms.me/" /> -->
+    <!-- <link rel="stylesheet" href="https://rsms.me/inter/inter.css" /> -->
     <script src="/apps/maat/index.js"></script>
-    <script src="/apps/maat/path-deps.js"></script>
-    <script src="/apps/maat/json-enc.js"></script>
     <script src="/apps/maat/client-side-templates.js"></script>
+    <!-- NOTE: currently using own json-enc extension defined in index.js -->
+    <!-- <script src="/apps/maat/json-enc.js" defer></script> -->
+    <!-- TODO: serving path-deps from urbit does not work. -->
+    <script src="/apps/maat/path-deps.js"></script>
+    <!-- <script src="https://unpkg.com/htmx-ext-path-deps@2.0.0/path-deps.js"></script> -->
   </head>
 
   <body
     hx-boost="true"
-    hx-ext="client-side-templates,path-deps"
     hx-indicator="#overlay"
+    hx-ext="path-deps,json-enc-maat"
   >
     <header><nav>
   <ul>
     <li><a href="/apps/maat">↜ Lists</a></li>
+    <li><a href="/lists/{gid}/tasks">Tasks</a></li>
     <li><a href="/lists/{gid}/settings">Settings</a></li>
     <li><a href="/lists/{gid}/about">About</a></li>
   </ul>
@@ -87,20 +92,21 @@
       </div>
     </div>
 
-    <main>
+    <main class="flow">
       <div id="error-div" class="error">
         <pre hidden id="error-pre"></pre>
       </div>
-      <div
-  hx-get="/api/lists/{gid}"
-  hx-trigger="load"
-  mustache-template="title-template"
->
-  <h1 style="opacity: 0">Loading ...</h1>
-</div>
-<template id="title-template">
-  <h1>{{title}}</h1>
-</template>
+      <!-- TODO: does not work -->
+<!-- <h1 -->
+<!--   hx-get="/api/lists/{gid}" -->
+<!--   hx-trigger="load" -->
+<!--   hx-ext="client-side-templates" -->
+<!--   mustache-template="invite__title-template" -->
+<!--   hidden -->
+<!-- ></h1> -->
+<!-- <template id="invite__title-template"> -->
+<!--   {{title}} -->
+<!-- </template> -->
 
 <h2>Add members</h2>
 <p>
@@ -109,7 +115,6 @@
 <form
   id="put-invitees"
   hx-put="/api/lists/{gid}/invitees"
-  hx-ext="json-enc"
   hx-swap="none"
   hx-on::after-request='if(event.detail.successful) window.location.pathname = "/apps/maat/lists/" + gid() + "/settings";'
 >

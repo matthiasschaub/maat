@@ -2,7 +2,7 @@
   id="update-task"
   hx-get="/api/lists/{gid}"
   hx-trigger="load"
-  hx-ext="client-side-formats"
+  hx-ext="client-side-templates"
   mustache-template="list-template"
 ></div>
 <template id="list-template">
@@ -10,8 +10,8 @@
   <form
     id="update-list"
     hx-put="/api/lists"
-    hx-ext="json-enc"
     hx-vals='{"gid": "{{gid}}"}'
+    hx-ext="ignore:client-side-templates"
     hx-on::after-request='if(event.detail.successful) window.location.pathname = "/apps/maat/lists/" + gid() + "/settings";'
   >
     <fieldset>

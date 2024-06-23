@@ -27,18 +27,22 @@
     />
     <link rel="stylesheet" href="/apps/maat/udjat.css" />
     <link rel="stylesheet" href="/apps/maat/style.css" />
-    <link rel="preconnect" href="https://rsms.me/" />
-    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+    <!-- TODO: serve Inter font from urbit-->
+    <!-- <link rel="preconnect" href="https://rsms.me/" /> -->
+    <!-- <link rel="stylesheet" href="https://rsms.me/inter/inter.css" /> -->
     <script src="/apps/maat/index.js"></script>
-    <script src="/apps/maat/path-deps.js"></script>
-    <script src="/apps/maat/json-enc.js"></script>
     <script src="/apps/maat/client-side-templates.js"></script>
+    <!-- NOTE: currently using own json-enc extension defined in index.js -->
+    <!-- <script src="/apps/maat/json-enc.js" defer></script> -->
+    <!-- TODO: serving path-deps from urbit does not work. -->
+    <script src="/apps/maat/path-deps.js"></script>
+    <!-- <script src="https://unpkg.com/htmx-ext-path-deps@2.0.0/path-deps.js"></script> -->
   </head>
 
   <body
     hx-boost="true"
-    hx-ext="client-side-templates,path-deps"
     hx-indicator="#overlay"
+    hx-ext="path-deps,json-enc-maat"
   >
     <header><!-- invisible header bar to keep spacing consistent -->
 <nav style="opacity: 0; pointer-events: none">
@@ -101,19 +105,27 @@
       </div>
     </div>
 
-    <main>
+    <main class="flow">
       <div id="error-div" class="error">
         <pre hidden id="error-pre"></pre>
       </div>
       <h1>MAAT</h1>
 <h2>Create new list</h2>
+
+<!-- HACK: Make request to remove loading spinner. -->
+<!-- Using hx-on:htmx:load or Javascript does not work. -->
+<div
+hx-get="/api/lists"
+hx-trigger="load"
+hidden
+></div>
+
 <form
-  id="put-lists"
   hx-put="/apps/maat/api/lists"
-  hx-ext="json-enc"
   hx-swap="none"
   hx-vals="js:{gid: self.crypto.randomUUID()}"
   hx-request="noHeaders"
+  hx-on:htmx:load='console.log("Does not work"); document.getElementById("overlay").classList.remove("htmx-request");'
   hx-on::after-request='if(event.detail.successful) window.location.pathname = "/apps/maat";'
 >
   <fieldset>
@@ -142,20 +154,9 @@
     </button>
   </fieldset>
 </form>
-<script>
-  var element = document.getElementById("overlay");
-  element.classList.remove("htmx-request");
-
-  var form = document.getElementById("put-lists");
-  form.addEventListener("htmx:configRequest", (event) => {
-    console.log(event);
-    if ("public" in event.detail.parameters) {
-      event.detail.parameters.public =
-        event.detail.parameters.public === "true";
-      console.log(event.detail.parameters.public === "true");
-    }
-  });
-</script>
+<!-- <script> -->
+<!--   document.getElementById("overlay").classList.remove("htmx-request"); -->
+<!-- </script> -->
 
     </main>
     <script src="/apps/maat/helper.js"></script>

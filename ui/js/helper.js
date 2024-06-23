@@ -28,6 +28,14 @@ document.body.addEventListener("htmx:configRequest", (event) => {
     path = path.replace("/apps/maat", "");
   }
 
+  // delete empty tags query parameter
+  const formData = event.detail.formData;
+  if (formData.has("tags") && (event.detail.verb === "get")) {
+    if (!formData.get("tags")) {
+      delete formData.delete("tags");
+    }
+  }
+
   const site = `/apps/maat${path}`;
   event.detail.path = site.replace(/\/$/, ""); // without trailing slash
 });
@@ -63,3 +71,4 @@ document.body.addEventListener("htmx:responseError", (evt) => {
 export { gid, tid };
 
 window.gid = gid;
+window.tid = tid;

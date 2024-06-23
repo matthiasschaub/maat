@@ -27,22 +27,27 @@
     />
     <link rel="stylesheet" href="/apps/maat/udjat.css" />
     <link rel="stylesheet" href="/apps/maat/style.css" />
-    <link rel="preconnect" href="https://rsms.me/" />
-    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+    <!-- TODO: serve Inter font from urbit-->
+    <!-- <link rel="preconnect" href="https://rsms.me/" /> -->
+    <!-- <link rel="stylesheet" href="https://rsms.me/inter/inter.css" /> -->
     <script src="/apps/maat/index.js"></script>
-    <script src="/apps/maat/path-deps.js"></script>
-    <script src="/apps/maat/json-enc.js"></script>
     <script src="/apps/maat/client-side-templates.js"></script>
+    <!-- NOTE: currently using own json-enc extension defined in index.js -->
+    <!-- <script src="/apps/maat/json-enc.js" defer></script> -->
+    <!-- TODO: serving path-deps from urbit does not work. -->
+    <script src="/apps/maat/path-deps.js"></script>
+    <!-- <script src="https://unpkg.com/htmx-ext-path-deps@2.0.0/path-deps.js"></script> -->
   </head>
 
   <body
     hx-boost="true"
-    hx-ext="client-side-templates,path-deps"
     hx-indicator="#overlay"
+    hx-ext="path-deps,json-enc-maat"
   >
     <header><nav>
   <ul>
     <li><a href="/apps/maat">↜ Lists</a></li>
+    <li><a href="/lists/{gid}/tasks">Tasks</a></li>
     <li><a href="/lists/{gid}/settings">Settings</a></li>
     <li><a href="/lists/{gid}/about">About</a></li>
   </ul>
@@ -87,55 +92,56 @@
       </div>
     </div>
 
-    <main>
+    <main class="flow">
       <div id="error-div" class="error">
         <pre hidden id="error-pre"></pre>
       </div>
-      <div
-  id="details"
+      <h1>Settings</h1>
+
+<h2>Details</h2>
+<table
+  class="col-two"
   hx-get="/api/lists/{gid}"
-  hx-trigger="load, path-deps"
-  path-deps="/apps/maat/api/lists"
-  mustache-template="list-template"
-></div>
-<template id="list-template">
-  <h1>Settings</h1>
-  <h2>Details</h2>
-  <table class="col-two">
-    <thead></thead>
-    <tbody>
-      <tr>
-        <th>Title</th>
-        <td>{{title}}</td>
-      </tr>
-      <tr>
-        <th>Host</th>
-        <td>{{host}}</td>
-      </tr>
-      <tr>
-        <th>Public</th>
-        <td>{{public}}</td>
-      </tr>
-    </tbody>
-  </table>
+  hx-trigger="load"
+  hx-ext="client-side-templates"
+  mustache-template="settings__list-template"
+></table>
+<template id="settings__list-template">
+  <thead></thead>
+  <tbody>
+    <tr>
+      <th>Title</th>
+      <td>{{title}}</td>
+    </tr>
+    <tr>
+      <th>Host</th>
+      <td>{{host}}</td>
+    </tr>
+    <tr>
+      <th>Public</th>
+      <td>{{public}}</td>
+    </tr>
+  </tbody>
 </template>
+
 <h2>Update list</h2>
 <p><a href="/lists/{gid}/edit">Update</a> this lists metadata.</p>
 
 <h2>Members</h2>
 <ul
-  id="members"
   hx-get="/api/lists/{gid}/members"
   hx-trigger="load"
   hx-swap="outerHTML"
-  mustache-template="members-template"
+  hx-ext="client-side-templates"
+  mustache-template="settings__members-template"
 >
-  <template id="members-template">
+  <template id="settings__members-template">
     {{#.}}
     <li>{{.}}</li>
     {{/.}}
   </template>
 </ul>
+
 <h2>Add members</h2>
 <p>
   <a
@@ -147,6 +153,7 @@
   >
   members to this list.
 </p>
+
 <h2>Export tasks</h2>
 <p>
   <a
@@ -163,10 +170,9 @@
     id="delete-list"
     hx-delete="/api/lists/{gid}"
     hx-confirm="Are you sure?"
-    hx-ext="json-enc"
     hx-swap="none"
     hx-vals="js:{gid: gid()}"
-    hx-on::after-request='if(event.detail.successful) window.location.pathname = "/apps/maat"'
+    hx-on:htmx:after-request='if(event.detail.successful) window.location.pathname = "/apps/maat"'
     >delete</a
   >
   this group.

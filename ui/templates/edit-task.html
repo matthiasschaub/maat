@@ -3,6 +3,7 @@
   id="update"
   hx-get="/api/lists/{gid}/tasks/{tid}"
   hx-trigger="load"
+  hx-ext="client-side-templates,client-side-formats"
   mustache-template="task-template"
 ></div>
 <template id="task-template">
@@ -10,8 +11,8 @@
     id="update-task"
     hx-put="/api/lists/{{gid}}/tasks"
     hx-vals='{"gid": "{{gid}}", "tid": "{{tid}}", "date": {{date}}, "done": {{done}}}'
-    hx-ext="json-enc"
     hx-swap="none"
+    hx-ext="ignore:client-side-templates,client-side-formats"
     hx-on::after-request='if(event.detail.successful) window.location.pathname = "/apps/maat/lists/" + gid() + "/tasks";'
   >
     <fieldset>

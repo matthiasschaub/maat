@@ -67,7 +67,6 @@
       id="put-tasks"
       class="inline-form"
       hx-put="/api/lists/{gid}/tasks"
-      hx-ext="json-enc"
       hx-swap="none"
       hx-vals="js:{tid: self.crypto.randomUUID(), gid: gid(), desc: '', date: new Date().valueOf(), done: false, tags: []}"
       hx-on::after-request="if(event.detail.successful) this.reset();"

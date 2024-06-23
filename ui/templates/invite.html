@@ -1,13 +1,14 @@
-<div
-  hx-get="/api/lists/{gid}"
-  hx-trigger="load"
-  mustache-template="title-template"
->
-  <h1 style="opacity: 0">Loading ...</h1>
-</div>
-<template id="title-template">
-  <h1>{{title}}</h1>
-</template>
+<!-- TODO: does not work -->
+<!-- <h1 -->
+<!--   hx-get="/api/lists/{gid}" -->
+<!--   hx-trigger="load" -->
+<!--   hx-ext="client-side-templates" -->
+<!--   mustache-template="invite__title-template" -->
+<!--   hidden -->
+<!-- ></h1> -->
+<!-- <template id="invite__title-template"> -->
+<!--   {{title}} -->
+<!-- </template> -->
 
 <h2>Add members</h2>
 <p>
@@ -16,7 +17,6 @@
 <form
   id="put-invitees"
   hx-put="/api/lists/{gid}/invitees"
-  hx-ext="json-enc"
   hx-swap="none"
   hx-on::after-request='if(event.detail.successful) window.location.pathname = "/apps/maat/lists/" + gid() + "/settings";'
 >

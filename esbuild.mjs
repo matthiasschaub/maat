@@ -26,9 +26,9 @@ let ctx = await esbuild.context({
     "./ui/js/index.js",
     "./ui/js/helper.js",
     "./ui/js/edit-task.js",
-    "./node_modules/htmx.org/dist/ext/path-deps.js",
-    "./node_modules/htmx.org/dist/ext/json-enc.js",
-    "./node_modules/htmx.org/dist/ext/client-side-templates.js",
+    "./node_modules/htmx-ext-path-deps/path-deps.js",
+    "./node_modules/htmx-ext-json-enc/json-enc.js",
+    "./node_modules/htmx-ext-client-side-templates/client-side-templates.js",
   ],
   external: ["*.svg", "*.woff2", "*.ttf"],
   entryNames: "[ext]/[name]", // will name the result files by their folder names

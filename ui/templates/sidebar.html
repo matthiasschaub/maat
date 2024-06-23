@@ -36,7 +36,6 @@
           id="put-lists"
           class="inline"
           hx-put="/api/lists"
-          hx-ext="json-enc"
           hx-swap="none"
           hx-vals="js:{gid: self.crypto.randomUUID(), public: false}"
           hx-on::after-request="if(event.detail.successful) this.reset();"

@@ -6,7 +6,10 @@
   "author": "~talfus-laddus",
   "license": "MIT",
   "dependencies": {
-    "htmx.org": "^1.9.12",
+    "htmx.org": "^2.0.0",
+    "htmx-ext-client-side-templates": "^2.0.0",
+    "htmx-ext-json-enc": "^2.0.0",
+    "htmx-ext-path-deps": "^2.0.0",
     "mustache": "^4.2.0"
   },
   "devDependencies": {

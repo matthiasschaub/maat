@@ -1,12 +1,20 @@
 <h1>MAAT</h1>
 <h2>Create new list</h2>
+
+<!-- HACK: Make request to remove loading spinner. -->
+<!-- Using hx-on:htmx:load or Javascript does not work. -->
+<div
+hx-get="/api/lists"
+hx-trigger="load"
+hidden
+></div>
+
 <form
-  id="put-lists"
   hx-put="/apps/maat/api/lists"
-  hx-ext="json-enc"
   hx-swap="none"
   hx-vals="js:{gid: self.crypto.randomUUID()}"
   hx-request="noHeaders"
+  hx-on:htmx:load='console.log("Does not work"); document.getElementById("overlay").classList.remove("htmx-request");'
   hx-on::after-request='if(event.detail.successful) window.location.pathname = "/apps/maat";'
 >
   <fieldset>
@@ -35,17 +43,6 @@
     </button>
   </fieldset>
 </form>
-<script>
-  var element = document.getElementById("overlay");
-  element.classList.remove("htmx-request");
-
-  var form = document.getElementById("put-lists");
-  form.addEventListener("htmx:configRequest", (event) => {
-    console.log(event);
-    if ("public" in event.detail.parameters) {
-      event.detail.parameters.public =
-        event.detail.parameters.public === "true";
-      console.log(event.detail.parameters.public === "true");
-    }
-  });
-</script>
+<!-- <script> -->
+<!--   document.getElementById("overlay").classList.remove("htmx-request"); -->
+<!-- </script> -->

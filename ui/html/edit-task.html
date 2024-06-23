@@ -27,22 +27,27 @@
     />
     <link rel="stylesheet" href="/apps/maat/udjat.css" />
     <link rel="stylesheet" href="/apps/maat/style.css" />
-    <link rel="preconnect" href="https://rsms.me/" />
-    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+    <!-- TODO: serve Inter font from urbit-->
+    <!-- <link rel="preconnect" href="https://rsms.me/" /> -->
+    <!-- <link rel="stylesheet" href="https://rsms.me/inter/inter.css" /> -->
     <script src="/apps/maat/index.js"></script>
-    <script src="/apps/maat/path-deps.js"></script>
-    <script src="/apps/maat/json-enc.js"></script>
     <script src="/apps/maat/client-side-templates.js"></script>
+    <!-- NOTE: currently using own json-enc extension defined in index.js -->
+    <!-- <script src="/apps/maat/json-enc.js" defer></script> -->
+    <!-- TODO: serving path-deps from urbit does not work. -->
+    <script src="/apps/maat/path-deps.js"></script>
+    <!-- <script src="https://unpkg.com/htmx-ext-path-deps@2.0.0/path-deps.js"></script> -->
   </head>
 
   <body
     hx-boost="true"
-    hx-ext="client-side-templates,path-deps"
     hx-indicator="#overlay"
+    hx-ext="path-deps,json-enc-maat"
   >
     <header><nav>
   <ul>
     <li><a href="/apps/maat">↜ Lists</a></li>
+    <li><a href="/lists/{gid}/tasks">Tasks</a></li>
     <li><a href="/lists/{gid}/settings">Settings</a></li>
     <li><a href="/lists/{gid}/about">About</a></li>
   </ul>
@@ -87,7 +92,7 @@
       </div>
     </div>
 
-    <main>
+    <main class="flow">
       <div id="error-div" class="error">
         <pre hidden id="error-pre"></pre>
       </div>
@@ -96,6 +101,7 @@
   id="update"
   hx-get="/api/lists/{gid}/tasks/{tid}"
   hx-trigger="load"
+  hx-ext="client-side-templates,client-side-formats"
   mustache-template="task-template"
 ></div>
 <template id="task-template">
@@ -103,8 +109,8 @@
     id="update-task"
     hx-put="/api/lists/{{gid}}/tasks"
     hx-vals='{"gid": "{{gid}}", "tid": "{{tid}}", "date": {{date}}, "done": {{done}}}'
-    hx-ext="json-enc"
     hx-swap="none"
+    hx-ext="ignore:client-side-templates,client-side-formats"
     hx-on::after-request='if(event.detail.successful) window.location.pathname = "/apps/maat/lists/" + gid() + "/tasks";'
   >
     <fieldset>
