@@ -31,6 +31,12 @@ h1 {
   font-weight: 600;
 }
 
+blockquote {
+  text-align: center;
+  padding-inline-start: 0;
+  max-width: initial;
+}
+
 /* h2 { */
 /*   font-family: "Soria"; */
 /*   font-weight: normal; */
@@ -65,7 +71,7 @@ header > .header-icon {
 }
 
 .svg-ico {
-  margin-top: var(--vspace-0);
+  /* margin-top: var(--vspace--1); */
   display: inline;
   vertical-align: middle;
   height: 4em;
@@ -261,3 +267,4 @@ main > ul > li {
 .two-col > :is(thead, tbody) > tr > :is(th, td):nth-child(2) {
   text-align: right;
 }
+

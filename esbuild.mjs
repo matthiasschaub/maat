@@ -9,6 +9,7 @@ let ctx = await esbuild.context({
     "./ui/html/invites.html",
     "./ui/html/tasks.html",
     "./ui/html/settings.html",
+    "./ui/html/about.html",
     "./ui/html/edit-list.html",
     "./ui/html/edit-task.html",
     "./ui/css/udjat.css",

@@ -26,6 +26,7 @@ for site in (
     "invites.html",
     "tasks.html",
     "settings.html",
+    "about.html",
     "edit-list.html",
     "edit-task.html",
 ):

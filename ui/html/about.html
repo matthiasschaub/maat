@@ -45,27 +45,14 @@
     hx-indicator="#overlay"
     hx-ext="path-deps,json-enc-maat"
   >
-    <header><!-- invisible header bar to keep spacing consistent -->
-<nav style="opacity: 0; pointer-events: none">
+    <header><nav>
   <ul>
-    <li>Lists</li>
-    <li>Settings</li>
-    <li>About</li>
+    <li><a href="/apps/maat">↜ Lists</a></li>
+    <li><a href="/lists/{gid}/tasks">Tasks</a></li>
+    <li><a href="/lists/{gid}/settings">Settings</a></li>
+    <li><a href="/lists/{gid}/about">About</a></li>
   </ul>
 </nav>
-<div class="header-icon">
-  <a href="/apps/maat">
-    <svg
-      class="svg-ico"
-      version="1.1"
-      viewBox="0 0 135.47 135.47"
-      xml:space="preserve"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <use xlink:href="/apps/maat/icon.svg#icon" />
-    </svg>
-  </a>
-</div>
 </header>
 
     <div id="overlay" class="overlay htmx-indicator htmx-request">
@@ -110,54 +97,55 @@
       <div id="error-div" class="error">
         <pre hidden id="error-pre"></pre>
       </div>
-      <h1>MAAT</h1>
-<h2>Create new list</h2>
+      <h1>Maat</h1>
 
-<!-- HACK: Make request to remove loading spinner. -->
-<!-- Using hx-on:htmx:load or Javascript does not work. -->
-<div
-hx-get="/api/lists"
-hx-trigger="load"
-hidden
-></div>
+<blockquote>
+  <a href="https://www.createwcare.com/">Created w/ care</a>
+</blockquote>
 
-<form
-  hx-put="/apps/maat/api/lists"
-  hx-swap="none"
-  hx-vals="js:{gid: self.crypto.randomUUID()}"
-  hx-request="noHeaders"
-  hx-on:htmx:load='console.log("Does not work"); document.getElementById("overlay").classList.remove("htmx-request");'
-  hx-on::after-request='if(event.detail.successful) window.location.pathname = "/apps/maat";'
->
-  <fieldset class="stack">
-    <label>Titel</label>
-    <input
-      id="list-title"
-      type="text"
-      name="title"
-      aria-label="List Title"
-      autocomplete="off"
-      required
-    />
-    <label>Access</label>
-    <select id="public" type="text" name="public" aria-label="Public" required>
-      <option value="false">Private</option>
-      <option value="true">Public</option>
-    </select>
-    <button class="button-primary" type="submit">Create list ▸</button>
-    <button
-      class="button-cancel"
-      onclick="window.location.href='/apps/maat'"
-      type="button"
-      value="Cancel"
-    >
-      Cancel
-    </button>
-  </fieldset>
-</form>
-<!-- <script> -->
-<!--   document.getElementById("overlay").classList.remove("htmx-request"); -->
-<!-- </script> -->
+<h2>About</h2>
+<table class="col-two">
+  <thead></thead>
+  <tbody>
+    <tr>
+      <th>Version</th>
+      <td hx-get="/api/lists/{gid}/version" hx-trigger="load"></td>
+    </tr>
+    <tr>
+      <th>Developer</th>
+      <td>
+        <a href="/apps/talk/dm/~talfus-laddus" target="_blank" hx-boost="false"
+          >~talfus-laddus</a
+        >
+      </td>
+    </tr>
+    <tr>
+      <th>Code Repository</th>
+      <td>
+        <a href="https://github.com/matthiasschaub/maat">GitHub</a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<template id="version-template">
+  <td>{{#.}} {{.}} {{/.}}</td>
+</template>
+
+<h2>Frequently Asked Questions (FAQ)</h2>
+<p>
+  Take a look at the
+  <a href="https://github.com/matthiasschaub/maat/blob/main/docs/faq.md">
+    Frequently Asked Questions page</a
+  >.
+</p>
+
+<h2>Contact</h2>
+<p>
+  Please reach out to
+  <a href="/apps/talk/dm/~talfus-laddus" target="_blank" hx-boot="false"
+    >~talfus-laddus</a
+  >, to report any bug, to give feedbag or to receive support.
+</p>
 
     </main>
     <script src="/apps/maat/helper.js"></script>

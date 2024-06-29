@@ -17,7 +17,7 @@ hidden
   hx-on:htmx:load='console.log("Does not work"); document.getElementById("overlay").classList.remove("htmx-request");'
   hx-on::after-request='if(event.detail.successful) window.location.pathname = "/apps/maat";'
 >
-  <fieldset>
+  <fieldset class="stack">
     <label>Titel</label>
     <input
       id="list-title"

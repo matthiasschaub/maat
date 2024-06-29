@@ -1,6 +1,7 @@
 <h1>Update Task</h1>
 <div
   id="update"
+  class="stack"
   hx-get="/api/lists/{gid}/tasks/{tid}"
   hx-trigger="load"
   hx-ext="client-side-templates,client-side-formats"
@@ -15,7 +16,7 @@
     hx-ext="ignore:client-side-templates,client-side-formats"
     hx-on::after-request='if(event.detail.successful) window.location.pathname = "/apps/maat/lists/" + gid() + "/tasks";'
   >
-    <fieldset>
+    <fieldset class="stack">
       <label for="update-title">Title:</label>
       <input
         autocomplete="false"
@@ -28,18 +29,21 @@
         aria-label="Title"
         value="{{title}}"
       />
-      <label for="update-desc">Description:</label>
-      <div class="grow-wrap">
-        <textarea
-          row="1"
-          id="update-desc"
-          name="desc"
-          aria-label="Description"
-          onInput="this.parentNode.dataset.replicatedValue = this.value"
-        >
+      <div class="stack--1">
+        <label for="update-desc">Description:</label>
+        <div class="grow-wrap">
+          <textarea
+            row="1"
+            id="update-desc"
+            name="desc"
+            aria-label="Description"
+            onInput="this.parentNode.dataset.replicatedValue = this.value"
+          >
 {{desc}}</textarea
-        >
+          >
+        </div>
       </div>
+
       <label for="update-tags">Tags <small>(Comma-separated)</small>:</label>
       <textarea id="update-tags" name="tags" aria-label="Tags">
 {{tags}}</textarea
@@ -53,7 +57,16 @@
       >
         Cancel
       </button>
+      <button
+        id="delete-task"
+        hx-delete="/api/lists/{gid}/tasks/{tid}"
+        hx-confirm="Are you sure?"
+        hx-swap="none"
+        hx-on:htmx:after-request='if(event.detail.successful) window.location.pathname = "/apps/maat/lists/{{gid}}"'
+      >
+        Delete task
+      </button>
     </fieldset>
   </form>
+  <script src="/apps/maat/edit-task.js"></script>
 </template>
-<script src="/apps/maat/edit-task.js"></script>

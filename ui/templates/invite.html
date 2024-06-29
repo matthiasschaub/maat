@@ -11,6 +11,15 @@
 <!-- </template> -->
 
 <h2>Add members</h2>
+
+<!-- HACK: Make request to remove loading spinner. -->
+<!-- Using hx-on:htmx:load or Javascript does not work. -->
+<div
+hx-get="/api/lists"
+hx-trigger="load"
+hidden
+></div>
+
 <p>
   Invite people on Urbit to join this list.<br /><small>(In-app invite)</small>
 </p>
@@ -20,7 +29,7 @@
   hx-swap="none"
   hx-on::after-request='if(event.detail.successful) window.location.pathname = "/apps/maat/lists/" + gid() + "/settings";'
 >
-  <fieldset>
+  <fieldset class="stack">
     <!-- TODO: add validation for valid @p -->
     <label>Urbit ID</label>
     <input

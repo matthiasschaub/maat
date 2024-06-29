@@ -1,5 +1,6 @@
 <div
   id="update-task"
+  class="stack"
   hx-get="/api/lists/{gid}"
   hx-trigger="load"
   hx-ext="client-side-templates"
@@ -14,7 +15,7 @@
     hx-ext="ignore:client-side-templates"
     hx-on::after-request='if(event.detail.successful) window.location.pathname = "/apps/maat/lists/" + gid() + "/settings";'
   >
-    <fieldset>
+    <fieldset class="stack">
       <label for="update-title">Title:</label>
       <input
         autocomplete="false"
