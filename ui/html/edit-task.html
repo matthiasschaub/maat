@@ -104,9 +104,9 @@
   hx-get="/api/lists/{gid}/tasks/{tid}"
   hx-trigger="load"
   hx-ext="client-side-templates,client-side-formats"
-  mustache-template="task-template"
+  mustache-template="task_edit__template"
 ></div>
-<template id="task-template">
+<template id="task_edit__template">
   <form
     id="update-task"
     hx-put="/api/lists/{{gid}}/tasks"
@@ -118,15 +118,14 @@
     <fieldset class="stack">
       <label for="update-title">Title:</label>
       <input
-        autocomplete="false"
         id="update-title"
         name="title"
-        placeholder="{{title}}"
-        required
-        spellcheck="false"
-        type="text"
         aria-label="Title"
+        type="text"
         value="{{title}}"
+        autocomplete="false"
+        spellcheck="false"
+        required
       />
       <div class="stack--1">
         <label for="update-desc">Description:</label>
@@ -167,7 +166,20 @@
       </button>
     </fieldset>
   </form>
-  <script src="/apps/maat/edit-task.js"></script>
+  <script>
+    document
+      .getElementById("update")
+      .addEventListener("htmx:afterSettle", (_event) => {
+        document.querySelectorAll("textarea").forEach((element) => {
+          element.dispatchEvent(
+            new Event("input", {
+              bubbles: true,
+              cancelable: true,
+            }),
+          );
+        });
+      });
+  </script>
 </template>
 
     </main>

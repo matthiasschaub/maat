@@ -18,7 +18,7 @@
   <form>
     <fieldset class="stack">
       <label for="update-title">Title:</label>
-      <input type="text" aria-label="Title" value="{{title}}" disabled/>
+      <input type="text" aria-label="Title" value="{{title}}" disabled />
       <div class="stack--1">
         <label for="update-desc">Description:</label>
         <div class="grow-wrap">
@@ -45,5 +45,18 @@
       </button>
     </fieldset>
   </form>
-  <script src="/apps/maat/edit-task.js"></script>
+  <script>
+    document
+      .getElementById("update")
+      .addEventListener("htmx:afterSettle", (_event) => {
+        document.querySelectorAll("textarea").forEach((element) => {
+          element.dispatchEvent(
+            new Event("input", {
+              bubbles: true,
+              cancelable: true,
+            }),
+          );
+        });
+      });
+  </script>
 </template>

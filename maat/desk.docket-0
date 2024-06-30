@@ -1,4 +1,4 @@
-:~  title+'Maat (alpha)'
+:~  title+'Maat (beta)'
     info+'A todo app'
     color+0xff.fff3
     image+'https://raw.githubusercontent.com/matthiasschaub/maat/main/ui/png/ios/512.png'

@@ -42,7 +42,6 @@ htmx.defineExtension("json-enc-maat", {
     xhr.overrideMimeType("text/json");
 
     const params = JSON.parse(JSON.stringify(parameters));
-    console.log(params);
 
     // send tags as list
     if (Object.keys(params).includes("tags")) {
@@ -59,9 +58,14 @@ htmx.defineExtension("json-enc-maat", {
 
     // send public flag as boolean
     if (Object.keys(params).includes("public")) {
-      // cast to bool
-      params.public = params.public === "true";
-      // console.log(params.public === "true");
+      if (params.public === "Yes") {
+        params.public = true;
+      } else if (params.public === "No") {
+        params.public = false;
+      } else {
+        // cast to bool
+        params.public = params.public === "true";
+      }
     }
 
     // send done flag as boolean

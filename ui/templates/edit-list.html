@@ -4,9 +4,9 @@
   hx-get="/api/lists/{gid}"
   hx-trigger="load"
   hx-ext="client-side-templates"
-  mustache-template="list-template"
+  mustache-template="list_edit__template"
 ></div>
-<template id="list-template">
+<template id="list_edit__template">
   <h1>Update {{host}}/{{title}}</h1>
   <form
     id="update-list"
@@ -18,26 +18,24 @@
     <fieldset class="stack">
       <label for="update-title">Title:</label>
       <input
-        autocomplete="false"
         id="update-title"
         name="title"
-        placeholder="{{title}}"
-        required
+        aria-label="Title"
+        autocomplete="false"
         spellcheck="false"
         type="text"
-        aria-label="Title"
+        value="{{title}}"
+        required
       />
       <label for="update-public">Public:</label>
       <select
-        autocomplete="false"
         id="update-public"
         name="public"
-        required
-        spellcheck="false"
+        aria-label="Public"
         type="text"
-        aria-label="Title"
+        required
       >
-        <option hidden disabled selected value>-- select an option --</option>
+        <option hidden disabled selected value>-- Select an option --</option>
         <option>Yes</option>
         <option>No</option>
       </select>
