@@ -14,7 +14,8 @@ Documentation:
 - [Development Setup](docs/development.md)
 - [Deployment](docs/deployment.md)
 
-See [inbox](inbox.md) for a loosely managed lists of open tasks and planned enhancements.
+See [this public Maat board](https://ship.talfus-laddus.de/apps/maat/lists/40e37114-34d3-4ee0-b650-1180bb67f1f7/tasks)
+for a loosely managed lists of open tasks and planned enhancements.
 
 ## Contributing
 
