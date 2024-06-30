@@ -1,5 +1,3 @@
-from time import sleep
-import time
 from uuid import uuid4
 
 import pytest
@@ -62,6 +60,17 @@ def test_lists_put(zod, uuid):
     url = "/apps/maat/api/lists"
     response = zod.put(url, json=list_)
     assert response.status_code == 200
+
+
+def test_lists_put_unauthorized(zod, uuid):
+    list_ = {
+        "gid": uuid,
+        "title": "assembly",
+        "public": False,
+    }
+    url = "http://localhost:8080/apps/maat/api/lists"
+    response = requests.put(url, json=list_)
+    assert response.status_code == 401
 
 
 def test_lists_get_all(zod, list_, lists_schema):
@@ -136,21 +145,6 @@ def test_lists_update(zod, gid, list_):
     response = zod.get(url)
     result = response.json()
     assert result == list_2
-
-
-# @pytest.mark.usefixtures("list_")
-# def test_lists_delete_unauthorized(zod, nus, gid):
-#     # PUT
-#     url = f"/apps/maat/api/lists/{gid}"
-#     response = nus.delete(url)
-#     assert response.status_code == 403
-
-#     # GET /lists
-#     url = "/apps/maat/api/lists"
-#     response = zod.get(url)
-#     assert response.status_code == 200
-#     result = response.json()
-#     assert list in result
 
 
 @pytest.mark.usefixtures("list_")

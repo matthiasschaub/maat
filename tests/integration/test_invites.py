@@ -34,11 +34,12 @@ def test_put_invitees(zod, gid):
     assert response.status_code == 200
 
 
-def test_put_invitees_public(gid):
+@pytest.mark.usefixtures("list_public")
+def test_put_invitees_unauthorized_public(gid):
     """Test PUT /invitees with unauthorized requests."""
     url = f"http://localhost:8080/apps/maat/api/lists/{gid}/invitees"
     response = requests.put(url, json={"invitee": "~nus"})
-    assert response.status_code == 500
+    assert response.status_code == 401
 
 
 def test_get_invites(nus, gid, list_, invitee_nus):
@@ -49,3 +50,10 @@ def test_get_invites(nus, gid, list_, invitee_nus):
     result = response.json()
     assert isinstance(result, list)
     assert list_ in result
+
+
+@pytest.mark.usefixtures("list_public")
+def test_get_invites_unauthorized_public():
+    url = f"http://localhost:8080/apps/maat/api/invites"
+    response = requests.get(url)
+    assert response.status_code == 401

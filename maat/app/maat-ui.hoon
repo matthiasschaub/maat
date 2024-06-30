@@ -1,4 +1,4 @@
-:: /-  *maat
+/-  *maat
 /+  dbug
 /+  verb
 /+  default-agent
@@ -7,12 +7,15 @@
 ::
 /*  html-index                %html   /app/ui/html/index/html
 /*  html-tasks                %html   /app/ui/html/tasks/html
+/*  html-tasks-public         %html   /app/ui/html/tasks-public/html
 /*  html-create               %html   /app/ui/html/create/html
 /*  html-invites              %html   /app/ui/html/invites/html
 /*  html-invite               %html   /app/ui/html/invite/html
 /*  html-settings             %html   /app/ui/html/settings/html
+/*  html-about                %html   /app/ui/html/about/html
 /*  html-edit-list            %html   /app/ui/html/edit-list/html
 /*  html-edit-task            %html   /app/ui/html/edit-task/html
+/*  html-show-task            %html   /app/ui/html/show-task/html
 /*  css-udjat                 %css    /app/ui/css/udjat/css
 /*  css-style                 %css    /app/ui/css/style/css
 /*  svg-circles               %svg    /app/ui/svg/circles/svg
@@ -102,8 +105,27 @@
     =+  ext=ext.request-line
     =+  send=(cury response:schooner eyre-id)
     =+  auth=authenticated.inbound-request
-    :: TODO:
-    =/  public  %.n
+    =/  group=(unit group)
+      ?.  (gte (lent site) 4)
+        ~
+      =/  gid   (snag 3 site)
+      =/  path  /(scot %p our.bowl)/maat/(scot %da now.bowl)/[gid]/noun
+      =,  .^([=group =acl =reg =led] %gx path)
+      (some group)
+    =/  public=?
+      ?^  group
+        public:(need group)
+      ?~  ext
+        %.n
+      ?+  +.ext  %.n
+        %css    %.y
+        %js     %.y
+        %ttf    %.y
+        %woff2  %.y
+        %png    %.y
+        %svg    %.y
+        %json   %.y
+      ==
     ?.  ?|(auth public)
       ?.  hx-req
         [(send [302 ~ [%login-redirect './apps/maat']]) state]
@@ -172,29 +194,40 @@
       ::  html
       ::
       [%apps %maat %lists @t %tasks @t %edit ~]
-        [(send [200 ~ [%html html-edit-task]]) state]
+        ?:  auth
+          [(send [200 ~ [%html html-edit-task]]) state]
+        ?.  hx-req
+          [(send [302 ~ [%login-redirect './apps/maat']]) state]
+        [(send [200 ~ [%hx-login-redirect './apps/maat']]) state]
+      [%apps %maat %lists @t %tasks @t %show ~]
+        [(send [200 ~ [%html html-show-task]]) state]
       [%apps %maat %lists @t @t ~]
         =/  endpoint  (snag 4 `(list @t)`site)
         ?+  endpoint  [(send [404 ~ [%plain "404 - Not Found"]]) state]
-          %tasks     [(send [200 ~ [%html html-tasks]]) state]
-          %settings  [(send [200 ~ [%html html-settings]]) state]
-          %edit      [(send [200 ~ [%html html-edit-list]]) state]
-          %invite    [(send [200 ~ [%html html-invite]]) state]
-          :: %settings
-          ::   ?:  auth
-          ::     ?:  .=(our.bowl host:(need group))
-          ::       [(send [200 ~ [%html html-settings-host]]) state]
-          ::     [(send [200 ~ [%html html-settings-member]]) state]
-          ::   [(send [200 ~ [%html html-settings-public]]) state]
-          :: %about           [(send [200 ~ [%html html-about]]) state]
-          :: %invite
-          ::   ?.  auth
-          ::     ?.  hx-req
-          ::       [(send [302 ~ [%login-redirect './apps/tahuti']]) state]
-          ::     [(send [200 ~ [%hx-login-redirect './apps/tahuti']]) state]
-          ::   ?:  public
-          ::     [(send [200 ~ [%html html-invite-public]]) state]
-          ::   [(send [200 ~ [%html html-invite]]) state]
+          %tasks
+            ?:  auth
+              [(send [200 ~ [%html html-tasks]]) state]
+            [(send [200 ~ [%html html-tasks-public]]) state]
+          %settings
+            ?:  auth
+              [(send [200 ~ [%html html-settings]]) state]
+            ?.  hx-req
+              [(send [302 ~ [%login-redirect './apps/maat']]) state]
+            [(send [200 ~ [%hx-login-redirect './apps/maat']]) state]
+          %about
+            [(send [200 ~ [%html html-about]]) state]
+          %edit
+            ?:  auth
+              [(send [200 ~ [%html html-edit-list]]) state]
+            ?.  hx-req
+              [(send [302 ~ [%login-redirect './apps/maat']]) state]
+            [(send [200 ~ [%hx-login-redirect './apps/maat']]) state]
+          %invite
+            ?:  auth
+              [(send [200 ~ [%html html-invite]]) state]
+            ?.  hx-req
+              [(send [302 ~ [%login-redirect './apps/maat']]) state]
+            [(send [200 ~ [%hx-login-redirect './apps/maat']]) state]
         ==
     ==
   --

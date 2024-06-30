@@ -71,22 +71,6 @@ def test_tasks_put(zod, gid):
     assert response.status_code == 200
 
 
-@pytest.mark.usefixtures("list_public")
-def test_tasks_put_public(gid):
-    task = {
-        "gid": gid,
-        "tid": str(uuid4()),
-        "title": "book a train ticket",
-        "desc": "blah",
-        "date": 1699182124,
-        "done": False,
-        "tags": ["areas"],
-    }
-    url = f"http://localhost:8080/apps/maat/api/lists/{gid}/tasks"
-    response = requests.put(url, json=task)
-    assert response.status_code == 401
-
-
 @pytest.mark.usefixtures("list_")
 def test_tasks_put_unauthorized(gid):
     task = {
@@ -98,6 +82,22 @@ def test_tasks_put_unauthorized(gid):
         "payer": "~zod",
         "date": 1699182124,
         "involves": ["~zod"],
+    }
+    url = f"http://localhost:8080/apps/maat/api/lists/{gid}/tasks"
+    response = requests.put(url, json=task)
+    assert response.status_code == 401
+
+
+@pytest.mark.usefixtures("list_public")
+def test_tasks_put_unauthorized_public(gid):
+    task = {
+        "gid": gid,
+        "tid": str(uuid4()),
+        "title": "book a train ticket",
+        "desc": "blah",
+        "date": 1699182124,
+        "done": False,
+        "tags": ["areas"],
     }
     url = f"http://localhost:8080/apps/maat/api/lists/{gid}/tasks"
     response = requests.put(url, json=task)
@@ -241,6 +241,13 @@ def test_tasks_get_filter_multiple_tags_or(zod, gid, tid, tasks_schema):
 #     assert tid not in ([r["tid"] for r in result])
 
 
+@pytest.mark.usefixtures("list_", "task")
+def test_tasks_get_unauthorized(gid, tid):
+    url = f"http://localhost:8080/apps/maat/api/lists/{gid}/tasks"
+    response = requests.get(url)
+    assert response.status_code == 401
+
+
 @pytest.mark.usefixtures("list_public", "task")
 def test_tasks_get_public(gid, tid, tasks_schema):
     url = f"http://localhost:8080/apps/maat/api/lists/{gid}/tasks"
@@ -249,13 +256,6 @@ def test_tasks_get_public(gid, tid, tasks_schema):
     result = response.json()
     assert tasks_schema.is_valid(result)
     assert tid in ([r["tid"] for r in result])
-
-
-@pytest.mark.usefixtures("list_", "task")
-def test_tasks_get_unauthorized(gid, tid):
-    url = f"http://localhost:8080/apps/maat/api/lists/{gid}/tasks"
-    response = requests.get(url)
-    assert response.status_code == 401
 
 
 @pytest.mark.usefixtures("list_")
@@ -344,17 +344,17 @@ def test_task_delete_by_nus(zod, nus, gid, tid):
         assert tid not in ids
 
 
-@pytest.mark.usefixtures("list_public", "task")
-def test_task_delete_public(gid, tid):
-    # DELETE /tasks/{tid}
+@pytest.mark.usefixtures("list_", "task")
+def test_task_delete_unauthorized(gid, tid):
+    # DELETE /tasks/{eid}
     url = f"http://localhost:8080/apps/maat/api/lists/{gid}/tasks/{tid}"
     response = requests.delete(url)
     assert response.status_code == 401
 
 
-@pytest.mark.usefixtures("list_", "task")
-def test_task_delete_unauthorized(gid, tid):
-    # DELETE /tasks/{eid}
+@pytest.mark.usefixtures("list_public", "task")
+def test_task_delete_unauthorized_public(gid, tid):
+    # DELETE /tasks/{tid}
     url = f"http://localhost:8080/apps/maat/api/lists/{gid}/tasks/{tid}"
     response = requests.delete(url)
     assert response.status_code == 401

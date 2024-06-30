@@ -45,14 +45,27 @@
     hx-indicator="#overlay"
     hx-ext="path-deps,json-enc-maat"
   >
-    <header><nav>
+    <header><!-- invisible header bar to keep spacing consistent -->
+<nav style="opacity: 0; pointer-events: none">
   <ul>
-    <li><a href="/apps/maat">↜ Lists</a></li>
-    <li><a href="/lists/{gid}/tasks">Tasks</a></li>
-    <li><a href="/lists/{gid}/settings">Settings</a></li>
-    <li><a href="/lists/{gid}/about">About</a></li>
+    <li>Lists</li>
+    <li>Settings</li>
+    <li>About</li>
   </ul>
 </nav>
+<div class="header-icon">
+  <a href="/apps/maat">
+    <svg
+      class="svg-ico"
+      version="1.1"
+      viewBox="0 0 135.47 135.47"
+      xml:space="preserve"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <use xlink:href="/apps/maat/icon.svg#icon" />
+    </svg>
+  </a>
+</div>
 </header>
 
     <div id="overlay" class="overlay htmx-indicator htmx-request">
@@ -97,138 +110,55 @@
       <div id="error-div" class="error">
         <pre hidden id="error-pre"></pre>
       </div>
-      <!-- TODO: does not work -->
-<h1>Tasks</h1>
-<h1
-  hx-get="/api/lists/{gid}"
+      <!-- <h1 -->
+<!--   id="task_show__title" -->
+<!--   hx-get="/api/lists/{gid}" -->
+<!--   hx-trigger="load" -->
+<!--   hx-ext="client-side-templates" -->
+<!--   mustache-template="task_show__title_template" -->
+<!-- ></h1> -->
+<!-- <template id="task_show__title_template"> {{title}} </template> -->
+<div
+  id="update"
+  class="stack"
+  hx-get="/api/lists/{gid}/tasks/{tid}"
   hx-trigger="load"
-  hx-ext="client-side-templates"
-  mustache-template="tasks__list-template"
-  hidden
-></h1>
-<template id="tasks__list-template"> {{title}} </template>
+  hx-ext="client-side-templates,client-side-formats"
+  mustache-template="task-show-template"
+></div>
+<template id="task-show-template">
+  <form>
+    <fieldset class="stack">
+      <label for="update-title">Title:</label>
+      <input type="text" aria-label="Title" value="{{title}}" disabled/>
+      <div class="stack--1">
+        <label for="update-desc">Description:</label>
+        <div class="grow-wrap">
+          <textarea
+            row="1"
+            aria-label="Description"
+            onInput="this.parentNode.dataset.replicatedValue = this.value"
+            disabled
+          >
+{{desc}}</textarea
+          >
+        </div>
+      </div>
 
-<!-- Filter tasks -->
-<ul class="sticky-top">
-  <li>
-    <a class="icon icon-circle-question"></a>
-    <!-- hx-target="#tasks" -->
-    <!-- hx-disinherit="*" -->
-    <!-- hx-get="/api/lists/{gid}/tasks" -->
-    <!-- hx-vals='{"done": "false"}' -->
-    <!-- mustache-template="tasks-todo-template" -->
-    <div class="inline_form">
-      <form class="floating_form">
-        <select
-          name="tags"
-          id="tasks__tags"
-          hx-get="/api/lists/{gid}/tags"
-          hx-trigger="load, path-deps"
-          hx-ext="client-side-templates"
-          path-deps="/apps/maat/api/lists/*/tasks"
-          mustache-template="tasks__tags-template"
-          onchange="PathDeps.refresh('/apps/maat/api/lists/*/tasks');"
-        ></select>
-        <button
-          style="margin: 0"
-          type="reset"
-          onclick="PathDeps.refresh('/apps/maat/api/lists/*/tasks');"
-        >
-          Clear filter
-        </button>
-      </form>
-    </div>
-    <template id="tasks__tags-template">
-      <option disabled selected value="">Filter by tag</option>
-      {{#.}}
-      <option value="{{.}}">{{.}}</option>
-      {{/.}}
-    </template>
-  </li>
-</ul>
-
-<!-- Undone tasks -->
-<ul
-  class="tasks"
-  hx-get="/api/lists/{gid}/tasks"
-  hx-vals='{"done": "false"}'
-  hx-include="#tasks__tags"
-  hx-trigger="load, path-deps"
-  hx-ext="client-side-templates,path-deps"
-  path-deps="/apps/maat/api/lists/*/tasks"
-  mustache-template="tasks__todo-template"
-></ul>
-<template id="tasks__todo-template">
-  {{#.}}
-  <li>
-    <!-- mark task as done -->
-    <!-- NOTE: be careful with the js prefix for hx-vals when dealing with user input -->
-    <a
-      id="{{tid}}"
-      class="icon icon-circle"
-      hx-put="/api/lists/{{gid}}/tasks"
-      hx-vals='js:{gid: "{{gid}}", tid: "{{tid}}", title: "{{title}}", desc: `{{desc}}`, date: {{date}}, done: true, tags: "{{tags}}"}'
-      hx-trigger="click"
-      hx-ext="ignore:client-side-templates"
-    >
-    </a>
-    <a style="text-decoration: none" href="/lists/{{gid}}/tasks/{{tid}}/edit"
-      >{{title}} <code>{{tags}}</code></a
-    >
-    {{/.}}
-  </li>
+      <label for="update-tags">Tags <small>(Comma-separated)</small>:</label>
+      <textarea aria-label="Tags">{{tags}}</textarea>
+      <button
+        class="button-cancel"
+        onclick="window.location.href='/apps/maat/lists/' + gid() + '/tasks';"
+        type="button"
+        value="Cancel"
+      >
+        Go back
+      </button>
+    </fieldset>
+  </form>
+  <script src="/apps/maat/edit-task.js"></script>
 </template>
-
-<!-- Done tasks -->
-<ul
-  id="tasks-done"
-  class="tasks__done"
-  hx-get="/api/lists/{gid}/tasks"
-  hx-vals='{"done": "true"}'
-  hx-include="#tasks__tags"
-  hx-trigger="load, path-deps"
-  hx-ext="client-side-templates"
-  path-deps="/apps/maat/api/lists/*/tasks"
-  mustache-template="tasks__done-template"
-></ul>
-<template id="tasks__done-template">
-  {{#.}}
-  <li>
-    <!-- mark task as undone -->
-    <!-- NOTE: be careful with the js prefix for hx-vals when dealing with user input -->
-    <a
-      id="{{tid}}"
-      class="icon icon-circle-checked"
-      hx-put="/api/lists/{{gid}}/tasks"
-      hx-vals='js:{gid: "{{gid}}", tid: "{{tid}}", title: "{{title}}", desc: `{{desc}}`, date: {{date}}, done: false, tags: "{{tags}}"}'
-      hx-trigger="click"
-      hx-ext="ignore:client-side-templates"
-    >
-    </a>
-    <s>
-      <a style="text-decoration: none" href="/lists/{{gid}}/tasks/{{tid}}/edit">
-        {{title}} <code>{{tags}}</code>
-      </a>
-    </s>
-    {{/.}}
-  </li>
-</template>
-
-<!-- Add task -->
-<ul class="sticky-bottom">
-  <li>
-    <a class="icon icon-circle-plus"></a>
-    <form
-      class="inline"
-      hx-put="/api/lists/{gid}/tasks"
-      hx-swap="none"
-      hx-vals="js:{tid: self.crypto.randomUUID(), gid: gid(), desc: '', date: new Date().valueOf(), done: false, tags: ['']}"
-      hx-on::after-request="if(event.detail.successful) this.reset();"
-    >
-      <input name="title" type="text" placeholder="Add new task" />
-    </form>
-  </li>
-</ul>
 
     </main>
     <script src="/apps/maat/helper.js"></script>

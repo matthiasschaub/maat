@@ -1,13 +1,12 @@
 <!-- TODO: does not work -->
-<h1>Tasks</h1>
 <h1
+  id="tasks_public__title"
   hx-get="/api/lists/{gid}"
   hx-trigger="load"
   hx-ext="client-side-templates"
-  mustache-template="tasks__list-template"
-  hidden
+  mustache-template="tasks_public__title-template"
 ></h1>
-<template id="tasks__list-template"> {{title}} </template>
+<template id="tasks_public__title-template"> {{title}} </template>
 
 <!-- Filter tasks -->
 <ul class="sticky-top">
@@ -64,16 +63,8 @@
   <li>
     <!-- mark task as done -->
     <!-- NOTE: be careful with the js prefix for hx-vals when dealing with user input -->
-    <a
-      id="{{tid}}"
-      class="icon icon-circle"
-      hx-put="/api/lists/{{gid}}/tasks"
-      hx-vals='js:{gid: "{{gid}}", tid: "{{tid}}", title: "{{title}}", desc: `{{desc}}`, date: {{date}}, done: true, tags: "{{tags}}"}'
-      hx-trigger="click"
-      hx-ext="ignore:client-side-templates"
-    >
-    </a>
-    <a style="text-decoration: none" href="/lists/{{gid}}/tasks/{{tid}}/edit"
+    <a id="{{tid}}" class="icon icon-circle" style="pointer-events: none"> </a>
+    <a style="text-decoration: none" href="/lists/{{gid}}/tasks/{{tid}}/show"
       >{{title}} <code>{{tags}}</code></a
     >
     {{/.}}
@@ -107,26 +98,10 @@
     >
     </a>
     <s>
-      <a style="text-decoration: none" href="/lists/{{gid}}/tasks/{{tid}}/edit">
-        {{title}} <code>{{tags}}</code>
-      </a>
+      <a style="text-decoration: none" href="/lists/{{gid}}/tasks/{{tid}}/show"
+        >{{title}} <code>{{tags}}</code></a
+      >
     </s>
     {{/.}}
   </li>
 </template>
-
-<!-- Add task -->
-<ul class="sticky-bottom">
-  <li>
-    <a class="icon icon-circle-plus"></a>
-    <form
-      class="inline"
-      hx-put="/api/lists/{gid}/tasks"
-      hx-swap="none"
-      hx-vals="js:{tid: self.crypto.randomUUID(), gid: gid(), desc: '', date: new Date().valueOf(), done: false, tags: ['']}"
-      hx-on::after-request="if(event.detail.successful) this.reset();"
-    >
-      <input name="title" type="text" placeholder="Add new task" />
-    </form>
-  </li>
-</ul>

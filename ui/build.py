@@ -25,13 +25,15 @@ for site in (
     "invite.html",
     "invites.html",
     "tasks.html",
+    "tasks-public.html",
     "settings.html",
     "about.html",
     "edit-list.html",
     "edit-task.html",
+    "show-task.html"
 ):
     main = Path(templates_dir / site).read_text()
-    if site in ("index.html", "create.html"):
+    if site in ("index.html", "create.html", "tasks-public.html", "show-task.html"):
         html = template.substitute(header=header_index, main=main)
     else:
         html = template.substitute(header=header, main=main)

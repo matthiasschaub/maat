@@ -3,7 +3,21 @@ import requests
 
 
 @pytest.mark.usefixtures("list_")
-def test_put_members(zod, gid):
+def test_put_members_invalid(zod, gid):
+    url = f"/apps/maat/api/list/{gid}/members"
+    response = zod.put(url, json={})
+    assert response.status_code == 404
+
+
+@pytest.mark.usefixtures("list_public")
+def test_put_members_public_unauthorized(zod, gid):
+    url = f"http://localhost:8080/apps/maat/api/lists/{gid}/members"
+    response = zod.put(url, json={})
+    assert response.status_code == 404
+
+
+@pytest.mark.usefixtures("list_")
+def test_put_members_invalid(zod, gid):
     url = f"/apps/maat/api/list/{gid}/members"
     response = zod.put(url, json={})
     assert response.status_code == 404

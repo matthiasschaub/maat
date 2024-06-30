@@ -1,0 +1,49 @@
+<!-- <h1 -->
+<!--   id="task_show__title" -->
+<!--   hx-get="/api/lists/{gid}" -->
+<!--   hx-trigger="load" -->
+<!--   hx-ext="client-side-templates" -->
+<!--   mustache-template="task_show__title_template" -->
+<!-- ></h1> -->
+<!-- <template id="task_show__title_template"> {{title}} </template> -->
+<div
+  id="update"
+  class="stack"
+  hx-get="/api/lists/{gid}/tasks/{tid}"
+  hx-trigger="load"
+  hx-ext="client-side-templates,client-side-formats"
+  mustache-template="task-show-template"
+></div>
+<template id="task-show-template">
+  <form>
+    <fieldset class="stack">
+      <label for="update-title">Title:</label>
+      <input type="text" aria-label="Title" value="{{title}}" disabled/>
+      <div class="stack--1">
+        <label for="update-desc">Description:</label>
+        <div class="grow-wrap">
+          <textarea
+            row="1"
+            aria-label="Description"
+            onInput="this.parentNode.dataset.replicatedValue = this.value"
+            disabled
+          >
+{{desc}}</textarea
+          >
+        </div>
+      </div>
+
+      <label for="update-tags">Tags <small>(Comma-separated)</small>:</label>
+      <textarea aria-label="Tags">{{tags}}</textarea>
+      <button
+        class="button-cancel"
+        onclick="window.location.href='/apps/maat/lists/' + gid() + '/tasks';"
+        type="button"
+        value="Cancel"
+      >
+        Go back
+      </button>
+    </fieldset>
+  </form>
+  <script src="/apps/maat/edit-task.js"></script>
+</template>

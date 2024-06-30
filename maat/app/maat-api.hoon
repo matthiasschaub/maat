@@ -86,19 +86,19 @@
       ::
         %'GET'
       ~&  >  '%maat-api: GET'
-      ?.  auth
-        [(send [401 ~ [%plain "401 - Unauthorized"]]) state]
       ?+  site  [(send [404 ~ [%plain "404 - Not Found"]]) state]
         ::
           [%apps %maat %api @t ~]
         =/  endpoint  (snag 3 `(list @t)`site)
         ?+  endpoint  [(send [404 ~ [%plain "404 - Not Found"]]) state]
-
+          ::
             %invites
+          ?.  auth
+            [(send [401 ~ [%plain "401 - Unauthorized"]]) state]
           =/  path      /(scot %p our.bowl)/maat/(scot %da now.bowl)/invs/noun
           =/  invs   .^(invs %gx path)
           [(send [200 ~ [%json (groups:enjs invs)]]) state]
-
+          ::
             %lists
           =/  path      /(scot %p our.bowl)/maat/(scot %da now.bowl)/groups/noun
           =/  groups    .^(groups %gx path)
@@ -121,22 +121,13 @@
           [(send [404 ~ [%plain "404 - Not Found"]]) state]
           ::
              %version
-           [(send [200 ~ [%json (version:enjs '2024-06-21.2')]]) state]
+           [(send [200 ~ [%json (version:enjs '2024-06-30.1')]]) state]
           ::
             %members
+          ?.  auth
+            [(send [401 ~ [%plain "401 - Unauthorized"]]) state]
           [(send [200 ~ [%json (ships:enjs reg)]]) state]
-          ::::
-            ::%castoffs
-          ::=/  regmod    `(set @tas)`(silt (skim ~(tap in reg) |=(m=member ?~(`(unit @p)`(slaw %p `@t`m) %.n %.y))))
-          ::=/  aclmod    `(set @tas)`(~(run in acl) |=(=@p `@tas`(scot %p `@t`p)))
-          ::=/  castoffs   (~(dif in regmod) aclmod)
-          ::[(send [200 ~ [%json (members:enjs castoffs)]]) state]
-            ::::
-          ::   %invitees
-          :: =/  path  /(scot %p our.bowl)/maat/(scot %da now.bowl)/invs/noun
-          :: =,  .^(=invs %gx path)
-          :: [(send [200 ~ [%json (ships:enjs (val by invs))]]) state]
-          ::::
+          ::
             %tasks
           =/  filter-by-done
             ?~  (find [[key='done' value='true'] ~] args)
@@ -163,15 +154,6 @@
           =/  raw    (apply tasks |=(=task ~(tap in tags.task)))
           =/  =tags  (silt `(list @tas)`(flatten raw))
           [(send [200 ~ [%json (tags:enjs tags)]]) state]
-          ::::
-          ::  %balances
-          ::=/  path  /(scot %p our.bowl)/tahuti/(scot %da now.bowl)/[gid]/net/noun
-          ::=/  net   .^(net %gx path)
-          ::[(send [200 ~ [%json (net:enjs [net currency.group])]]) state]
-          ::  %reimbursements
-          ::=/  path  /(scot %p our.bowl)/tahuti/(scot %da now.bowl)/[gid]/rei/noun
-          ::=/  rei   .^(rei %gx path)
-          ::[(send [200 ~ [%json (rei:enjs [rei currency.group])]]) state]
         ==
           [%apps %maat %api %lists @t %tasks @t ~]
         =/  gid       (snag 4 `(list @t)`site)
@@ -241,11 +223,11 @@
       ::
         %'DELETE'
       ~&  >  '%maat-api: DELETE'
+      ?.  auth
+        [(send [401 ~ [%plain "401 - Unauthorized"]]) state]
       ?+  site  [(send [404 ~ [%plain "404 - Not Found"]]) state]
         ::
           [%apps %maat %api %lists @t ~]
-        ?.  auth
-          [(send [401 ~ [%plain "401 - Unauthorized"]]) state]
         =/  gid        (snag 4 `(list @t)`site)
         =/  path  /(scot %p our.bowl)/maat/(scot %da now.bowl)/[gid]/noun
         =,  .^([=group =acl =reg =led] %gx path)
@@ -259,8 +241,6 @@
         state
       ::
           [%apps %maat %api %lists @t %tasks @t ~]
-        ?.  auth
-          [(send [401 ~ [%plain "401 - Unauthorized"]]) state]
         ~&  >  '%tahuti-api: DELETE /tasks/{tid}'
         =/  gid       (snag 4 `(list @t)`site)
         =/  tid       (snag 6 `(list @t)`site)
@@ -293,27 +273,7 @@
             (send [200 ~ [%plain "ok"]])
           [%pass ~ %agent [our.bowl %maat] %poke %maat-action !>(action)]
         state
-        ::
       ==
-        ::
-      ::
-      ::   %'PATCH'
-      :: ~&  >  '%maat-api: PATCH'
-      :: ?+  site  [(send [404 ~ [%plain "404 - Not Found"]]) state]
-      ::   ::
-      ::     [%apps %maat %api %lists @t %tasks @t ~]
-      ::   ?.  auth
-      ::     [(send [401 ~ [%plain "401 - Unauthorized"]]) state]
-      ::   ~&  >  '%tahuti-api: PATCH /tasks/{tid}'
-      ::   =/  gid       (snag 4 `(list @t)`site)
-      ::   =/  tid       (snag 6 `(list @t)`site)
-      ::   =/  action    [%upt-task gid tid]
-      ::   :-  ^-  (list card)
-      ::     %+  snoc
-      ::       (send [200 ~ [%plain "ok"]])
-      ::     [%pass ~ %agent [our.bowl %maat] %poke %maat-action !>(action)]
-      ::   state
-      :: ==
     ==
   --
 ++  on-arvo
