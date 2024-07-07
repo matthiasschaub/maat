@@ -173,10 +173,12 @@
     >
     </a>
     <a style="text-decoration: none" href="/lists/{{gid}}/tasks/{{tid}}/edit"
-      >{{title}} <code>{{tags}}</code></a
-    >
-    {{/.}}
+        >{{title}} {{#tags}}<span class="tag">{{.}}</span> {{/tags}}
+      <br />
+      <p class="ellipsis"><small>{{desc}}</small></p>
+    </a>
   </li>
+  {{/.}}
 </template>
 
 <!-- Done tasks -->

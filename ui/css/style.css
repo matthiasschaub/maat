@@ -18,7 +18,6 @@ button::after.icon-circle {
   font-display: swap;
 }
 
-
 body {
   position: relative;
 }
@@ -105,16 +104,13 @@ main > ul {
 
 main > ul > li {
   list-style-type: none;
-  /* overflow: hidden; */
-  /* white-space: nowrap; */
-  /* text-overflow: ellipsis; */
-  /* width: calc(var(--max-width)/2); */
 
   &:active {
     /* give list item a "pressed" feel */
     transform: scale(0.975);
     border-color: var(--color-primary);
   }
+
   &:hover {
     /* transform: scale(1.05); */
     /* border: 1px solid #f90; */
@@ -266,4 +262,16 @@ main > ul > li {
 
 .two-col > :is(thead, tbody) > tr > :is(th, td):nth-child(2) {
   text-align: right;
+}
+
+.ellipsis {
+  opacity: 0.75;
+  max-width: calc(var(--vspace-3) * 2);
+  /* max-width: calc(var(--max-width)/2); */
+  white-space: nowrap;
+  /* keeps the text in a single line */
+  text-overflow: ellipsis;
+  /* enables ellipsis */
+  overflow: hidden;
+  /* keeps the element from overflowing its parent */
 }

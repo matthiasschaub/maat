@@ -65,10 +65,12 @@
     <!-- NOTE: be careful with the js prefix for hx-vals when dealing with user input -->
     <a id="{{tid}}" class="icon icon-circle" style="pointer-events: none"> </a>
     <a style="text-decoration: none" href="/lists/{{gid}}/tasks/{{tid}}/show"
-      >{{title}} <code>{{tags}}</code></a
-    >
-    {{/.}}
+      >{{title}} <code>{{tags}}</code>
+      <br />
+      <p class="ellipsis"><small>{{desc}}</small></p>
+    </a>
   </li>
+  {{/.}}
 </template>
 
 <!-- Done tasks -->
