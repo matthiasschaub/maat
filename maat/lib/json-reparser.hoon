@@ -48,7 +48,7 @@
     ++  tags
       |=  =^tags
       ^-  json
-      [%a (turn ~(tap in tags) tag:enjs)]
+      [%a (turn (sort ~(tap in tags) lth) tag:enjs)]
     ++  task
       |=  t=^task
       ^-  json
