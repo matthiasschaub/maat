@@ -204,14 +204,16 @@
 </footer>
 <p
   id="invites"
+  style="text-align: center"
   hx-get="/api/invites"
   hx-trigger="load"
-  hx-ext="client-side-templates,client-side-formats"
-  mustache-template="index__invites-temp"
+  hx-ext="client-side-formats, client-side-templates"
+  mustache-template="index__invites-template"
 ></p>
-<template id="index__invites-temp">
-  {{#invites}} You are invited to join another list. See
-  <a href="/apps/maat/invites">invites</a>. {{/invites}}
+<template id="index__invites-template">
+  {{#invites}}
+  You are invited to join another list. See <a href="/apps/maat/invites">invites</a>.
+  {{/invites}}
   {{^invites}}{{/invites}}
 </template>
 

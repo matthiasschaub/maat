@@ -45,14 +45,27 @@
     hx-indicator="#overlay"
     hx-ext="path-deps,json-enc-maat"
   >
-    <header><nav>
+    <header><!-- invisible header bar to keep spacing consistent -->
+<nav style="opacity: 0; pointer-events: none">
   <ul>
-    <li><a href="/apps/maat">↜ Lists</a></li>
-    <li><a href="/lists/{gid}/tasks">Tasks</a></li>
-    <li><a href="/lists/{gid}/settings">Settings</a></li>
-    <li><a href="/lists/{gid}/about">About</a></li>
+    <li>Lists</li>
+    <li>Settings</li>
+    <li>About</li>
   </ul>
 </nav>
+<div class="header-icon">
+  <a href="/apps/maat">
+    <svg
+      class="svg-ico"
+      version="1.1"
+      viewBox="0 0 135.47 135.47"
+      xml:space="preserve"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <use xlink:href="/apps/maat/icon.svg#icon" />
+    </svg>
+  </a>
+</div>
 </header>
 
     <div id="overlay" class="overlay htmx-indicator htmx-request">
@@ -101,41 +114,43 @@
 <div
   hx-get="/api/invites"
   hx-trigger="load"
+  hx-swap="outerHTML"
+  hx-ext="client-side-templates"
   mustache-template="invites-template"
-></div>
-<template id="invites-template">
-  {{#.}}
-  <fieldset>
-    <label
-      >You got invited to join <em>{{title}}</em> by <em>{{host}}</em>.</label
-    >
-    <form>
+>
+  <template id="invites-template">
+    {{#.}}
+    <fieldset class="stack">
+      <label
+        >You got invited to join <em>{{title}}</em> by <em>{{host}}</em>.</label
+      >
       <button
         id="post-join"
         class="button-primary"
         hx-post="/api/join"
         hx-swap="none"
         hx-vals='{"gid": "{{gid}}", "host": "{{host}}", "public": "{{public}}"}'
-        hx-on::after-request='if(event.detail.successful) window.location.pathname = "/apps/maat/lists/{{gid}}/tasks"'
+        hx-on::after-request='if(event.detail.successful) setTimeout(() => window.location.pathname = "/apps/maat/lists/{{gid}}/tasks" , 2000);'
         type="submit"
       >
         Join list ▸
       </button>
-      <button
-        id="post-leave"
-        class="button-cancel"
-        hx-post="/api/leave"
-        hx-swap="none"
-        hx-vals='{"gid": "{{gid}}", "host": "{{host}}", "public": "{{public}}"}'
-        hx-on::after-request='if(event.detail.successful) window.location.pathname = "/apps/maat"'
-        type="submit"
-      >
-        Decline invitation ▸
-      </button>
-    </form>
-  </fieldset>
-  {{/.}}
-</template>
+      <!-- TODO -->
+      <!-- <button -->
+      <!--   id="post-leave" -->
+      <!--   class="button-cancel" -->
+      <!--   hx-post="/api/leave" -->
+      <!--   hx-swap="none" -->
+      <!--   hx-vals='{"gid": "{{gid}}", "host": "{{host}}", "public": "{{public}}"}' -->
+      <!--   hx-on::after-request='if(event.detail.successful) window.location.pathname = "/apps/maat"' -->
+      <!--   type="submit" -->
+      <!-- > -->
+      <!--   Decline invitation ▸ -->
+      <!-- </button> -->
+    </fieldset>
+    {{/.}}
+  </template>
+</div>
 
     </main>
     <script src="/apps/maat/helper.js"></script>

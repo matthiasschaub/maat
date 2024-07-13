@@ -33,15 +33,13 @@
 <ul
   hx-get="/api/lists/{gid}/members"
   hx-trigger="load"
-  hx-swap="outerHTML"
   hx-ext="client-side-templates"
   mustache-template="settings__members-template"
 >
   <template id="settings__members-template">
     {{#.}}
     <li>{{.}}</li>
-    {{/.}}
-    {{^.}}
+    {{/.}} {{^.}}
     <li>No members</li>
     {{/.}}
   </template>

@@ -98,6 +98,7 @@ header > .header-icon {
 /*     max-width: calc(1.3 * var(--max-width)); */
 /* } */
 
+/* TODO: make a class to not apply it to every list */
 main > ul {
   padding: 0;
 }

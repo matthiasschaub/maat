@@ -30,10 +30,16 @@ for site in (
     "about.html",
     "edit-list.html",
     "edit-task.html",
-    "show-task.html"
+    "show-task.html",
 ):
     main = Path(templates_dir / site).read_text()
-    if site in ("index.html", "create.html", "tasks-public.html", "show-task.html"):
+    if site in (
+        "index.html",
+        "create.html",
+        "invites.html",
+        "tasks-public.html",
+        "show-task.html",
+    ):
         html = template.substitute(header=header_index, main=main)
     else:
         html = template.substitute(header=header, main=main)
