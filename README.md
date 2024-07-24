@@ -1,8 +1,12 @@
+![](ui/png/ios/128.png)
+
 # Maat
 
-A todo app for [Urbit](https://urbit.org/).
+A mobile-friendly to-do app for [Urbit](https://urbit.org/).
 
 Install from `~talfus-laddus/maat`.
+
+[Created w/ care](https://www.createwcare.com/) by `~talfus-laddus`. Maat is kept [simple, stupid!](https://en.wikipedia.org/wiki/KISS_principle) Or in the language of Tlon: it is designed to be calm.
 
 For details about this app, see the [proposal](proposal.md) and take a look at
 the [Frequently Asked Questions page](docs/faq.md)
