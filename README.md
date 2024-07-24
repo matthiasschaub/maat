@@ -1,4 +1,6 @@
-![](ui/png/ios/128.png)
+<p align="center">
+  <img src="ui/png/ios/128.png" />
+</p>
 
 # Maat
 
