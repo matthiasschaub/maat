@@ -266,8 +266,11 @@ main > ul > li {
   }
 }
 
-.two-col > :is(thead, tbody) > tr > :is(th, td):nth-child(2) {
+.col-two > :is(thead, tbody) > tr > :is(th, td):nth-child(2) {
   text-align: right;
+}
+.col-two > :is(thead, tbody) > tr > :is(th, td):nth-child(1) {
+  text-align: left;
 }
 
 .ellipsis {

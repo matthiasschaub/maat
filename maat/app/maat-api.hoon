@@ -2,6 +2,7 @@
 /+  dbug
 /+  verb
 /+  default-agent
+/+  seq
 /+  server         :: HTTP request processing
 /+  schooner       :: HTTP response handling
 /+  *json-reparser
@@ -102,7 +103,8 @@
             %lists
           =/  path      /(scot %p our.bowl)/maat/(scot %da now.bowl)/groups/noun
           =/  groups    .^(groups %gx path)
-          [(send [200 ~ [%json (groups:enjs groups)]]) state]
+          =/  sorted    (sort ~(val by groups) |=([a=group b=group] (lth title.a title.b)))
+          [(send [200 ~ [%json (list-of-groups:enjs sorted)]]) state]
         ==
         ::
           [%apps %maat %api %lists @t ~]
@@ -121,7 +123,7 @@
           [(send [404 ~ [%plain "404 - Not Found"]]) state]
           ::
              %version
-           [(send [200 ~ [%json (version:enjs '2024-08-09.1')]]) state]
+           [(send [200 ~ [%json (version:enjs '2024-08-09.3')]]) state]
           ::
             %members
           ?.  auth

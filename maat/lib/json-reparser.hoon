@@ -37,6 +37,10 @@
       ==
     ::  (lists as json array)
     ::
+    ++  list-of-groups
+      |=  g=(list ^group)
+      ^-  json
+      [%a (turn g group:enjs)]
     ++  groups
       |=  g=^groups
       ^-  json
