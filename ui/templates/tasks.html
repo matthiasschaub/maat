@@ -1,11 +1,9 @@
 <!-- TODO: does not work -->
-<h1>Tasks</h1>
 <h1
   hx-get="/api/lists/{gid}"
   hx-trigger="load"
   hx-ext="client-side-templates"
   mustache-template="tasks__list-template"
-  hidden
 ></h1>
 <template id="tasks__list-template"> {{title}} </template>
 
@@ -50,7 +48,7 @@
 
 <!-- Undone tasks -->
 <ul
-  class="tasks"
+  class="tasks__todo"
   hx-get="/api/lists/{gid}/tasks"
   hx-vals='{"done": "false"}'
   hx-include="#tasks__tags"
@@ -122,6 +120,7 @@
   <li>
     <a class="icon icon-circle-plus"></a>
     <form
+      id="tasks__add-task"
       class="inline"
       hx-put="/api/lists/{gid}/tasks"
       hx-swap="none"

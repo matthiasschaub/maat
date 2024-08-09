@@ -121,7 +121,7 @@
           [(send [404 ~ [%plain "404 - Not Found"]]) state]
           ::
              %version
-           [(send [200 ~ [%json (version:enjs '2024-07-13.1')]]) state]
+           [(send [200 ~ [%json (version:enjs '2024-08-09.1')]]) state]
           ::
             %members
           ?.  auth

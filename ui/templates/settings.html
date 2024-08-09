@@ -1,6 +1,13 @@
-<h1>Settings</h1>
+<h1
+  hx-get="/api/lists/{gid}"
+  hx-trigger="load"
+  hx-ext="client-side-templates"
+  mustache-template="tasks__list-template"
+></h1>
+<template id="tasks__list-template"> {{title}} </template>
+<h2>Settings</h1>
 
-<h2>Details</h2>
+<h3>Details</h3>
 <table
   class="col-two"
   hx-get="/api/lists/{gid}"
@@ -26,10 +33,10 @@
   </tbody>
 </template>
 
-<h2>Update list</h2>
+<h3>Update list</h3>
 <p><a href="/lists/{gid}/edit">Update</a> this lists metadata.</p>
 
-<h2>Members</h2>
+<h3>Members</h3>
 <ul
   hx-get="/api/lists/{gid}/members"
   hx-trigger="load"
@@ -45,7 +52,7 @@
   </template>
 </ul>
 
-<h2>Add members</h2>
+<h3>Add members</h3>
 <p>
   <a
     hx-get="/lists/{gid}/invite"
@@ -57,7 +64,7 @@
   members to this list.
 </p>
 
-<h2>Export tasks</h2>
+<h3>Export tasks</h3>
 <p>
   <a
     onclick="window.location.pathname = '/apps/maat/api/lists/' + gid() + '/tasks'"
@@ -66,7 +73,7 @@
   all tasks of this list as JSON.
 </p>
 
-<h2>Delete list</h2>
+<h3>Delete list</h3>
 <p>
   Permanently
   <a

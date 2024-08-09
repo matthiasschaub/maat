@@ -1,4 +1,11 @@
-<h1>Update Task</h1>
+<h1
+  hx-get="/api/lists/{gid}"
+  hx-trigger="load"
+  hx-ext="client-side-templates"
+  mustache-template="edit-task__list-template"
+></h1>
+<h2>Update Task</h2>
+<template id="edit-task__list-template"> {{title}} </template>
 <div
   id="update"
   class="stack"

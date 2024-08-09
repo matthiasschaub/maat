@@ -1,14 +1,10 @@
-<!-- TODO: does not work -->
-<!-- <h1 -->
-<!--   hx-get="/api/lists/{gid}" -->
-<!--   hx-trigger="load" -->
-<!--   hx-ext="client-side-templates" -->
-<!--   mustache-template="invite__title-template" -->
-<!--   hidden -->
-<!-- ></h1> -->
-<!-- <template id="invite__title-template"> -->
-<!--   {{title}} -->
-<!-- </template> -->
+<h1
+  hx-get="/api/lists/{gid}"
+  hx-trigger="load"
+  hx-ext="client-side-templates"
+  mustache-template="invite__list-template"
+></h1>
+<template id="invite__list-template"> {{title}} </template>
 
 <h2>Add members</h2>
 
