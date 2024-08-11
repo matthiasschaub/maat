@@ -1,4 +1,5 @@
 from uuid import uuid4
+from time import sleep
 
 import pytest
 import requests
@@ -89,6 +90,29 @@ def test_lists_get_all_unauthorized():
     url = "http://localhost:8080/apps/maat/api/lists"
     response = requests.get(url)
     assert response.status_code == 401
+
+
+def test_lists_all_ordered(zod, list_):
+    url = "/apps/maat/api/lists"
+    list_2 = {
+        "gid": str(uuid4()),
+        "title": "aaa",
+        "public": False,
+    }
+    zod.put(url, json=list_2)
+    list_3 = {
+        "gid": str(uuid4()),
+        "title": "bbb",
+        "public": False,
+    }
+    zod.put(url, json=list_3)
+    response = zod.get(url)
+    result = [r["gid"] for r in response.json()]
+    assert (
+        result.index(list_2["gid"])
+        < result.index(list_["gid"])
+        < result.index(list_3["gid"])
+    )
 
 
 def test_lists_get_single(zod, gid, list_, list_schema):

@@ -103,7 +103,7 @@
             %lists
           =/  path      /(scot %p our.bowl)/maat/(scot %da now.bowl)/groups/noun
           =/  groups    .^(groups %gx path)
-          =/  sorted    (sort ~(val by groups) |=([a=group b=group] (lth title.a title.b)))
+          =/  sorted    (sort ~(val by groups) |=([a=group b=group] (aor title.a title.b)))
           [(send [200 ~ [%json (list-of-groups:enjs sorted)]]) state]
         ==
         ::
